@@ -1,0 +1,76 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+
+    compileSdk workspace.compileSdk
+
+    defaultConfig {
+        applicationId workspace.applicationId
+        minSdk workspace.minSdk
+        targetSdk workspace.targetSdk
+        versionCode workspace.versionCode
+        versionName workspace.versionName
+        multiDexEnabled true
+        viewBinding {
+            enabled true
+        }
+    }
+
+    buildTypes {
+        debug {
+            ext.enableCrashlytics = false
+            ext.alwaysUpdateBuildId = false
+            shrinkResources false
+            zipAlignEnabled true
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        release {
+            ext.enableCrashlytics = false
+            ext.alwaysUpdateBuildId = false
+            shrinkResources true
+            zipAlignEnabled true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        coreLibraryDesugaringEnabled = true
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/java']
+            resources.srcDirs = ['src/main/java', 'src/main/resources']
+            jniLibs.srcDirs = ['src/main/jniLibs']
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+
+    implementation(library.spiderman) {
+        exclude group: "androidx.appcompat"
+    }
+
+    implementation project(':apktool:android')
+
+    implementation library.androidx_annotation
+    implementation library.androidx_appcompat
+    implementation library.androidx_multidex_instrumentation
+    implementation library.google_material
+    implementation library.androidx_constraintlayout
+    implementation library.androidx_recyclerview
+    implementation library.androidx_viewpager2
+    implementation library.androidx_cardview
+    implementation library.androidx_preference
+    implementation library.androidx_fragment
+    implementation library.androidx_drawerlayout
+}

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:title="Appearance"
+        android:summary="Configure global application appearance."
+        android:fragment="com.apkide.ui.preferences.AppearancePreferencesFragment"/>
+    <Preference
+        android:title="Editor"
+        android:summary="Configure the editor."
+        android:fragment="com.apkide.ui.preferences.IDEEditorPreferencesFragment"/>
+    <Preference
+        android:title="Version Control"
+        android:summary="Configure source version control."
+        android:fragment="com.apkide.ui.preferences.VersionControlPreferencesFragment"/>
+    <Preference
+        android:title="Build &amp; Execution/Run"
+        android:summary="Configure the build environment and execution environment."
+        android:fragment="com.apkide.ui.preferences.BuildExecutionPreferencesFragment"/>
+    <Preference
+        android:title="Engine &amp; Plugin"
+        android:summary="Configuration engine and plugin management."
+        android:fragment="com.apkide.ui.preferences.EnginePluginPreferencesFragment"/>
+    <Preference
+        android:title="About APK-IDE"
+        android:summary="Show legal information."
+        android:key="show_about"/>
+</PreferenceScreen>
