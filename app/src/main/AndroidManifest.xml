@@ -7,9 +7,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission
-        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
-        tools:ignore="ScopedStorage" />
-    <uses-permission
         android:name="android.permission.READ_LOGS"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
@@ -25,21 +22,21 @@
     <uses-permission android:name="android.permission.REQUEST_COMPANION_RUN_IN_BACKGROUND" />
 
     <application
-        android:name="com.apkide.APKIDEApplication"
-        android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
         android:extractNativeLibs="true"
+        android:largeHeap="true"
+        android:resizeableActivity="true"
+        android:requestLegacyExternalStorage="true"
+        android:name="com.apkide.ApkIDEApplication"
+        android:allowBackup="true"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:largeHeap="true"
-        android:resizeableActivity="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ApkIDE"
-        tools:targetApi="31">
+        >
         <activity
-            android:name=".MainActivity"
+            android:name=".main.MainUI"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -47,13 +44,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".preferences.PreferencesActivity"
-            android:label="@string/activity_preferences" />
 
         <provider
-            android:name="com.apkide.app.ContentProvider"
-            android:authorities=".contentprovider.ContentProvider"
+            android:name=".ContentProvider"
+            android:authorities="com.apkide.ui.ContentProvider"
             android:exported="false" />
     </application>
 

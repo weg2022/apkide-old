@@ -1,7 +1,7 @@
 # APK-IDE
-APK-IDE is an Android software that can modify Android apk.
-It has the characteristics of visualization, ease of use, quickness.
-Integrate ApkTool, Dex2jar, JavaKotlin Decompiler and other tools.
+APK-IDE is an Android software that can modify Android apk,
+It has the characteristics of visualization, ease of use, quickness,
+Internal integrate ApkTool and other tools.
 
 [简体中文](./README_zh.md)
 
