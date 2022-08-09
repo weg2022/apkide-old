@@ -31,4 +31,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "ApkIDE"
 include ':app'
-include ':apktool:android'
+//include ':apktool:android'
