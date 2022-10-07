@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">APK-IDE</string>
+    <string name="preferences_name">偏好选项</string>
 </resources>

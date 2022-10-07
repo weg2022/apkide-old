@@ -1,32 +1,33 @@
-package com.apkide.ui;
+package com.apkide.ui
 
-import android.content.Context;
-import android.os.Bundle;
+import android.app.UiModeManager
+import android.os.Bundle
+import android.view.View
+import android.view.View.OnLongClickListener
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowInsetsControllerCompat
+import androidx.viewbinding.ViewBinding
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
-public abstract class StyledUI extends AppCompatActivity {
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        IDECore.updateConfiguration();
-        super.attachBaseContext(newBase);
-    }
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        IDECore.applyThemeStyle(this,isPreferencesUI());
-        onUICreated(savedInstanceState);
-    }
-
-
-    protected abstract void onUICreated(@Nullable Bundle savedInstanceState);
-
-
-    protected boolean isPreferencesUI(){
-        return false;
-    }
-
-
+abstract class StyledUI : AppCompatActivity(), View.OnClickListener, OnLongClickListener {
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		applyTheme()
+	}
+	
+	private fun applyTheme() {
+		val controller = WindowInsetsControllerCompat(window, window.decorView)
+		val darkMode =
+			(getSystemService(UI_MODE_SERVICE) as UiModeManager).nightMode == UiModeManager.MODE_NIGHT_YES
+		controller.isAppearanceLightStatusBars = !darkMode
+		controller.isAppearanceLightNavigationBars = !darkMode
+	}
+	
+	fun setContentView(view: ViewBinding) {
+		super.setContentView(view.root)
+	}
+	
+	override fun onClick(v: View) {}
+	override fun onLongClick(v: View): Boolean {
+		return false
+	}
 }

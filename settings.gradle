@@ -1,12 +1,12 @@
 pluginManagement {
     repositories {
+        google()
         gradlePluginPortal()
+        mavenCentral()
         maven { url 'https://plugins.gradle.org/m2/' }
         maven { url 'https://maven.aliyun.com/nexus/content/repositories/google' }
         maven { url 'https://maven.aliyun.com/nexus/content/groups/public' }
         maven { url 'https://maven.aliyun.com/nexus/content/repositories/jcenter' }
-        google()
-        mavenCentral()
         maven { url 'https://jitpack.io' }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
         maven { url 'https://repo1.maven.org/maven2/' }
@@ -17,11 +17,12 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://repo.aikar.co/content/groups/aikar/' }
         maven { url 'https://maven.aliyun.com/nexus/content/repositories/google' }
         maven { url 'https://maven.aliyun.com/nexus/content/groups/public' }
         maven { url 'https://maven.aliyun.com/nexus/content/repositories/jcenter' }
-        google()
-        mavenCentral()
         maven { url 'https://jitpack.io' }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
         maven { url 'https://repo1.maven.org/maven2/' }
@@ -31,4 +32,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "ApkIDE"
 include ':app'
-//include ':apktool:android'
+

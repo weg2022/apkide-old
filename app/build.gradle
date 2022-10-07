@@ -1,8 +1,10 @@
 plugins {
     id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
+    namespace workspace.applicationId
     compileSdk workspace.compileSdk
 
     defaultConfig {
@@ -12,9 +14,6 @@ android {
         versionCode workspace.versionCode
         versionName workspace.versionName
         multiDexEnabled true
-        viewBinding {
-            enabled true
-        }
     }
 
     buildTypes {
@@ -41,7 +40,13 @@ android {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
-
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        viewBinding true
+    }
+    
     sourceSets {
         main {
             java.srcDirs = ['src/main/java']
@@ -49,19 +54,54 @@ android {
             jniLibs.srcDirs = ['src/main/jniLibs']
         }
     }
+    
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+        }
+    }
+    packagingOptions {
+        exclude 'license.txt'
+        exclude '**/license.txt'
+        exclude 'LICENSE-junit.txt'
+        exclude 'androidsupportmultidexversion.txt'
+        exclude 'license/**'
+        exclude 'META-INF/**.version'
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.0'
-    implementation library.androidx_annotation
-    implementation library.androidx_multidex
-    implementation library.google_material
-    implementation library.androidx_preference
-    implementation library.antlr4_runtime
-
-    //implementation 'org.eclipse.jgit:org.eclipse.jgit:6.2.0.202206071550-r'
-
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.0'
+    
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'androidx.preference:preference-ktx:1.2.0'
+    implementation 'androidx.fragment:fragment-ktx:1.5.3'
+    implementation 'androidx.annotation:annotation:1.5.0'
+    
     implementation("com.github.7hens.okbinder:okbinder2:2.0")
     annotationProcessor("com.github.7hens.okbinder:okbinder2-compiler:2.0")
+    
+    implementation 'org.magicwerk.brownies:brownies-collections:0.9.18'
+    
+    implementation 'org.ow2.asm:asm:9.4'
+    implementation 'org.ow2.asm:asm-commons:9.4'
+    implementation 'org.ow2.asm:asm-util:9.4'
+    implementation 'org.ow2.asm:asm-tree:9.4'
+    implementation 'org.ow2.asm:asm-analysis:9.4'
+    
+    implementation 'jaxen:jaxen:1.2.0'
+    
+    //apktool dependencies
+    implementation depends.baksmali,
+            depends.smali,
+            depends.snakeyaml,
+            depends.xmlpull,
+            depends.guava,
+            depends.commons_lang,
+            depends.commons_io,
+            depends.commons_text
+    
 }

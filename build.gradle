@@ -1,47 +1,32 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-    id 'com.android.application' version '7.4.0-alpha09' apply false
-    id 'com.android.library' version '7.4.0-alpha09' apply false
+    id 'com.android.application' version '8.0.0-alpha02' apply false
+    id 'com.android.library' version '8.0.0-alpha02' apply false
+    id 'org.jetbrains.kotlin.android' version '1.7.10' apply false
 }
-gradle.taskGraph.whenReady {
-    tasks.each { task ->
-        if (task.name == 'mockableAndroidJar') {
-            task.enabled = false
-        }
-    }
-}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
 ext {
     workspace = [
             applicationId: "com.apkide.ui",
-            compileSdk   : 31,
+            compileSdk   : 33,
             targetSdk    : 29,
-            minSdk       : 21,
-            versionCode  : 20220809,
-            versionName  : "1.0-test1",
+            minSdk       : 24,
+            versionCode  : 202201005,
+            versionName  : "1.0.0",
     ]
-    library = [
-            antlr4_runtime                   : 'org.antlr:antlr4-runtime:+',
-
-            xmlpull                          : 'xpp3:xpp3:1.1.4c',
-            dexlib2                          : 'org.smali:dexlib2:2.5.2',
-            baksmali                         : 'org.smali:baksmali:2.5.2',
-            smali                            : 'org.smali:smali:2.5.2',
-            snakeyaml                        : 'org.yaml:snakeyaml:1.29:android',
-            guava                            : 'com.google.guava:guava:31.1-android',
-            java_diff_utils                  : 'io.github.java-diff-utils:java-diff-utils:+',
-            commons_cli                      : 'commons-cli:commons-cli:1.5.0',
-            commons_io                       : 'commons-io:commons-io:2.11.0',
-            commons_lang                     : 'org.apache.commons:commons-lang3:3.12.0',
-            commons_text                     : 'org.apache.commons:commons-text:1.9',
-
-            androidx_annotation              : 'androidx.annotation:annotation:1.3.0',
-            androidx_multidex                : 'androidx.multidex:multidex:2.0.1',
-            google_material                  : 'com.google.android.material:material:1.4.0',
-            androidx_cardview                : 'androidx.cardview:cardview:1.0.0',
-            androidx_preference              : 'androidx.preference:preference:1.1.0',
-            androidx_fragment                : 'androidx.fragment:fragment:1.3.0',
+    
+    depends = [
+            baksmali       : 'org.smali:baksmali:2.5.2',
+            commons_io     : 'commons-io:commons-io:2.11.0',
+            commons_lang   : 'org.apache.commons:commons-lang3:3.12.0',
+            commons_text   : 'org.apache.commons:commons-text:1.10.0',
+            guava          : 'com.google.guava:guava:31.1-android',
+            snakeyaml      : 'org.yaml:snakeyaml:1.33:android',
+            smali          : 'org.smali:smali:2.5.2',
+            xmlpull        : 'xpp3:xpp3:1.1.4c',
+            xmlunit        : 'xmlunit:xmlunit:1.6',
     ]
 }
