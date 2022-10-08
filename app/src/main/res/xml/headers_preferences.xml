@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 	<Preference
 		android:title="Application"
-		android:summary="Configure Application Appearance Preferences."
+		android:summary="Configure Application Preferences."
 		android:fragment="com.apkide.ui.preferences.ApplicationPreferencesFragment"/>
 	
 	<Preference

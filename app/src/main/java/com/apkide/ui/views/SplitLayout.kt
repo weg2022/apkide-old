@@ -12,7 +12,8 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.annotation.Keep
 
-class SplitView : ViewGroup {
+@Keep
+class SplitLayout : ViewGroup {
 	private val dividerSpeed: Float
 	private val dividerTouchSize: Int
 	private val horizontalSplitRatio: Float

@@ -17,4 +17,5 @@ public class Editor extends View {
 		super(context, attrs, defStyle);
 	}
 	
+	
 }

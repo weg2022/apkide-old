@@ -19,6 +19,7 @@
 		<item name="colorPrimaryVariant">@color/app_colorPrimaryVariant</item>
 		<item name="colorOnPrimary">@color/app_colorOnPrimary</item>
 		<item name="colorSecondary">@color/app_colorSecondary</item>
+		<item name="colorButtonNormal">@color/app_colorSecondary</item>
 		<item name="colorSecondaryVariant">@color/app_colorSecondaryVariant</item>
 		<item name="colorOnSecondary">@color/app_colorOnSecondary</item>
 		<item name="android:statusBarColor">@color/app_statusBarColor</item>

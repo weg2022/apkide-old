@@ -17,7 +17,13 @@ import java.util.List;
 
 public class BrowserPager extends ViewPager {
 	private List<View> _views;
-	
+	public static final int VIEW_FILES = 0;
+	public static final int VIEW_EVENT = 1;
+	public static final int VIEW_SEARCH = 2;
+	public static final int VIEW_PROBLEMS = 3;
+	public static final int VIEW_GIT = 4;
+	public static final int VIEW_BUILD = 5;
+	public static final int VIEW_LOGCAT = 6;
 	
 	public BrowserPager(@NonNull Context context) {
 		this(context, null);
@@ -31,18 +37,47 @@ public class BrowserPager extends ViewPager {
 	private void initView() {
 		_views = new ArrayList<>();
 		_views.add(new FilesBrowser(getContext()));
-		_views.add(new LogcatBrowser(getContext()));
+		_views.add(new EventBrowser(getContext()));
 		_views.add(new SearchBrowser(getContext()));
-		_views.add(new BuildBrowser(getContext()));
 		_views.add(new ProblemsBrowser(getContext()));
 		_views.add(new GitBrowser(getContext()));
-		_views.add(new EventBrowser(getContext()));
+		_views.add(new BuildBrowser(getContext()));
+		_views.add(new LogcatBrowser(getContext()));
 		setAdapter(new BrowserAdapter());
 	}
 	
 	public MainUI getActivity() {
 		return (MainUI) getContext();
 	}
+	
+	public FilesBrowser getFileBrowser() {
+		return (FilesBrowser) getView(VIEW_FILES);
+	}
+	
+	public EventBrowser getEventBrowser() {
+		return (EventBrowser) getView(VIEW_EVENT);
+	}
+	
+	public SearchBrowser getSearchBrowser() {
+		return (SearchBrowser) getView(VIEW_SEARCH);
+	}
+	
+	public ProblemsBrowser getProblemsBrowser() {
+		return (ProblemsBrowser) getView(VIEW_PROBLEMS);
+	}
+	
+	public GitBrowser getGitBrowser() {
+		return (GitBrowser) getView(VIEW_GIT);
+	}
+	
+	public BuildBrowser getBuildBrowser() {
+		return (BuildBrowser) getView(VIEW_BUILD);
+	}
+	
+	public LogcatBrowser getLogcatBrowser() {
+		return (LogcatBrowser) getView(VIEW_LOGCAT);
+	}
+	
 	
 	public int getCurrentBrowser() {
 		return getCurrentItem();
