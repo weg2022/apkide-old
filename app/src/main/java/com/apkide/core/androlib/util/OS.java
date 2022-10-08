@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import com.apkide.core.Logger;
+import com.apkide.core.logging.Logger;
 
 public class OS {
 

@@ -97,6 +97,7 @@ dependencies {
     //apktool dependencies
     implementation depends.baksmali,
             depends.smali,
+            depends.smali_util,
             depends.snakeyaml,
             depends.xmlpull,
             depends.guava,

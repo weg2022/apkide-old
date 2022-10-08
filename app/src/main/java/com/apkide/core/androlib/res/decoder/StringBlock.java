@@ -26,7 +26,7 @@ import java.nio.charset.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import com.apkide.core.Logger;
+import com.apkide.core.logging.Logger;
 
 public class StringBlock {
 

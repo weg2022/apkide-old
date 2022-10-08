@@ -96,9 +96,8 @@ public class SmaliDecoder {
                 options.inlineResolver =
                         InlineMethodResolver.createInlineMethodResolver(((DexBackedOdexFile)dexFile).getOdexVersion());
             }
-
-            Baksmali.disassembleDexFile(dexFile, mOutDir, jobs, options);
-
+            
+                Baksmali.disassembleDexFile(dexFile, mOutDir, jobs, options);
             return dexFile;
         } catch (IOException ex) {
             throw new AndrolibException(ex);

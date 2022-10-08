@@ -23,7 +23,7 @@ import com.apkide.core.androlib.res.data.value.ResValueFactory;
 import com.apkide.core.androlib.res.xml.ResValuesXmlSerializable;
 import com.apkide.core.androlib.util.Duo;
 import java.util.*;
-import com.apkide.core.Logger;
+import com.apkide.core.logging.Logger;
 
 public class ResPackage {
     private final ResTable mResTable;

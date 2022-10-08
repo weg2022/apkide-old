@@ -24,7 +24,7 @@ import com.google.common.collect.PeekingIterator;
 
 import java.util.List;
 import java.util.Map;
-import com.apkide.core.Logger;
+import com.apkide.core.logging.Logger;
 
 public class StyledString {
     private final String mText;

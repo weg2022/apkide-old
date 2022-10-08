@@ -42,7 +42,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.*;
 import java.util.*;
-import com.apkide.core.Logger;
+import com.apkide.core.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;

@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import com.apkide.core.Logger;
+import com.apkide.core.logging.Logger;
 
 public class ARSCDecoder {
     public static ARSCData decode(InputStream arscStream, boolean findFlagsOffsets, boolean keepBroken)

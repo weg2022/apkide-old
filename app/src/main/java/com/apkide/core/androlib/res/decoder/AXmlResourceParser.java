@@ -28,8 +28,8 @@ import java.io.DataInput;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import com.apkide.core.Logger.Level;
-import com.apkide.core.Logger;
+import com.apkide.core.logging.Level;
+import com.apkide.core.logging.Logger;
 
 /**
  * Binary xml files parser.

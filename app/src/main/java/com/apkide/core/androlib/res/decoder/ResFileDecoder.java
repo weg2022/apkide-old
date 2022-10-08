@@ -27,8 +27,8 @@ import com.apkide.core.androlib.directory.Directory;
 import com.apkide.core.androlib.directory.DirectoryException;
 
 import java.io.*;
-import com.apkide.core.Logger.Level;
-import com.apkide.core.Logger;
+import com.apkide.core.logging.Level;
+import com.apkide.core.logging.Logger;
 
 public class ResFileDecoder {
     private final ResStreamDecoderContainer mDecoders;

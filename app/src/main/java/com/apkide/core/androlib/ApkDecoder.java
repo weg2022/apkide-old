@@ -36,7 +36,7 @@ import com.google.common.base.Strings;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import com.apkide.core.Logger;
+import com.apkide.core.logging.Logger;
 
 public class ApkDecoder {
     public ApkDecoder() {

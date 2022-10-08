@@ -1,32 +1,33 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-    id 'com.android.application' version '8.0.0-alpha02' apply false
-    id 'com.android.library' version '8.0.0-alpha02' apply false
-    id 'org.jetbrains.kotlin.android' version '1.7.10' apply false
+	id 'com.android.application' version '8.0.0-alpha02' apply false
+	id 'com.android.library' version '8.0.0-alpha02' apply false
+	id 'org.jetbrains.kotlin.android' version '1.7.10' apply false
 }
 
 task clean(type: Delete) {
-    delete rootProject.buildDir
+	delete rootProject.buildDir
 }
 ext {
-    workspace = [
-            applicationId: "com.apkide.ui",
-            compileSdk   : 33,
-            targetSdk    : 29,
-            minSdk       : 24,
-            versionCode  : 202201005,
-            versionName  : "1.0.0",
-    ]
-    
-    depends = [
-            baksmali       : 'org.smali:baksmali:2.5.2',
-            commons_io     : 'commons-io:commons-io:2.11.0',
-            commons_lang   : 'org.apache.commons:commons-lang3:3.12.0',
-            commons_text   : 'org.apache.commons:commons-text:1.10.0',
-            guava          : 'com.google.guava:guava:31.1-android',
-            snakeyaml      : 'org.yaml:snakeyaml:1.33:android',
-            smali          : 'org.smali:smali:2.5.2',
-            xmlpull        : 'xpp3:xpp3:1.1.4c',
-            xmlunit        : 'xmlunit:xmlunit:1.6',
-    ]
+	workspace = [
+			applicationId: "com.apkide.ui",
+			compileSdk   : 33,
+			targetSdk    : 29,
+			minSdk       : 24,
+			versionCode  : 202201007,
+			versionName  : "1.0.0",
+	]
+	
+	depends = [
+			baksmali    : 'org.smali:baksmali:2.5.2',
+			commons_io  : 'commons-io:commons-io:2.11.0',
+			commons_lang: 'org.apache.commons:commons-lang3:3.12.0',
+			commons_text: 'org.apache.commons:commons-text:1.10.0',
+			guava       : 'com.google.guava:guava:31.1-android',
+			snakeyaml   : 'org.yaml:snakeyaml:1.33:android',
+			smali       : 'org.smali:smali:2.5.2',
+			smali_util  : 'org.smali:util:2.5.2',
+			xmlpull     : 'xpp3:xpp3:1.1.4c',
+			xmlunit     : 'xmlunit:xmlunit:1.6',
+	]
 }

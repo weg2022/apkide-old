@@ -24,7 +24,7 @@ import com.apkide.core.androlib.util.Duo;
 import org.xmlpull.v1.XmlSerializer;
 
 import java.io.IOException;
-import com.apkide.core.Logger;
+import com.apkide.core.logging.Logger;
 
 public class ResStyleValue extends ResBagValue implements
         ResValuesXmlSerializable {

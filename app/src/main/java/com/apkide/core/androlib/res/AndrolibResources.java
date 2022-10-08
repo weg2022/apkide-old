@@ -53,7 +53,6 @@ import com.apkide.core.androlib.res.xml.ResXmlPatcher;
 import com.apkide.core.androlib.util.AaptManager;
 import com.apkide.core.androlib.util.Duo;
 import com.apkide.core.androlib.util.OS;
-import com.apkide.core.androlib.util.OSDetection;
 
 import org.apache.commons.io.IOUtils;
 import org.xmlpull.v1.XmlSerializer;
@@ -76,7 +75,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import com.apkide.core.Logger;
+import com.apkide.core.logging.Logger;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -1002,19 +1001,7 @@ final public class AndrolibResources {
 		String path;
 		
 		// if a framework path was specified on the command line, use it
-		if (buildOptions.frameworkFolderLocation != null) {
-			path = buildOptions.frameworkFolderLocation;
-		} else {
-			File parentPath = new File(System.getProperty("user.home"));
-			
-			if (OSDetection.isMacOSX()) {
-				path = parentPath.getAbsolutePath() + String.format("%1$sLibrary%1$sapktool%1$sframework", File.separatorChar);
-			} else if (OSDetection.isWindows()) {
-				path = parentPath.getAbsolutePath() + String.format("%1$sAppData%1$sLocal%1$sapktool%1$sframework", File.separatorChar);
-			} else {
-				path = parentPath.getAbsolutePath() + String.format("%1$s.local%1$sshare%1$sapktool%1$sframework", File.separatorChar);
-			}
-		}
+		path = Objects.requireNonNullElseGet(buildOptions.frameworkFolderLocation, () -> Core.getFrameworkFileDir().getAbsolutePath());
 		
 		File dir = new File(path);
 		
@@ -1039,12 +1026,12 @@ final public class AndrolibResources {
 		
 		if (buildOptions.frameworkFolderLocation == null) {
 			if (!dir.canWrite()) {
+				File tempdir= Core.mkdirIfNot(new File(Objects.requireNonNull(Core.INSTANCE.getContext()).getFilesDir(),"tmpdir"));
 				LOGGER.severe(String.format("WARNING: Could not write to (%1$s), using %2$s instead...",
-						dir.getAbsolutePath(), System.getProperty("java.io.tmpdir")));
+						dir.getAbsolutePath(), tempdir));
 				LOGGER.severe("Please be aware this is a volatile directory and frameworks could go missing, " +
 						"please utilize --frame-path if the default storage directory is unavailable");
-				
-				dir = new File(System.getProperty("java.io.tmpdir"));
+				dir=tempdir;
 			}
 		}
 		

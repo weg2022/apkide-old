@@ -23,7 +23,7 @@ import com.apkide.core.androlib.common.TraversalUnknownFileException;
 import com.apkide.core.androlib.util.BrutIO;
 import com.apkide.core.androlib.util.OS;
 import java.io.*;
-import com.apkide.core.Logger;
+import com.apkide.core.logging.Logger;
 
 public class DirUtil {
     private static final Logger LOGGER = Logger.getLogger("Dir");

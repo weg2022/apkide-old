@@ -8,7 +8,7 @@ import com.apkide.core.Core
 
 class IDEContentProvider : ContentProvider() {
 	override fun onCreate(): Boolean {
-		Core.setContext(context)
+		Core.context = context
 		return false
 	}
 	

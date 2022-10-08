@@ -32,7 +32,7 @@ import javax.xml.xpath.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import com.apkide.core.Logger;
+import com.apkide.core.logging.Logger;
 
 public final class ResXmlPatcher {
 
