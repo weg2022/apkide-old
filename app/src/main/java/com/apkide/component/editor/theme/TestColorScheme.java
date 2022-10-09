@@ -1,8 +1,8 @@
-package com.apkide.ui.views.editor.theme;
+package com.apkide.component.editor.theme;
 
 import androidx.annotation.NonNull;
 
-import com.apkide.ui.views.editor.graphics.Color;
+import com.apkide.component.editor.graphics.Color;
 
 import java.util.Map;
 
@@ -24,5 +24,6 @@ public class TestColorScheme extends ColorScheme {
 		attributes.put(JAVA_KEYWORD_ID, KEYWORD);
 		attributes.put(JAVA_LINE_COMMENT_ID, LINE_COMMENT);
 		attributes.put(JAVA_DOC_COMMENT_ID, DOC_COMMENT);
+		
 	}
 }

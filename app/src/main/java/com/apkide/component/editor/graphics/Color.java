@@ -1,4 +1,4 @@
-package com.apkide.ui.views.editor.graphics;
+package com.apkide.component.editor.graphics;
 
 
 import android.os.Parcel;

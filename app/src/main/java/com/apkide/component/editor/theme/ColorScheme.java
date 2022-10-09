@@ -1,4 +1,4 @@
-package com.apkide.ui.views.editor.theme;
+package com.apkide.component.editor.theme;
 
 import android.annotation.NonNull;
 import android.os.Parcel;

@@ -1,4 +1,4 @@
-package com.apkide.ui.views.editor.syntax;
+package com.apkide.component.editor.syntax;
 
 import static java.lang.Integer.*;
 

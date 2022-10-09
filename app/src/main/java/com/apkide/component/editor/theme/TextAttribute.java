@@ -1,11 +1,11 @@
-package com.apkide.ui.views.editor.theme;
+package com.apkide.component.editor.theme;
 
 import android.os.Parcel;
 
 import androidx.annotation.NonNull;
 
-import com.apkide.ui.views.editor.graphics.Color;
-import com.apkide.ui.views.editor.graphics.TextStyle;
+import com.apkide.component.editor.graphics.Color;
+import com.apkide.component.editor.graphics.TextStyle;
 
 import java.util.Objects;
 
@@ -25,8 +25,6 @@ public class TextAttribute extends TextStyle implements Cloneable {
 		super(style);
 		this.name = name;
 	}
-	
-	
 	public TextAttribute(String name, Color foreground) {
 		this(name, foreground, null);
 	}

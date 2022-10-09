@@ -1,10 +1,10 @@
-package com.apkide.ui.whatsnew
+package com.apkide.ui.marketing
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
+import android.view.WindowManager.LayoutParams
 import androidx.fragment.app.DialogFragment
 import com.apkide.ui.databinding.WhatsnewDialogBinding
 import org.apache.commons.io.IOUtils
@@ -24,8 +24,8 @@ class WhatsNewDialogFragment : DialogFragment() {
 		super.onViewCreated(view, savedInstanceState)
 		if (dialog != null) {
 			dialog!!.window.setLayout(
-				WindowManager.LayoutParams.MATCH_PARENT,
-				WindowManager.LayoutParams.WRAP_CONTENT
+				LayoutParams.MATCH_PARENT,
+				LayoutParams.WRAP_CONTENT
 			)
 		}
 	}

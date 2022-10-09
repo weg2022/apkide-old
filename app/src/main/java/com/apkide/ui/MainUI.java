@@ -7,16 +7,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.apkide.core.logging.Level;
 import com.apkide.core.logging.LoggerReceiver;
 import com.apkide.ui.databinding.MainUiBinding;
 import com.apkide.ui.preferences.PreferencesUI;
-import com.apkide.ui.whatsnew.WhatsNew;
+import com.apkide.ui.marketing.WhatsNew;
 
 public class MainUI extends StyledUI implements LoggerReceiver.LoggerListener {
 	
@@ -25,6 +23,7 @@ public class MainUI extends StyledUI implements LoggerReceiver.LoggerListener {
 	
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
+		IDEPreferences.init(this);
 		super.onCreate(savedInstanceState);
 		_uiBinding = MainUiBinding.inflate(getLayoutInflater());
 		setContentView(_uiBinding);

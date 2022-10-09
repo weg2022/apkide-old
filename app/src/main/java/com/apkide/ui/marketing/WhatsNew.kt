@@ -1,4 +1,4 @@
-package com.apkide.ui.whatsnew
+package com.apkide.ui.marketing
 
 import android.content.Intent
 import android.content.IntentFilter
