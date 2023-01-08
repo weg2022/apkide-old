@@ -1,108 +1,93 @@
 plugins {
     id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
 }
+def buildDate = new Date().format("yyyy-MMdd-HHmm")
 
 android {
-    namespace workspace.applicationId
-    compileSdk workspace.compileSdk
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def appFileName = "apkide-" + buildDate + ".apk"
+            outputFileName = appFileName;
+        }
+    }
+
+    signingConfigs {
+        testKey {
+            storeFile file('testkey.jks')
+            storePassword 'testkey'
+            keyAlias 'testkey'
+            keyPassword 'testkey'
+        }
+    }
+    buildToolsVersion '33.0.1'
+    namespace app.namespace
+    compileSdk app.compileSdk
 
     defaultConfig {
-        applicationId workspace.applicationId
-        minSdk workspace.minSdk
-        targetSdk workspace.targetSdk
-        versionCode workspace.versionCode
-        versionName workspace.versionName
+        applicationId app.applicationId
+        minSdk app.minSdk
+        targetSdk app.targetSdk
+        versionCode app.versionCode
+        versionName app.versionName
         multiDexEnabled true
     }
 
-    buildTypes {
-        debug {
-            ext.enableCrashlytics = false
-            ext.alwaysUpdateBuildId = false
-            shrinkResources false
-            zipAlignEnabled true
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-
-        release {
-            ext.enableCrashlytics = false
-            ext.alwaysUpdateBuildId = false
-            shrinkResources true
-            zipAlignEnabled true
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-    compileOptions {
-        coreLibraryDesugaringEnabled = true
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
-    buildFeatures {
-        viewBinding true
-    }
-    
     sourceSets {
         main {
             java.srcDirs = ['src/main/java']
+            aidl.srcDirs = ['src/main/aidl','src/main/java']
             resources.srcDirs = ['src/main/java', 'src/main/resources']
             jniLibs.srcDirs = ['src/main/jniLibs']
         }
     }
-    
-    gradle.projectsEvaluated {
-        tasks.withType(JavaCompile) {
-            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
-        }
+
+    compileOptions {
+        coreLibraryDesugaringEnabled = true
+        sourceCompatibility javaVersion.sourceCompatibility
+        targetCompatibility javaVersion.targetCompatibility
     }
+
+    buildFeatures {
+        viewBinding true
+        aidl true
+    }
+
     packagingOptions {
-        exclude 'license.txt'
-        exclude '**/license.txt'
-        exclude 'LICENSE-junit.txt'
         exclude 'androidsupportmultidexversion.txt'
-        exclude 'license/**'
         exclude 'META-INF/**.version'
+        exclude 'XPP3_1.1.4c_VERSION'
+        exclude 'org/jf/**'
+        exclude 'org/antlr/**'
+    }
+
+    buildTypes {
+        debug {
+            shrinkResources false
+            minifyEnabled false
+            proguardFiles 'proguard-rules.pro'
+            signingConfig signingConfigs.testKey
+        }
+
+        release {
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles 'proguard-rules.pro'
+            signingConfig signingConfigs.testKey
+        }
     }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.0'
-    
-    implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'com.google.android.material:material:1.6.1'
-    implementation 'androidx.preference:preference-ktx:1.2.0'
-    implementation 'androidx.fragment:fragment-ktx:1.5.3'
-    implementation 'androidx.annotation:annotation:1.5.0'
-    
-    implementation("com.github.7hens.okbinder:okbinder2:2.0")
-    annotationProcessor("com.github.7hens.okbinder:okbinder2-compiler:2.0")
-    
-    implementation 'org.magicwerk.brownies:brownies-collections:0.9.18'
-    
-    implementation 'org.ow2.asm:asm:9.4'
-    implementation 'org.ow2.asm:asm-commons:9.4'
-    implementation 'org.ow2.asm:asm-util:9.4'
-    implementation 'org.ow2.asm:asm-tree:9.4'
-    implementation 'org.ow2.asm:asm-analysis:9.4'
-    
-    implementation 'jaxen:jaxen:1.2.0'
-    
-    //apktool dependencies
-    implementation depends.baksmali,
-            depends.smali,
-            depends.smali_util,
-            depends.snakeyaml,
-            depends.xmlpull,
-            depends.guava,
-            depends.commons_lang,
-            depends.commons_io,
-            depends.commons_text
-    
+    implementation lib.androidx_multidex
+    implementation lib.androidx_preference
+    implementation lib.android_material
+    implementation project(':common')
+    implementation project(':engine')
+    implementation project(':editor')
+    implementation project(':core:core')
+    implementation project(':core:common')
+    implementation project(':core:dir')
+    implementation project(':core:util')
 }

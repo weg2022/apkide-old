@@ -1,0 +1,50 @@
+plugins {
+	id 'com.android.library'
+}
+
+android {
+	namespace 'com.apkide.core'
+	compileSdk app.compileSdk
+
+	defaultConfig {
+		minSdk app.minSdk
+		targetSdk app.targetSdk
+		consumerProguardFiles "consumer-rules.pro"
+	}
+
+	buildTypes {
+		release {
+			minifyEnabled false
+			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+		}
+	}
+	compileOptions {
+		sourceCompatibility javaVersion.sourceCompatibility
+		targetCompatibility javaVersion.targetCompatibility
+	}
+	buildFeatures {
+		buildConfig false
+	}
+	sourceSets {
+		main {
+			java.srcDirs = ['src/main/java']
+			resources.srcDirs = ['src/main/java', 'src/main/resources']
+		}
+	}
+}
+
+dependencies {
+	implementation fileTree(dir: 'libs', include: ['*.jar'])
+	implementation lib.androidx_annotation
+	implementation project(':core:common')
+	implementation project(':core:dir')
+	implementation project(':core:util')
+	implementation depends.baksmali
+	implementation depends.smali
+	implementation depends.snakeyaml
+	implementation depends.xmlpull
+	implementation depends.guava
+	implementation depends.commons_lang
+	implementation depends.commons_io
+	implementation depends.commons_text
+}

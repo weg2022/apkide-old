@@ -1,23 +1,69 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-plugins {
-	id 'com.android.application' version '8.0.0-alpha02' apply false
-	id 'com.android.library' version '8.0.0-alpha02' apply false
-	id 'org.jetbrains.kotlin.android' version '1.7.10' apply false
+buildscript {
+	repositories {
+		google()
+		mavenCentral()
+		gradlePluginPortal()
+		maven { url 'https://plugins.gradle.org/m2/' }
+		maven { url 'https://maven.aliyun.com/nexus/content/repositories/google' }
+		maven { url 'https://maven.aliyun.com/nexus/content/groups/public' }
+		maven { url 'https://maven.aliyun.com/nexus/content/repositories/jcenter' }
+		maven { url 'https://jitpack.io' }
+		maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+		maven { url 'https://repo1.maven.org/maven2/' }
+		maven { url 'https://plugins.gradle.org/m2/' }
+		maven { url 'https://oss.sonatype.org/service/local/repositories/releases/content/' }
+	}
+	dependencies {
+		classpath 'com.android.tools.build:gradle:8.0.0-alpha11'
+	}
+}
+
+allprojects {
+	repositories {
+		google()
+		mavenCentral()
+		gradlePluginPortal()
+		maven { url 'https://repo.aikar.co/content/groups/aikar/' }
+		maven { url 'https://packages.jetbrains.team/maven/p/ij/intellij-dependencies' }
+		maven { url 'https://maven.aliyun.com/nexus/content/repositories/google' }
+		maven { url 'https://maven.aliyun.com/nexus/content/groups/public' }
+		maven { url 'https://maven.aliyun.com/nexus/content/repositories/jcenter' }
+		maven { url 'https://jitpack.io' }
+		maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+		maven { url 'https://repo1.maven.org/maven2/' }
+		maven { url 'https://plugins.gradle.org/m2/' }
+		maven { url 'https://oss.sonatype.org/service/local/repositories/releases/content/' }
+	}
 }
 
 task clean(type: Delete) {
 	delete rootProject.buildDir
 }
+
 ext {
-	workspace = [
+	app = [
+			namespace: "com.apkide.ui",
 			applicationId: "com.apkide.ui",
 			compileSdk   : 33,
-			targetSdk    : 29,
-			minSdk       : 24,
-			versionCode  : 202201007,
-			versionName  : "1.0.0",
+			targetSdk    : 33,
+			minSdk       : 26,
+			versionCode  : 20230108,
+			versionName  : "1.0beta1",
 	]
-	
+
+	javaVersion =[
+			sourceCompatibility :JavaVersion.VERSION_1_8,
+			targetCompatibility :JavaVersion.VERSION_1_8,
+	]
+
+	lib = [
+	        androidx_annotation : 'androidx.annotation:annotation:1.2.0',
+	        androidx_multidex : 'androidx.multidex:multidex:2.0.1',
+	        androidx_preference : 'androidx.preference:preference:1.1.0',
+	        android_material : 'com.google.android.material:material:1.5.0'
+	]
+
 	depends = [
 			baksmali    : 'org.smali:baksmali:2.5.2',
 			commons_io  : 'commons-io:commons-io:2.11.0',

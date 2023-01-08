@@ -1,4 +1,3 @@
 <resources>
-    <string name="app_name">APK-IDE</string>
-    <string name="preferences_name">Preferences</string>
+	<string name="app_name">APK-IDE</string>
 </resources>

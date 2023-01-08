@@ -1,28 +1,35 @@
-<resources>
-    
-    <style name="Theme.App" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowBackground">@color/app_background</item>
-        <item name="colorPrimary">@color/app_colorPrimary</item>
-        <item name="colorPrimaryVariant">@color/app_colorPrimaryVariant</item>
-        <item name="colorOnPrimary">@color/app_colorOnPrimary</item>
-        <item name="colorSecondary">@color/app_colorSecondary</item>
-        <item name="colorSecondaryVariant">@color/app_colorSecondaryVariant</item>
-        <item name="colorOnSecondary">@color/app_colorOnSecondary</item>
-        <item name="android:statusBarColor">@color/app_statusBarColor</item>
-    </style>
-    
-    <style name="Theme.UI" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowBackground">@color/app_background</item>
-        <item name="colorPrimary">@color/app_colorPrimary</item>
-        <item name="colorPrimaryVariant">@color/app_colorPrimaryVariant</item>
-        <item name="colorOnPrimary">@color/app_colorOnPrimary</item>
-        <item name="colorSecondary">@color/app_colorSecondary</item>
-        <item name="colorSecondaryVariant">@color/app_colorSecondaryVariant</item>
-        <item name="colorOnSecondary">@color/app_colorOnSecondary</item>
-        <item name="android:statusBarColor">@color/app_statusBarColor</item>
-    </style>
+<resources xmlns:tools="http://schemas.android.com/tools">
+	<!-- Base application theme. -->
+	<style name="Theme.App" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+		<item name="android:windowBackground">@color/colorBackground</item>
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+		<item name="colorOnPrimary">@color/colorOnPrimary</item>
+		<item name="colorSecondary">@color/colorSecondary</item>
+		<item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
+		<item name="colorOnSecondary">@color/colorOnSecondary</item>
+		<item name="android:statusBarColor" tools:targetApi="21">@color/colorPrimaryVariant</item>
+	</style>
 
+	<style name="Theme.UI" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+		<item name="android:windowBackground">@color/colorBackground</item>
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+		<item name="colorOnPrimary">@color/colorOnPrimary</item>
+		<item name="colorSecondary">@color/colorSecondary</item>
+		<item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
+		<item name="colorOnSecondary">@color/colorOnSecondary</item>
+		<item name="android:statusBarColor" tools:targetApi="21">@color/colorPrimaryVariant</item>
+	</style>
 
+	<style name="Theme.UI.Preferences" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+		<item name="android:windowBackground">@color/colorBackground</item>
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+		<item name="colorOnPrimary">@color/colorOnPrimary</item>
+		<item name="colorSecondary">@color/colorSecondary</item>
+		<item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
+		<item name="colorOnSecondary">@color/colorOnSecondary</item>
+		<item name="android:statusBarColor" tools:targetApi="21">@color/colorPrimaryVariant</item>
+	</style>
 </resources>
