@@ -18,14 +18,18 @@ android {
 			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 		}
 	}
+
 	compileOptions {
+		coreLibraryDesugaringEnabled = true
 		sourceCompatibility javaVersion.sourceCompatibility
 		targetCompatibility javaVersion.targetCompatibility
 	}
+
 	buildFeatures {
 		buildConfig false
 		aidl true
 	}
+
 	sourceSets {
 		main {
 			java.srcDirs = ['src/main/java']
@@ -37,7 +41,9 @@ android {
 }
 
 dependencies {
-	implementation fileTree(dir: 'libs', include: ['*.jar'])
-	implementation lib.androidx_annotation
+	api fileTree(dir: 'libs', include: ['*.jar'])
+	coreLibraryDesugaring lib.desugar
+	implementation lib.annotation
+	implementation project(':codemodel')
 	implementation project(':common')
 }

@@ -1,10 +1,10 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
 	repositories {
 		google()
 		mavenCentral()
 		gradlePluginPortal()
 		maven { url 'https://plugins.gradle.org/m2/' }
+		maven { url 'https://repository.liferay.com/nexus/content/repositories/public/' }
 		maven { url 'https://maven.aliyun.com/nexus/content/repositories/google' }
 		maven { url 'https://maven.aliyun.com/nexus/content/groups/public' }
 		maven { url 'https://maven.aliyun.com/nexus/content/repositories/jcenter' }
@@ -15,7 +15,7 @@ buildscript {
 		maven { url 'https://oss.sonatype.org/service/local/repositories/releases/content/' }
 	}
 	dependencies {
-		classpath 'com.android.tools.build:gradle:8.0.0-alpha11'
+		classpath 'com.android.tools.build:gradle:8.1.0-alpha08'
 	}
 }
 
@@ -24,6 +24,7 @@ allprojects {
 		google()
 		mavenCentral()
 		gradlePluginPortal()
+		maven { url 'https://repository.liferay.com/nexus/content/repositories/public/' }
 		maven { url 'https://repo.aikar.co/content/groups/aikar/' }
 		maven { url 'https://packages.jetbrains.team/maven/p/ij/intellij-dependencies' }
 		maven { url 'https://maven.aliyun.com/nexus/content/repositories/google' }
@@ -35,6 +36,17 @@ allprojects {
 		maven { url 'https://plugins.gradle.org/m2/' }
 		maven { url 'https://oss.sonatype.org/service/local/repositories/releases/content/' }
 	}
+	gradle.projectsEvaluated {
+		tasks.withType(JavaCompile).tap {
+			configureEach {
+				//options.compilerArgs << '-parameters'
+				options.compilerArgs << '-Xdoclint:none'
+				//options.compilerArgs << '-Xlint:none'
+				//options.compilerArgs << '-nowarn'
+				options.compilerArgs << '-Xlint:-deprecation'
+			}
+		}
+	}
 }
 
 task clean(type: Delete) {
@@ -43,11 +55,11 @@ task clean(type: Delete) {
 
 ext {
 	app = [
-			namespace: "com.apkide.ui",
-			applicationId: "com.apkide.ui",
+			namespace: 'com.apkide.ui',
+			applicationId: 'com.apkide.ui',
 			compileSdk   : 33,
 			targetSdk    : 33,
-			minSdk       : 26,
+			minSdk       : 21,
 			versionCode  : 20230108,
 			versionName  : "1.0beta1",
 	]
@@ -58,10 +70,11 @@ ext {
 	]
 
 	lib = [
-	        androidx_annotation : 'androidx.annotation:annotation:1.2.0',
-	        androidx_multidex : 'androidx.multidex:multidex:2.0.1',
-	        androidx_preference : 'androidx.preference:preference:1.1.0',
-	        android_material : 'com.google.android.material:material:1.5.0'
+			desugar: 'com.android.tools:desugar_jdk_libs_nio:2.0.2',
+			annotation: 'androidx.annotation:annotation:1.2.0',
+			multidex  : 'androidx.multidex:multidex:2.0.1',
+			preference: 'androidx.preference:preference:1.1.0',
+			material  : 'com.google.android.material:material:1.5.0'
 	]
 
 	depends = [

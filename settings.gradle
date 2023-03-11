@@ -1,11 +1,6 @@
 rootProject.name = "apkide"
 include ':app'
+include ':codemodel'
 include ':common'
 include ':engine'
-include ':editor'
-include ':core'
-include ':core:core'
-include ':core:common'
-include ':core:dir'
-include ':core:util'
 

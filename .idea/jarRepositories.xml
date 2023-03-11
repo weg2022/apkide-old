@@ -76,5 +76,10 @@
       <option name="name" value="maven9" />
       <option name="url" value="https://plugins.gradle.org/m2/" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven" />
+      <option name="name" value="maven" />
+      <option name="url" value="https://repository.liferay.com/nexus/content/repositories/public/" />
+    </remote-repository>
   </component>
 </project>
