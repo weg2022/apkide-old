@@ -1,16 +1,14 @@
 plugins {
     id 'com.android.application'
 }
-def buildDate = new Date().format("yyyy-MMdd-HHmm")
 
 android {
-    applicationVariants.all { variant ->
-        variant.outputs.all { output ->
-            def appFileName = "apkide-" + buildDate + ".apk"
-            outputFileName = appFileName;
+    applicationVariants.configureEach { variant ->
+        variant.outputs.configureEach { output ->
+            def appFileName = "ApkIDE-" + variant.versionName + ".apk"
+            outputFileName = appFileName
         }
     }
-
     signingConfigs {
         testKey {
             storeFile file('testkey.jks')
@@ -19,7 +17,6 @@ android {
             keyPassword 'testkey'
         }
     }
-    buildToolsVersion '33.0.1'
     namespace app.namespace
     compileSdk app.compileSdk
 
@@ -30,6 +27,9 @@ android {
         versionCode app.versionCode
         versionName app.versionName
         multiDexEnabled true
+        signingConfig signingConfigs.testKey
+        renderscriptTargetApi 21
+        renderscriptSupportModeEnabled true
     }
 
     sourceSets {
@@ -62,6 +62,9 @@ android {
 
     buildTypes {
         debug {
+            pseudoLocalesEnabled true
+            ext.enableCrashlytics = false
+            ext.alwaysUpdateBuildId = false
             shrinkResources false
             minifyEnabled false
             proguardFiles 'proguard-rules.pro'
@@ -69,6 +72,9 @@ android {
         }
 
         release {
+            pseudoLocalesEnabled true
+            ext.enableCrashlytics = false
+            ext.alwaysUpdateBuildId = false
             shrinkResources true
             minifyEnabled true
             proguardFiles 'proguard-rules.pro'
@@ -79,15 +85,11 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.0'
-    implementation lib.androidx_multidex
-    implementation lib.androidx_preference
-    implementation lib.android_material
+    coreLibraryDesugaring lib.desugar
+    implementation lib.multidex
+    implementation lib.preference
+    implementation lib.material
+    implementation project(':codemodel')
     implementation project(':common')
     implementation project(':engine')
-    implementation project(':editor')
-    implementation project(':core:core')
-    implementation project(':core:common')
-    implementation project(':core:dir')
-    implementation project(':core:util')
 }

@@ -1,44 +1,36 @@
+-keeppackagenames androidx.**
+-keeppackagenames com.google.android.material.**
+-keeppackagenames com.flurry.**
+-keeppackagenames com.apkide.ui.**
 -optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*
 -optimizationpasses 5
--allowaccessmodification
+#-keepattributes MethodParameters
+#-allowaccessmodification
 #-dontoptimize
-#-dontshrink
-#-dontusemixedcaseclassnames
+-dontshrink
+-dontusemixedcaseclassnames
 -dontskipnonpubliclibraryclasses
+-dontskipnonpubliclibraryclassmembers
 -verbose
 -repackageclasses ''
--keepattributes AnnotationDefault,
+# Preserve some attributes that may be required for reflection.
+#MethodParameters,
+-keepattributes Exceptions,
+				Deprecated,
+				AnnotationDefault,
                 EnclosingMethod,
                 InnerClasses,
                 RuntimeVisibleAnnotations,
                 RuntimeVisibleParameterAnnotations,
                 RuntimeVisibleTypeAnnotations,
-                Signature
+                Signature,
+                LineNumberTable
 
--keep public class com.google.vending.licensing.ILicensingService
--keep public class com.android.vending.licensing.ILicensingService
--keep public class com.google.android.vending.licensing.ILicensingService
--dontnote com.android.vending.licensing.ILicensingService
--dontnote com.google.vending.licensing.ILicensingService
--dontnote com.google.android.vending.licensing.ILicensingService
-
-# For native methods, see http://proguard.sourceforge.net/manual/examples.html#native
 -keepclasseswithmembernames,includedescriptorclasses class * {
     native <methods>;
 }
 
-# Keep setters in Views so that animations can still work.
--keepclassmembers public class * extends android.view.View {
-#    void set*(***);
-#    *** get*();
-}
-
-# We want to keep methods in Activity that could be used in the XML attribute onClick.
--keepclassmembers class * extends android.app.Activity {
-    public void *(android.view.View);
-}
-
-# For enumeration classes, see http://proguard.sourceforge.net/manual/examples.html#enumerations
+# For enumeration classes
 -keepclassmembers enum * {
     public static **[] values();
     public static ** valueOf(java.lang.String);
@@ -56,6 +48,7 @@
     java.lang.Object writeReplace();
     java.lang.Object readResolve();
 }
+
 # Preserve annotated Javascript interface methods.
 -keepclassmembers class * {
     @android.webkit.JavascriptInterface <methods>;
@@ -73,30 +66,16 @@
 -dontwarn android.util.FloatMath
 
 # Understand the @Keep support annotation.
--keep class android.support.annotation.Keep
 -keep class androidx.annotation.Keep
 
--keep @android.support.annotation.Keep class * {*;}
 -keep @androidx.annotation.Keep class * {*;}
-
--keepclasseswithmembers class * {
-    @android.support.annotation.Keep <methods>;
-}
 
 -keepclasseswithmembers class * {
     @androidx.annotation.Keep <methods>;
 }
 
 -keepclasseswithmembers class * {
-    @android.support.annotation.Keep <fields>;
-}
-
--keepclasseswithmembers class * {
     @androidx.annotation.Keep <fields>;
-}
-
--keepclasseswithmembers class * {
-    @android.support.annotation.Keep <init>(...);
 }
 
 -keepclasseswithmembers class * {
@@ -110,13 +89,34 @@
 # These classes are duplicated between android.jar and core-lambda-stubs.jar.
 -dontnote java.lang.invoke.**
 
-# support
--keep class androidx.multidex.MultiDexApplication
--keep class * extends android.support.annotation.** { *; }
--keep class * extends android.support.v4.content.FileProvider
+-keep class * extends android.content.ContextWrapper
+-keep public class * extends android.app.Activity
+-keep public class * extends android.app.Fragment
+-keep public class * extends android.app.Application
+-keep public class * extends android.app.Service
+-keep public class * extends android.content.BroadcastReceiver
+-keep public class * extends android.content.ContentProvider
+-keep public class * extends android.app.backup.BackupAgentHelper
+-keep public class * extends android.preference.Preference
 # androidx
--keep class * extends androidx.annotation.** { *; }
 -keep class * extends androidx.core.content.FileProvider
 
--dontwarn org.xmlpull.v1.**
--keep public class org.xmlpull.v1.**{*;}
+-keep public class * extends androidx.fragment.app.Fragment
+-keep public class * extends androidx.preference.Preference
+
+-keep public class * extends android.view.View {
+    public <init>(android.content.Context);
+    public <init>(android.content.Context, android.util.AttributeSet);
+    public <init>(android.content.Context, android.util.AttributeSet, int);
+}
+
+-dontwarn com.**
+-dontwarn jdk.**
+-dontwarn sun.**
+-dontwarn groovy.**
+-dontwarn groovyjarjarasm.**
+-dontwarn java.**
+-dontwarn javax.**
+-dontwarn org.**
+-dontwarn libcore.**
+-dontwarn dalvik.**

@@ -1,8 +1,5 @@
 package com.apkide.common;
 
-/**
- * Utilities for treating a {@code long} as a pair of {@code int}s
- */
 public final class IntPair {
 	private IntPair() {}
 	
