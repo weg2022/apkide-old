@@ -1,5 +1,11 @@
 package com.apkide.ui;
 
-public class MainUI extends IDEThemeUI {
+import android.content.SharedPreferences;
 
+public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPreferenceChangeListener {
+	
+	@Override
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+	
+	}
 }
