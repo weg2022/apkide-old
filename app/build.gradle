@@ -56,7 +56,6 @@ android {
         exclude 'androidsupportmultidexversion.txt'
         exclude 'META-INF/**.version'
         exclude 'XPP3_1.1.4c_VERSION'
-        exclude 'org/jf/**'
         exclude 'org/antlr/**'
     }
 
@@ -89,7 +88,14 @@ dependencies {
     implementation lib.multidex
     implementation lib.preference
     implementation lib.material
-    implementation project(':codemodel')
     implementation project(':common')
-    implementation project(':engine')
+
+    implementation("io.github.Rosemoe.sora-editor:editor:0.21.1")
+
+    implementation depends.baksmali
+    implementation depends.smali
+    implementation depends.snakeyaml
+    implementation depends.xmlpull
+    implementation depends.guava
+    implementation depends.commons_text
 }

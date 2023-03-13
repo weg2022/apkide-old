@@ -153,6 +153,14 @@ public final class FileUtils {
 			IOUtils.safeClose(out);
 	}
 	
+	@NonNull
+	public static String getExtension(@NonNull String fileName) {
+		int index=fileName.indexOf('.');
+		if (index>=0)
+			return fileName.substring(index+1);
+		return "";
+	}
+	
 	public static boolean deleteDir(File dir, boolean failFast) {
 		File file = internalFileDelete(dir, failFast);
 		if (failFast) {

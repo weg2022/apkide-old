@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 public final class SafeRunner {
 	
-	public static void run(@NonNull SafeRunnable runnable) {
+	public static void run(@NonNull SafeRunnerCallback runnable) {
 		try {
 			runnable.run();
 		} catch (Exception e) {
@@ -12,7 +12,7 @@ public final class SafeRunner {
 		}
 	}
 	
-	public interface SafeRunnable {
+	public interface SafeRunnerCallback {
 		void handleException(@NonNull Throwable e);
 		
 		void run() throws Exception;

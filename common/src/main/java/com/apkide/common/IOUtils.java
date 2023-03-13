@@ -92,12 +92,19 @@ public final class IOUtils {
 		return byteCount;
 	}
 	
-	public static void safeClose(@NonNull Closeable closeable) {
+	@NonNull
+	public static LineIterator lineIterator(@NonNull Reader reader) {
+		return new LineIterator(reader);
+	}
+	
+	public static void safeClose(Closeable closeable) {
+		if (closeable==null)return;
 		try {
 			closeable.close();
 		} catch (IOException e) {
 			AppLog.e(e);
 		}
 	}
+	
 	
 }
