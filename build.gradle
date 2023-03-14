@@ -70,11 +70,11 @@ ext {
 	]
 
 	lib = [
-			desugar: 'com.android.tools:desugar_jdk_libs_nio:2.0.2',
-			annotation: 'androidx.annotation:annotation:1.2.0',
+			desugar   : 'com.android.tools:desugar_jdk_libs_nio:2.0.2',
+			annotation: 'androidx.annotation:annotation:1.6.0',
 			multidex  : 'androidx.multidex:multidex:2.0.1',
-			preference: 'androidx.preference:preference:1.1.0',
-			material  : 'com.google.android.material:material:1.5.0'
+			preference: 'androidx.preference:preference:1.2.0',
+			material  : 'com.google.android.material:material:1.8.0'
 	]
 
 	depends = [

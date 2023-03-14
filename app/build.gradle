@@ -80,22 +80,54 @@ android {
             signingConfig signingConfigs.testKey
         }
     }
+    /* configurations {
+		 configureEach {
+			 exclude group: 'androidx.lifecycle', module: 'lifecycle-runtime-ktx'
+			 exclude group: 'androidx.lifecycle', module: 'lifecycle-viewmodel-ktx'
+		 }
+	 }*/
 }
 
 dependencies {
+
+    constraints {
+        implementation("androidx.arch.core:core-runtime:2.2.0-rc01")
+        implementation("androidx.lifecycle:lifecycle-common:2.6.0-beta01")
+        implementation("androidx.lifecycle:lifecycle-livedata:2.6.0-beta01")
+        implementation("androidx.lifecycle:lifecycle-livedata-core:2.6.0-beta01")
+        implementation("androidx.lifecycle:lifecycle-livedata-core-ktx:2.6.0-beta01")
+        implementation("androidx.lifecycle:lifecycle-runtime:2.6.0-beta01")
+        implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.0-beta01")
+        implementation("androidx.lifecycle:lifecycle-viewmodel:2.6.0-beta01")
+        implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0-beta01")
+        implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.0-beta01")
+        implementation("androidx.savedstate:savedstate-ktx:1.2.0")
+        implementation("androidx.transition:transition:1.4.1")
+        implementation("androidx.core:core-ktx:1.9.0")
+        implementation("androidx.activity:activity-ktx:1.6.0")
+        implementation("org.jetbrains.kotlin:kotlin-stdlib:1.8.10")
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-common:1.8.10")
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0")
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0")
+        implementation("org.jetbrains.kotlinx:coroutines-android:1.6.4")
+        implementation("org.jetbrains.kotlinx:coroutines-core-jvm:1.6.4")
+        implementation("com.goole.errorprone:error_prone_annotations:2.15.0")
+    }
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    coreLibraryDesugaring lib.desugar
-    implementation lib.multidex
-    implementation lib.preference
-    implementation lib.material
-    implementation project(':common')
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs_nio:2.0.2'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'androidx.preference:preference:1.2.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0-alpha02'
+    implementation 'com.google.android.material:material:1.9.0-alpha02'
 
     implementation("io.github.Rosemoe.sora-editor:editor:0.21.1")
+    // implementation("io.github.dingyi222666:treeview:1.1.0")
 
     implementation depends.baksmali
     implementation depends.smali
     implementation depends.snakeyaml
-    implementation depends.xmlpull
+    //implementation depends.xmlpull
     implementation depends.guava
     implementation depends.commons_text
 }

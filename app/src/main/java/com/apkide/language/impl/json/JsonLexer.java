@@ -6,8 +6,8 @@ package com.apkide.language.impl.json;
 
 import com.apkide.language.api.Lexer;
 
-import java.io.Reader;
 import java.io.IOException;
+import java.io.Reader;
 
 
 @SuppressWarnings("fallthrough")

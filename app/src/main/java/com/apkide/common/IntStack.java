@@ -1,6 +1,6 @@
 package com.apkide.common;
 
-import static java.lang.System.*;
+import static java.lang.System.arraycopy;
 
 import java.util.EmptyStackException;
 

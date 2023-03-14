@@ -1,7 +1,4 @@
--keeppackagenames androidx.**
--keeppackagenames com.google.android.material.**
--keeppackagenames com.flurry.**
--keeppackagenames com.apkide.ui.**
+-keeppackagenames **.**
 -optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*
 -optimizationpasses 5
 #-keepattributes MethodParameters
@@ -9,12 +6,9 @@
 #-dontoptimize
 #-dontshrink
 -dontusemixedcaseclassnames
--dontskipnonpubliclibraryclasses
--dontskipnonpubliclibraryclassmembers
 -verbose
 -repackageclasses ''
 # Preserve some attributes that may be required for reflection.
-#MethodParameters,
 -keepattributes Exceptions,
 				Deprecated,
 				AnnotationDefault,
@@ -120,5 +114,3 @@
 -dontwarn org.**
 -dontwarn libcore.**
 -dontwarn dalvik.**
-
--keep class org.xmlpull.v1.* {*;}

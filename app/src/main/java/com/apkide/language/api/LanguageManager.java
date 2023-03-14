@@ -3,7 +3,6 @@ package com.apkide.language.api;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.apkide.common.AppLog;
 import com.apkide.common.FileUtils;
 import com.apkide.language.impl.cpp.CppLanguage;
 import com.apkide.language.impl.groovy.GroovyLanguage;
