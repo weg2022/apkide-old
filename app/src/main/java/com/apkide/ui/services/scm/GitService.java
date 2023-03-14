@@ -1,4 +1,4 @@
 package com.apkide.ui.services.scm;
 
-public class SourceControlService {
+public class GitService {
 }

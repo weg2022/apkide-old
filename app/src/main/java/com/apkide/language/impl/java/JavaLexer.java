@@ -5,8 +5,9 @@
 package com.apkide.language.impl.java;
 
 import com.apkide.language.api.Lexer;
-import java.io.Reader;
+
 import java.io.IOException;
+import java.io.Reader;
 
 
 
@@ -840,7 +841,8 @@ public class JavaLexer implements Lexer {
   	public static final int SEPARATOR = 5;
   	public static final int LITERAL = 6;
   	public static final int COMMENT = 7;
-  	public static final int DOC_COMMENT = 8;
+  public static final int DOC_COMMENT = 8;
+  public static final int PACKAGE = 9;
 
   private boolean myAssertKeyword;
   private boolean myEnumKeyword;

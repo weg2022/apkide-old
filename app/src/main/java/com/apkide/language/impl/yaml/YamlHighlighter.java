@@ -1,15 +1,16 @@
-package com.apkide.language.impl.java;
+package com.apkide.language.impl.yaml;
 
 import com.apkide.common.AppLog;
 import com.apkide.language.api.Highlighter;
 import com.apkide.language.api.SyntaxKind;
 import com.apkide.language.api.TokenIterator;
+import com.apkide.language.impl.kotlin.KotlinLexer;
 
 import java.io.IOException;
 import java.io.Reader;
 
-public class JavaHighlighter implements Highlighter {
-	private final JavaLexer lexer = new JavaLexer();
+public class YamlHighlighter implements Highlighter {
+	private final YamlLexer lexer = new YamlLexer();
 	
 	@Override
 	public int highlightLine(Reader reader, int state, TokenIterator iterator) {
@@ -36,23 +37,19 @@ public class JavaHighlighter implements Highlighter {
 	@Override
 	public SyntaxKind getSyntaxKind(int token) {
 		switch (token) {
-			case JavaLexer.KEYWORD:
+			case YamlLexer.KEYWORD:
 				return SyntaxKind.Keyword;
-			case JavaLexer.OPERATOR:
+			case YamlLexer.OPERATOR:
 				return SyntaxKind.Operator;
-			case JavaLexer.SEPARATOR:
+			case YamlLexer.SEPARATOR:
 				return SyntaxKind.Separator;
-			case JavaLexer.LITERAL:
+			case YamlLexer.LITERAL:
 				return SyntaxKind.Literal;
-			case JavaLexer.TYPE:
+			case YamlLexer.TYPE:
 				return SyntaxKind.TypeIdentifier;
-			case JavaLexer.COMMENT:
+			case YamlLexer.COMMENT:
 				return SyntaxKind.Comment;
-			case JavaLexer.DOC_COMMENT:
-				return SyntaxKind.DocComment;
-			case JavaLexer.PACKAGE:
-				return SyntaxKind.NamespaceIdentifier;
-			case JavaLexer.PLAIN:
+			case YamlLexer.PLAIN:
 			default:
 				return SyntaxKind.Plain;
 		}

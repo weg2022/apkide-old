@@ -1,24 +1,24 @@
-package com.apkide.language.impl.groovy;
+package com.apkide.language.impl.json;
 
 import androidx.annotation.NonNull;
 
 import com.apkide.language.api.CommonLanguage;
 import com.apkide.language.api.Highlighter;
 
-public class GroovyLanguage extends CommonLanguage {
-	private GroovyHighlighter highlighter;
-	
+public class JsonLanguage extends CommonLanguage {
 	@NonNull
 	@Override
 	public String getName() {
-		return "Groovy";
+		return "JSON";
 	}
+	
+	private JsonHighlighter highlighter;
 	
 	@NonNull
 	@Override
 	public Highlighter getHighlighter() {
 		if (highlighter == null)
-			highlighter = new GroovyHighlighter();
+			highlighter = new JsonHighlighter();
 		return highlighter;
 	}
 	
@@ -26,8 +26,8 @@ public class GroovyLanguage extends CommonLanguage {
 	@Override
 	public String[] getDefaultFilePatterns() {
 		return new String[]{
-				"*.gant",
-				"*.groovy",
-				"*.gy"};
+				"*.har",
+				"*.json"
+		};
 	}
 }

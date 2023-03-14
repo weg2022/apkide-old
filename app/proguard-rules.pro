@@ -120,3 +120,5 @@
 -dontwarn org.**
 -dontwarn libcore.**
 -dontwarn dalvik.**
+
+-keep class org.xmlpull.v1.* {*;}

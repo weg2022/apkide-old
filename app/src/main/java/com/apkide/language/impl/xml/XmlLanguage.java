@@ -12,26 +12,32 @@ public class XmlLanguage extends CommonLanguage {
 	@Override
 	public String[] getDefaultFilePatterns() {
 		return new String[] {
+				"*.ant",
+				"*.fxml",
+				"*.jhm",
+				"*.jnlp",
+				"*.jrxml",
+				"*.rng",
+				"*.tld",
+				"*.wsdl",
 				"*.xml",
+				"*.xsd",
 				"*.xsl",
 				"*.xslt",
-				"*.xsd",
-				"*.*proj",
-				"*.resx",
-				"*.settings",
-				"*.config",
-				"*.html",
-				"*.htm",
-				"*.pom",
-				"*.classpath",
-				"*.imi"};
+				"*.xul"};
+	}
+	
+	@NonNull
+	@Override
+	public String getName() {
+		return "XML";
 	}
 	
 	@NonNull
 	@Override
 	public Highlighter getHighlighter() {
-		if (highlighter==null)
-			highlighter=new XmlHighlighter();
+		if (highlighter == null)
+			highlighter = new XmlHighlighter();
 		return highlighter;
 	}
 }

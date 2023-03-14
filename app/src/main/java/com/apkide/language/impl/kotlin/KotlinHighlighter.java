@@ -1,4 +1,4 @@
-package com.apkide.language.impl.java;
+package com.apkide.language.impl.kotlin;
 
 import com.apkide.common.AppLog;
 import com.apkide.language.api.Highlighter;
@@ -8,8 +8,8 @@ import com.apkide.language.api.TokenIterator;
 import java.io.IOException;
 import java.io.Reader;
 
-public class JavaHighlighter implements Highlighter {
-	private final JavaLexer lexer = new JavaLexer();
+public class KotlinHighlighter implements Highlighter {
+	private final KotlinLexer lexer = new KotlinLexer();
 	
 	@Override
 	public int highlightLine(Reader reader, int state, TokenIterator iterator) {
@@ -36,23 +36,21 @@ public class JavaHighlighter implements Highlighter {
 	@Override
 	public SyntaxKind getSyntaxKind(int token) {
 		switch (token) {
-			case JavaLexer.KEYWORD:
+			case KotlinLexer.KEYWORD:
 				return SyntaxKind.Keyword;
-			case JavaLexer.OPERATOR:
+			case KotlinLexer.OPERATOR:
 				return SyntaxKind.Operator;
-			case JavaLexer.SEPARATOR:
+			case KotlinLexer.SEPARATOR:
 				return SyntaxKind.Separator;
-			case JavaLexer.LITERAL:
+			case KotlinLexer.LITERAL:
 				return SyntaxKind.Literal;
-			case JavaLexer.TYPE:
+			case KotlinLexer.TYPE:
 				return SyntaxKind.TypeIdentifier;
-			case JavaLexer.COMMENT:
+			case KotlinLexer.COMMENT:
 				return SyntaxKind.Comment;
-			case JavaLexer.DOC_COMMENT:
+			case KotlinLexer.DOC_COMMENT:
 				return SyntaxKind.DocComment;
-			case JavaLexer.PACKAGE:
-				return SyntaxKind.NamespaceIdentifier;
-			case JavaLexer.PLAIN:
+			case KotlinLexer.PLAIN:
 			default:
 				return SyntaxKind.Plain;
 		}

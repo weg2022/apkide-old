@@ -7,11 +7,18 @@ import com.apkide.language.api.Highlighter;
 
 public class SmaliLanguage extends CommonLanguage {
 	private SmaliHighlighter highlighter;
+	
+	@NonNull
+	@Override
+	public String getName() {
+		return "Smali";
+	}
+	
 	@NonNull
 	@Override
 	public Highlighter getHighlighter() {
-		if (highlighter==null)
-			highlighter=new SmaliHighlighter();
+		if (highlighter == null)
+			highlighter = new SmaliHighlighter();
 		return highlighter;
 	}
 	
