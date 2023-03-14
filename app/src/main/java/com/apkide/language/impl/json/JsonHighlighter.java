@@ -1,15 +1,16 @@
-package com.apkide.language.impl.java;
+package com.apkide.language.impl.json;
 
 import com.apkide.common.AppLog;
 import com.apkide.language.api.Highlighter;
 import com.apkide.language.api.SyntaxKind;
 import com.apkide.language.api.TokenIterator;
+import com.apkide.language.impl.json5.Json5Lexer;
 
 import java.io.IOException;
 import java.io.Reader;
 
-public class JavaHighlighter implements Highlighter {
-	private final JavaLexer lexer = new JavaLexer();
+public class JsonHighlighter implements Highlighter {
+	private final JsonLexer lexer = new JsonLexer();
 	
 	@Override
 	public int highlightLine(Reader reader, int state, TokenIterator iterator) {
@@ -36,23 +37,21 @@ public class JavaHighlighter implements Highlighter {
 	@Override
 	public SyntaxKind getSyntaxKind(int token) {
 		switch (token) {
-			case JavaLexer.KEYWORD:
+			case JsonLexer.KEYWORD:
 				return SyntaxKind.Keyword;
-			case JavaLexer.OPERATOR:
+			case JsonLexer.OPERATOR:
 				return SyntaxKind.Operator;
-			case JavaLexer.SEPARATOR:
+			case JsonLexer.SEPARATOR:
 				return SyntaxKind.Separator;
-			case JavaLexer.LITERAL:
+			case JsonLexer.LITERAL:
 				return SyntaxKind.Literal;
-			case JavaLexer.TYPE:
+			case JsonLexer.TYPE:
 				return SyntaxKind.TypeIdentifier;
-			case JavaLexer.COMMENT:
+			case JsonLexer.COMMENT:
 				return SyntaxKind.Comment;
-			case JavaLexer.DOC_COMMENT:
+			case JsonLexer.DOC_COMMENT:
 				return SyntaxKind.DocComment;
-			case JavaLexer.PACKAGE:
-				return SyntaxKind.NamespaceIdentifier;
-			case JavaLexer.PLAIN:
+			case JsonLexer.PLAIN:
 			default:
 				return SyntaxKind.Plain;
 		}

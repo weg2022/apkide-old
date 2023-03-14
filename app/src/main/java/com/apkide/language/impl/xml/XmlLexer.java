@@ -5,8 +5,9 @@
 package com.apkide.language.impl.xml;
 
 import com.apkide.language.api.Lexer;
-import java.io.Reader;
+
 import java.io.IOException;
+import java.io.Reader;
 
 
 

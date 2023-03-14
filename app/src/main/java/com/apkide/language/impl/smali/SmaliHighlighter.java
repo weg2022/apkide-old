@@ -1,6 +1,5 @@
 package com.apkide.language.impl.smali;
 
-import com.android.tools.smali.smali.SmaliOptions;
 import com.android.tools.smali.smali.smaliFlexLexer;
 import com.android.tools.smali.smali.smaliParser;
 import com.apkide.language.api.Highlighter;

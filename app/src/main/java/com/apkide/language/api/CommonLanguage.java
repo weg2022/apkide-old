@@ -10,6 +10,7 @@ import io.github.rosemoe.sora.lang.Language;
 import io.github.rosemoe.sora.lang.analysis.AnalyzeManager;
 import io.github.rosemoe.sora.lang.completion.CompletionCancelledException;
 import io.github.rosemoe.sora.lang.completion.CompletionPublisher;
+import io.github.rosemoe.sora.lang.completion.SimpleCompletionItem;
 import io.github.rosemoe.sora.lang.format.Formatter;
 import io.github.rosemoe.sora.lang.smartEnter.NewlineHandler;
 import io.github.rosemoe.sora.text.CharPosition;
@@ -21,6 +22,9 @@ public abstract class CommonLanguage implements Language {
 	private AnalyzeManagerImpl analyzeManger;
 	
 	@NonNull
+	public abstract String getName();
+	
+	@NonNull
 	public abstract Highlighter getHighlighter();
 	
 	@NonNull
@@ -29,7 +33,7 @@ public abstract class CommonLanguage implements Language {
 	@NonNull
 	@Override
 	public AnalyzeManager getAnalyzeManager() {
-		if (analyzeManger==null)
+		if (analyzeManger == null)
 			analyzeManger=new AnalyzeManagerImpl(getHighlighter());
 		return analyzeManger;
 	}

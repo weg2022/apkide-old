@@ -1,4 +1,4 @@
-package com.apkide.language.impl.java;
+package com.apkide.language.impl.json5;
 
 import com.apkide.common.AppLog;
 import com.apkide.language.api.Highlighter;
@@ -8,8 +8,8 @@ import com.apkide.language.api.TokenIterator;
 import java.io.IOException;
 import java.io.Reader;
 
-public class JavaHighlighter implements Highlighter {
-	private final JavaLexer lexer = new JavaLexer();
+public class Json5Highlighter implements Highlighter {
+	private final Json5Lexer lexer = new Json5Lexer();
 	
 	@Override
 	public int highlightLine(Reader reader, int state, TokenIterator iterator) {
@@ -36,23 +36,21 @@ public class JavaHighlighter implements Highlighter {
 	@Override
 	public SyntaxKind getSyntaxKind(int token) {
 		switch (token) {
-			case JavaLexer.KEYWORD:
+			case Json5Lexer.KEYWORD:
 				return SyntaxKind.Keyword;
-			case JavaLexer.OPERATOR:
+			case Json5Lexer.OPERATOR:
 				return SyntaxKind.Operator;
-			case JavaLexer.SEPARATOR:
+			case Json5Lexer.SEPARATOR:
 				return SyntaxKind.Separator;
-			case JavaLexer.LITERAL:
+			case Json5Lexer.LITERAL:
 				return SyntaxKind.Literal;
-			case JavaLexer.TYPE:
+			case Json5Lexer.TYPE:
 				return SyntaxKind.TypeIdentifier;
-			case JavaLexer.COMMENT:
+			case Json5Lexer.COMMENT:
 				return SyntaxKind.Comment;
-			case JavaLexer.DOC_COMMENT:
+			case Json5Lexer.DOC_COMMENT:
 				return SyntaxKind.DocComment;
-			case JavaLexer.PACKAGE:
-				return SyntaxKind.NamespaceIdentifier;
-			case JavaLexer.PLAIN:
+			case Json5Lexer.PLAIN:
 			default:
 				return SyntaxKind.Plain;
 		}

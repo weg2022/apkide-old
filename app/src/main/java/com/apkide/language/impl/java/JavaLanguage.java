@@ -10,6 +10,12 @@ public class JavaLanguage extends CommonLanguage {
 	
 	@NonNull
 	@Override
+	public String getName() {
+		return "Java";
+	}
+	
+	@NonNull
+	@Override
 	public Highlighter getHighlighter() {
 		if (highlighter == null)
 			highlighter = new JavaHighlighter();

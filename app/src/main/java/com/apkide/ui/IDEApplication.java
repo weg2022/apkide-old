@@ -3,6 +3,7 @@ package com.apkide.ui;
 import androidx.multidex.MultiDexApplication;
 
 import com.apkide.common.IOUtils;
+import com.apkide.language.api.LanguageManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,6 +18,7 @@ public class IDEApplication extends MultiDexApplication {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		LanguageManager.registerDefaults();
 		AppPreferences.init(getApplicationContext());
 		SyncAssets.set(new SyncAssets() {
 			@Override
