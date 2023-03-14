@@ -1,24 +1,26 @@
 package com.apkide.language.impl.java;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.apkide.language.api.CommonLanguage;
 import com.apkide.language.api.Highlighter;
+import com.apkide.language.api.HighlighterProxy;
 
 public class JavaLanguage extends CommonLanguage {
-	private JavaHighlighter highlighter;
-	
 	@NonNull
 	@Override
 	public String getName() {
 		return "Java";
 	}
 	
-	@NonNull
+	private Highlighter highlighter;
+	
+	@Nullable
 	@Override
 	public Highlighter getHighlighter() {
 		if (highlighter == null)
-			highlighter = new JavaHighlighter();
+			highlighter = new HighlighterProxy(new JavaLexer());
 		return highlighter;
 	}
 	

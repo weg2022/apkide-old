@@ -4,6 +4,7 @@ buildscript {
 		mavenCentral()
 		gradlePluginPortal()
 		maven { url 'https://plugins.gradle.org/m2/' }
+		maven { url 'https://maven.quiltmc.org/repository/release/' }
 		maven { url 'https://repository.liferay.com/nexus/content/repositories/public/' }
 		maven { url 'https://maven.aliyun.com/nexus/content/repositories/google' }
 		maven { url 'https://maven.aliyun.com/nexus/content/groups/public' }
@@ -24,9 +25,9 @@ allprojects {
 		google()
 		mavenCentral()
 		gradlePluginPortal()
+		maven { url 'https://plugins.gradle.org/m2/' }
+		maven { url 'https://maven.quiltmc.org/repository/release/' }
 		maven { url 'https://repository.liferay.com/nexus/content/repositories/public/' }
-		maven { url 'https://repo.aikar.co/content/groups/aikar/' }
-		maven { url 'https://packages.jetbrains.team/maven/p/ij/intellij-dependencies' }
 		maven { url 'https://maven.aliyun.com/nexus/content/repositories/google' }
 		maven { url 'https://maven.aliyun.com/nexus/content/groups/public' }
 		maven { url 'https://maven.aliyun.com/nexus/content/repositories/jcenter' }
@@ -36,13 +37,11 @@ allprojects {
 		maven { url 'https://plugins.gradle.org/m2/' }
 		maven { url 'https://oss.sonatype.org/service/local/repositories/releases/content/' }
 	}
+
 	gradle.projectsEvaluated {
 		tasks.withType(JavaCompile).tap {
 			configureEach {
-				//options.compilerArgs << '-parameters'
 				options.compilerArgs << '-Xdoclint:none'
-				//options.compilerArgs << '-Xlint:none'
-				//options.compilerArgs << '-nowarn'
 				options.compilerArgs << '-Xlint:-deprecation'
 			}
 		}
@@ -51,41 +50,4 @@ allprojects {
 
 tasks.register('clean', Delete) {
 	delete rootProject.buildDir
-}
-
-ext {
-	app = [
-			namespace: 'com.apkide.ui',
-			applicationId: 'com.apkide.ui',
-			compileSdk   : 33,
-			targetSdk    : 33,
-			minSdk       : 21,
-			versionCode  : 20230108,
-			versionName  : "1.0beta1",
-	]
-
-	javaVersion =[
-			sourceCompatibility :JavaVersion.VERSION_1_8,
-			targetCompatibility :JavaVersion.VERSION_1_8,
-	]
-
-	lib = [
-			desugar   : 'com.android.tools:desugar_jdk_libs_nio:2.0.2',
-			annotation: 'androidx.annotation:annotation:1.6.0',
-			multidex  : 'androidx.multidex:multidex:2.0.1',
-			preference: 'androidx.preference:preference:1.2.0',
-			material  : 'com.google.android.material:material:1.8.0'
-	]
-
-	depends = [
-			baksmali    : 'com.android.tools.smali:smali-baksmali:3.0.1',
-			commons_lang: 'org.apache.commons:commons-lang3:3.12.0',
-			commons_text: 'org.apache.commons:commons-text:1.10.0',
-			guava       : 'com.google.guava:guava:31.1-android',
-			snakeyaml   : 'org.yaml:snakeyaml:1.33:android',
-			smali       : 'com.android.tools.smali:smali:3.0.1',
-			smali_util  : 'com.android.tools.smali:smali-util:3.0.1',
-			xmlpull     : 'org.codelibs:xpp3:1.1.4c.0',
-			xmlunit     : 'xmlunit:xmlunit:1.6',
-	]
 }

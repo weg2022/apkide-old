@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 	<!-- Base application theme. -->
 	<style name="Theme.App" parent="Theme.MaterialComponents.DayNight.NoActionBar">
 		<item name="android:windowBackground">@color/colorBackground</item>
@@ -8,7 +8,7 @@
 		<item name="colorSecondary">@color/colorSecondary</item>
 		<item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
 		<item name="colorOnSecondary">@color/colorOnSecondary</item>
-		<item name="android:statusBarColor" tools:targetApi="21">@color/colorPrimaryVariant</item>
+		<item name="android:statusBarColor">@color/colorPrimaryVariant</item>
 	</style>
 
 	<style name="Theme.UI" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -19,7 +19,7 @@
 		<item name="colorSecondary">@color/colorSecondary</item>
 		<item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
 		<item name="colorOnSecondary">@color/colorOnSecondary</item>
-		<item name="android:statusBarColor" tools:targetApi="21">@color/colorPrimaryVariant</item>
+		<item name="android:statusBarColor">@color/colorPrimaryVariant</item>
 	</style>
 
 	<style name="Theme.UI.Preferences" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -30,6 +30,6 @@
 		<item name="colorSecondary">@color/colorSecondary</item>
 		<item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
 		<item name="colorOnSecondary">@color/colorOnSecondary</item>
-		<item name="android:statusBarColor" tools:targetApi="21">@color/colorPrimaryVariant</item>
+		<item name="android:statusBarColor">@color/colorPrimaryVariant</item>
 	</style>
 </resources>

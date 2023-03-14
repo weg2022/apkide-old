@@ -4,7 +4,7 @@
 #-keepattributes MethodParameters
 #-allowaccessmodification
 #-dontoptimize
-#-dontshrink
+-dontshrink
 -dontusemixedcaseclassnames
 -verbose
 -repackageclasses ''

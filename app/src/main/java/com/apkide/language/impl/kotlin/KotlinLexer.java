@@ -347,13 +347,13 @@ public class KotlinLexer implements Lexer {
 	private static final int[] ZZ_ACTION = zzUnpackAction();
 	
 	private static final String ZZ_ACTION_PACKED_0 =
-			"\1\0\3\1\1\2\1\3\1\1\1\2\1\3\1\4" +
-					"\2\2\1\4\1\2\2\3\3\2\22\1\2\2\1\0" +
-					"\2\3\1\0\1\3\2\0\1\3\1\0\1\5\3\3" +
-					"\1\2\1\6\3\1\1\7\1\1\1\7\15\1\1\7" +
-					"\21\1\1\0\4\3\1\0\1\3\1\0\1\3\3\1" +
-					"\1\7\37\1\1\7\2\1\1\0\1\10\1\0\35\1" +
-					"\1\0\3\1\1\7\37\1";
+			"\1\0\3\1\1\2\1\3\1\4\1\2\1\3\1\5" +
+					"\2\2\1\5\1\2\2\3\3\2\1\1\21\4\2\2" +
+					"\1\0\2\3\1\0\1\3\2\0\1\3\1\0\1\6" +
+					"\3\3\1\2\1\7\3\4\1\10\1\4\1\10\15\4" +
+					"\1\10\21\4\1\0\4\3\1\0\1\3\1\0\1\3" +
+					"\3\4\1\10\37\4\1\10\2\4\1\0\1\11\1\0" +
+					"\35\4\1\0\3\4\1\10\37\4";
 	
 	private static int[] zzUnpackAction() {
 		int[] result = new int[206];
@@ -876,15 +876,6 @@ public class KotlinLexer implements Lexer {
 	private boolean zzEOFDone;
 	
 	/* user code: */
-	public static final int PLAIN = 1;
-	public static final int KEYWORD = 2;
-	public static final int TYPE = 3;
-	public static final int OPERATOR = 4;
-	public static final int SEPARATOR = 5;
-	public static final int LITERAL = 6;
-	public static final int COMMENT = 7;
-	public static final int DOC_COMMENT = 8;
-	
 	@Override
 	public void setReader(Reader reader) {
 		zzReader = reader;
@@ -1341,52 +1332,58 @@ public class KotlinLexer implements Lexer {
 			} else {
 				switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
 					case 1: {
-						return PLAIN;
-					}
-					// fall through
-					case 9:
-						break;
-					case 2: {
-						return OPERATOR;
+						return Plain;
 					}
 					// fall through
 					case 10:
 						break;
-					case 3: {
-						return LITERAL;
+					case 2: {
+						return Operator;
 					}
 					// fall through
 					case 11:
 						break;
-					case 4: {
-						return SEPARATOR;
+					case 3: {
+						return Literal;
 					}
 					// fall through
 					case 12:
 						break;
-					case 5: {
-						return COMMENT;
+					case 4: {
+						return Identifier;
 					}
 					// fall through
 					case 13:
 						break;
-					case 6: {
-						return TYPE;
+					case 5: {
+						return Separator;
 					}
 					// fall through
 					case 14:
 						break;
-					case 7: {
-						return KEYWORD;
+					case 6: {
+						return Comment;
 					}
 					// fall through
 					case 15:
 						break;
-					case 8: {
-						return DOC_COMMENT;
+					case 7: {
+						return TypeIdentifier;
 					}
 					// fall through
 					case 16:
+						break;
+					case 8: {
+						return Keyword;
+					}
+					// fall through
+					case 17:
+						break;
+					case 9: {
+						return DocComment;
+					}
+					// fall through
+					case 18:
 						break;
 					default:
 						zzScanError(ZZ_NO_MATCH);

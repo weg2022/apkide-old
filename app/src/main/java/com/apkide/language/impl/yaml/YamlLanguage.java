@@ -1,9 +1,11 @@
 package com.apkide.language.impl.yaml;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.apkide.language.api.CommonLanguage;
 import com.apkide.language.api.Highlighter;
+import com.apkide.language.api.HighlighterProxy;
 
 public class YamlLanguage extends CommonLanguage {
 	@NonNull
@@ -12,13 +14,13 @@ public class YamlLanguage extends CommonLanguage {
 		return "YAML";
 	}
 	
-	private YamlHighlighter highlighter;
+	private Highlighter highlighter;
 	
-	@NonNull
+	@Nullable
 	@Override
 	public Highlighter getHighlighter() {
 		if (highlighter == null)
-			highlighter = new YamlHighlighter();
+			highlighter = new HighlighterProxy(new YamlLexer());
 		return highlighter;
 	}
 	

@@ -1,11 +1,13 @@
 package com.apkide.language.impl.smali;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.apkide.language.api.CommonLanguage;
 import com.apkide.language.api.Highlighter;
 
 public class SmaliLanguage extends CommonLanguage {
+	
 	private SmaliHighlighter highlighter;
 	
 	@NonNull
@@ -14,7 +16,7 @@ public class SmaliLanguage extends CommonLanguage {
 		return "Smali";
 	}
 	
-	@NonNull
+	@Nullable
 	@Override
 	public Highlighter getHighlighter() {
 		if (highlighter == null)

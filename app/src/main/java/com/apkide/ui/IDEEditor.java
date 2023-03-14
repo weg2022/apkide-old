@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import com.apkide.language.api.ColorScheme;
 
 import io.github.rosemoe.sora.widget.CodeEditor;
+import io.github.rosemoe.sora.widget.style.builtin.MoveCursorAnimator;
 
 public class IDEEditor extends CodeEditor {
 	public IDEEditor(Context context) {
@@ -34,6 +35,8 @@ public class IDEEditor extends CodeEditor {
 		
 		setTypefaceText(typeface);
 		setLigatureEnabled(true);
+		
+		setCursorAnimator(new MoveCursorAnimator(this));
 		setColorScheme(colorScheme);
 	}
 	

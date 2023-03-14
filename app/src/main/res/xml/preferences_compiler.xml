@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<PreferenceCategory android:title="Execution">
+
+
+	</PreferenceCategory>
+
+	<PreferenceCategory android:title="Build">
+
+		<SwitchPreference
+			android:defaultValue="true"
+			android:key="verbose"
+			android:summary="Build-time output details."
+			android:title="Verbose" />
+
+		<SwitchPreference
+			android:defaultValue="true"
+			android:key="forceBuildAll"
+			android:summary="Force all builds."
+			android:title="Overridden Output" />
+
+		<SwitchPreference
+			android:defaultValue="true"
+			android:key="forceDeleteFramework"
+			android:summary="Force delete the framework."
+			android:title="Delete Framework" />
+
+		<SwitchPreference
+			android:defaultValue="true"
+			android:key="debugMode"
+			android:summary="Set to debuggable when building the Apk."
+			android:title="Debug Mode" />
+
+		<SwitchPreference
+			android:defaultValue="true"
+			android:key="copyOriginalFiles"
+			android:summary="Copy the original files"
+			android:title="Keep Original Files" />
+
+		<SwitchPreference
+			android:defaultValue="true"
+			android:key="useAapt2"
+			android:summary="Use AAPT 2 instead of AAPT."
+			android:title="Use AAPT2" />
+	</PreferenceCategory>
+
+	<PreferenceCategory android:title="Java Compile">
+
+		<ListPreference
+			android:defaultValue="8"
+			android:entries="@array/PefJavaVersion"
+			android:entryValues="@array/PefJavaVersionValues"
+			android:key="javaSourceVersion"
+			android:summary="Set the Java version of the Java source file."
+			android:title="Source Version" />
+		<ListPreference
+			android:defaultValue="8"
+			android:entries="@array/PefJavaVersion"
+			android:entryValues="@array/PefJavaVersionValues"
+			android:key="javaTargetVersion"
+			android:summary="Set the Java version of the Java output file."
+			android:title="Target Version" />
+		<SwitchPreference
+			android:key="javaKeepParameters"
+			android:summary="Parameter information is preserved at compile time."
+			android:title="Keep Parameters" />
+
+	</PreferenceCategory>
+
+	<PreferenceCategory android:title="Java Decompile">
+		<SwitchPreference
+			android:key="rbr"
+			android:defaultValue="true"
+			android:title="Hide bridge methods" />
+		<SwitchPreference
+			android:key="rsy"
+			android:defaultValue="true"
+			android:title="Hide synthetic class members" />
+		<SwitchPreference
+			android:key="din"
+			android:defaultValue="true"
+			android:title="Decompile inner classes" />
+		<SwitchPreference
+			android:key="dc4"
+			android:defaultValue="true"
+			android:title="Collapse 1.4 class references" />
+		<SwitchPreference
+			android:key="das"
+			android:defaultValue="true"
+			android:title="Decompile assertions" />
+		<SwitchPreference
+			android:key="hes"
+			android:defaultValue="true"
+			android:title="Hide empty super invocation" />
+		<SwitchPreference
+			android:key="hdc"
+			android:defaultValue="true"
+			android:title="Hide empty default constructor" />
+		<SwitchPreference
+			android:key="dgs"
+			android:defaultValue="true"
+			android:title="Decompile generic signatures" />
+		<SwitchPreference
+			android:key="ner"
+			android:defaultValue="true"
+			android:title="Assume return not throwing exceptions" />
+		<SwitchPreference
+			android:key="esm"
+			android:defaultValue="true"
+			android:title="Ensure synchronized ranges are complete" />
+		<SwitchPreference
+			android:key="den"
+			android:defaultValue="true"
+			android:title="Decompile enumerations" />
+		<SwitchPreference
+			android:key="rgn"
+			android:defaultValue="true"
+			android:title="Remove getClass() invocation, when it is part of a qualified new statement" />
+		<SwitchPreference
+			android:key="lit"
+			android:defaultValue="false"
+			android:title="Output numeric literals 'as-is'" />
+		<SwitchPreference
+			android:key="bto"
+			android:defaultValue="true"
+			android:title="Interpret int 1 as boolean true (workaround to a compiler bug)'" />
+		<SwitchPreference
+			android:key="asc"
+			android:defaultValue="false"
+			android:title="Encode non-ASCII characters in string and character literals as Unicode escapes" />
+		<SwitchPreference
+			android:key="nns"
+			android:defaultValue="false"
+			android:title="Allow for not set synthetic attribute (workaround to a compiler bug)" />
+		<SwitchPreference
+			android:key="uto"
+			android:defaultValue="true"
+			android:title="Consider nameless types as java.lang.Object (workaround to a compiler architecture flaw)" />
+		<SwitchPreference
+			android:key="udv"
+			android:defaultValue="true"
+			android:title="Reconstruct variable names from debug information, if present" />
+		<SwitchPreference
+			android:key="ump"
+			android:defaultValue="true"
+			android:title="Use method parameter names from the MethodParameter attribute." />
+		<SwitchPreference
+			android:key="rer"
+			android:defaultValue="true"
+			android:title="Remove empty exception ranges" />
+		<SwitchPreference
+			android:key="fdi"
+			android:defaultValue="true"
+			android:title="De-inline finally structures" />
+		<SwitchPreference
+			android:key="inn"
+			android:defaultValue="true"
+			android:title="Check for IntelliJ IDEA-specific annotation and remove inserted code if found@NotNull" />
+		<SwitchPreference
+			android:key="lac"
+			android:defaultValue="false"
+			android:title="Decompile lambda expressions to anonymous classes" />
+		<SwitchPreference
+			android:key="bsm"
+			android:defaultValue="false"
+			android:title="Add mappings for source bytecode instructions to decompiled code lines" />
+		<SwitchPreference
+			android:key="dcl"
+			android:defaultValue="false"
+			android:title="Dump line mappings to output archive zip entry extra data" />
+		<SwitchPreference
+			android:key="iib"
+			android:defaultValue="false"
+			android:title="Ignore invalid bytecode" />
+		<SwitchPreference
+			android:key="vac"
+			android:defaultValue="false"
+			android:title="Verify that anonymous classes can be anonymous" />
+		<SwitchPreference
+			android:key="tcs"
+			android:defaultValue="false"
+			android:title="Simplify boolean constants in ternary operations" />
+		<SwitchPreference
+			android:key="pam"
+			android:defaultValue="true"
+			android:title="Decompile pattern matching" />
+		<SwitchPreference
+			android:key="tlf"
+			android:defaultValue="true"
+			android:title="loop-in-try fixes" />
+		<SwitchPreference
+			android:key="tco"
+			android:defaultValue="true"
+			android:title="Allow ternaries to be generated in if and loop conditions" />
+		<SwitchPreference
+			android:key="swe"
+			android:defaultValue="true"
+			android:title="Decompile Switch Expressions in modern Java" />
+		<SwitchPreference
+			android:key="shs"
+			android:defaultValue="false"
+			android:title="Display code blocks hidden, for debugging purposes" />
+		<SwitchPreference
+			android:key="ovr"
+			android:defaultValue="true"
+			android:title="Show override annotations for methods known to the decompiler." />
+		<SwitchPreference
+			android:key="ssp"
+			android:defaultValue="true"
+			android:title="Second-Pass Stack Simplficiation" />
+		<SwitchPreference
+			android:key="vvm"
+			android:defaultValue="false"
+			android:title="Verify variable merges before remapping them" />
+		<SwitchPreference
+			android:key="iec"
+			android:defaultValue="false"
+			android:title="Give the decompiler information about every jar on the classpath." />
+		<SwitchPreference
+			android:key="isl"
+			android:defaultValue="true"
+			android:title="Inline simple lambdas" />
+		<SwitchPreference
+			android:key="ren"
+			android:defaultValue="false"
+			android:title="Rename ambiguous (resp. obfuscated) classes and class elements" />
+		<SwitchPreference
+			android:key="jvn"
+			android:defaultValue="false"
+			android:title="Use jad variable naming for local variables" />
+		<SwitchPreference
+			android:key="sef"
+			android:defaultValue="false"
+			android:title="Skip copying non-class files from the input folder or file to the output" />
+		<SwitchPreference
+			android:key="win"
+			android:defaultValue="true"
+			android:title="Warn about inconsistent inner class attributes" />
+		<SwitchPreference
+			android:key="dbe"
+			android:defaultValue="true"
+			android:title="Dump bytecode on errors" />
+		<SwitchPreference
+			android:key="dee"
+			android:defaultValue="true"
+			android:title="Dump exceptions on errors" />
+		<SwitchPreference
+			android:key="dec"
+			android:defaultValue="true"
+			android:title="Decompiler error comments" />
+		<SwitchPreference
+			android:key="sfc"
+			android:defaultValue="false"
+			android:title="Debug comments showing the class SourceFile attribute if present" />
+		<SwitchPreference
+			android:key="dcc"
+			android:defaultValue="false"
+			android:title="Decompile complex constant-dynamic bootstraps, that might have different or slower run-time behaviour when recompiled" />
+		<SwitchPreference
+			android:key="dpr"
+			android:defaultValue="true"
+			android:title="Decompile preview features in latest Java versions" />
+	</PreferenceCategory>
+</PreferenceScreen>

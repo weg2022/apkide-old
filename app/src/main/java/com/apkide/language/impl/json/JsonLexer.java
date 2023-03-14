@@ -314,10 +314,10 @@ public class JsonLexer implements Lexer {
 	private static final int[] ZZ_ACTION = zzUnpackAction();
 	
 	private static final String ZZ_ACTION_PACKED_0 =
-			"\1\0\3\1\2\2\1\3\2\1\2\2\1\4\6\1" +
-					"\1\2\2\0\1\5\1\6\1\1\1\2\5\1\1\5" +
-					"\1\1\1\6\3\2\1\1\1\2\3\1\1\0\1\5" +
-					"\1\1\1\7\1\5\3\1";
+			"\1\0\1\1\2\2\2\3\1\4\2\1\2\3\1\5" +
+					"\5\1\1\2\1\3\2\0\1\6\1\7\1\1\1\3" +
+					"\5\1\1\6\1\1\1\7\3\3\1\1\1\3\3\1" +
+					"\1\0\1\6\1\1\1\10\1\6\3\1";
 	
 	private static int[] zzUnpackAction() {
 		int[] result = new int[49];
@@ -590,14 +590,6 @@ public class JsonLexer implements Lexer {
 	private boolean zzEOFDone;
 	
 	/* user code: */
-	public static final int PLAIN = 1;
-	public static final int KEYWORD = 2;
-	public static final int TYPE = 3;
-	public static final int OPERATOR = 4;
-	public static final int SEPARATOR = 5;
-	public static final int LITERAL = 6;
-	public static final int COMMENT = 7;
-	public static final int DOC_COMMENT = 8;
 	
 	@Override
 	public void setReader(Reader reader) {
@@ -1055,46 +1047,52 @@ public class JsonLexer implements Lexer {
 			} else {
 				switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
 					case 1: {
-						return PLAIN;
-					}
-					// fall through
-					case 8:
-						break;
-					case 2: {
-						return LITERAL;
+						return Identifier;
 					}
 					// fall through
 					case 9:
 						break;
-					case 3: {
-						return SEPARATOR;
+					case 2: {
+						return Plain;
 					}
 					// fall through
 					case 10:
 						break;
-					case 4: {
-						return OPERATOR;
+					case 3: {
+						return Literal;
 					}
 					// fall through
 					case 11:
 						break;
-					case 5: {
-						return DOC_COMMENT;
+					case 4: {
+						return Separator;
 					}
 					// fall through
 					case 12:
 						break;
-					case 6: {
-						return COMMENT;
+					case 5: {
+						return Operator;
 					}
 					// fall through
 					case 13:
 						break;
-					case 7: {
-						return KEYWORD;
+					case 6: {
+						return DocComment;
 					}
 					// fall through
 					case 14:
+						break;
+					case 7: {
+						return Comment;
+					}
+					// fall through
+					case 15:
+						break;
+					case 8: {
+						return Keyword;
+					}
+					// fall through
+					case 16:
 						break;
 					default:
 						zzScanError(ZZ_NO_MATCH);

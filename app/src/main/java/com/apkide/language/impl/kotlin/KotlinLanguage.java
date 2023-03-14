@@ -1,9 +1,11 @@
 package com.apkide.language.impl.kotlin;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.apkide.language.api.CommonLanguage;
 import com.apkide.language.api.Highlighter;
+import com.apkide.language.api.HighlighterProxy;
 
 public class KotlinLanguage extends CommonLanguage {
 	@NonNull
@@ -12,13 +14,13 @@ public class KotlinLanguage extends CommonLanguage {
 		return "Kotlin";
 	}
 	
-	private KotlinHighlighter highlighter;
+	private Highlighter highlighter;
 	
-	@NonNull
+	@Nullable
 	@Override
 	public Highlighter getHighlighter() {
 		if (highlighter == null)
-			highlighter = new KotlinHighlighter();
+			highlighter = new HighlighterProxy(new KotlinLexer());
 		return highlighter;
 	}
 	
