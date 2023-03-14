@@ -1,1 +1,0 @@
--keeppackagenames com.apkide.common.**

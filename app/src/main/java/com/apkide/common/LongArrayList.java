@@ -1,8 +1,9 @@
 package com.apkide.common;
 
 
-import static java.lang.System.*;
-import static java.util.Arrays.*;
+import static java.lang.System.arraycopy;
+import static java.util.Arrays.copyOf;
+import static java.util.Arrays.copyOfRange;
 
 import androidx.annotation.NonNull;
 

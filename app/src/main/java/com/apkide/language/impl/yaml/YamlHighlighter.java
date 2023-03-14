@@ -4,7 +4,6 @@ import com.apkide.common.AppLog;
 import com.apkide.language.api.Highlighter;
 import com.apkide.language.api.SyntaxKind;
 import com.apkide.language.api.TokenIterator;
-import com.apkide.language.impl.kotlin.KotlinLexer;
 
 import java.io.IOException;
 import java.io.Reader;
