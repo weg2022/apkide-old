@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<Preference
+		android:fragment="com.apkide.ui.preferences.ApplicationPreferencesFragment"
+		android:summary="Configure global application settings."
+		android:title="Application" />
+	<Preference
+		android:fragment="com.apkide.ui.preferences.EditorPreferencesFragment"
+		android:summary="Configure the editor settings."
+		android:title="Editor" />
+	<Preference
+		android:fragment="com.apkide.ui.preferences.CompilerPreferencesFragment"
+		android:summary="Configure Build and Execution settings."
+		android:title="Build &amp; Execution" />
+	<Preference
+		android:fragment="com.apkide.ui.preferences.SourceControlPreferencesFragment"
+		android:summary="Configure Git source control settings."
+		android:title="Git Source Control" />
+	<Preference
+		android:summary="Show legal information about the application"
+		android:title="About &amp; Licenses">
+		<intent
+			android:targetClass="com.apkide.ui.activities.AboutUI"
+			android:targetPackage="com.apkide.ui" />
+	</Preference>
+</PreferenceScreen>

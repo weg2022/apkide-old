@@ -1,17 +1,33 @@
 package com.apkide.language.impl.xml;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.apkide.language.api.CommonLanguage;
 import com.apkide.language.api.Highlighter;
+import com.apkide.language.api.HighlighterProxy;
 
 public class XmlLanguage extends CommonLanguage {
-	private XmlHighlighter highlighter;
+	private Highlighter highlighter;
+	
+	@NonNull
+	@Override
+	public String getName() {
+		return "XML";
+	}
+	
+	@Nullable
+	@Override
+	public Highlighter getHighlighter() {
+		if (highlighter == null)
+			highlighter = new HighlighterProxy(new XmlLexer());
+		return highlighter;
+	}
 	
 	@NonNull
 	@Override
 	public String[] getDefaultFilePatterns() {
-		return new String[] {
+		return new String[]{
 				"*.ant",
 				"*.fxml",
 				"*.jhm",
@@ -25,19 +41,5 @@ public class XmlLanguage extends CommonLanguage {
 				"*.xsl",
 				"*.xslt",
 				"*.xul"};
-	}
-	
-	@NonNull
-	@Override
-	public String getName() {
-		return "XML";
-	}
-	
-	@NonNull
-	@Override
-	public Highlighter getHighlighter() {
-		if (highlighter == null)
-			highlighter = new XmlHighlighter();
-		return highlighter;
 	}
 }

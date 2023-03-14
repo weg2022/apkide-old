@@ -23,7 +23,7 @@ public abstract class CommonLanguage implements Language {
 	@NonNull
 	public abstract String getName();
 	
-	@NonNull
+	@Nullable
 	public abstract Highlighter getHighlighter();
 	
 	@NonNull

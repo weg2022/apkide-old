@@ -5,7 +5,7 @@ plugins {
 android {
     applicationVariants.configureEach { variant ->
         variant.outputs.configureEach { output ->
-            def appFileName = "ApkIDE-" + variant.versionName + ".apk"
+            def appFileName = "APK-IDE-" + variant.versionName + ".apk"
             outputFileName = appFileName
         }
     }
@@ -17,15 +17,15 @@ android {
             keyPassword 'testkey'
         }
     }
-    namespace app.namespace
-    compileSdk app.compileSdk
+    namespace 'com.apkide.ui'
+    compileSdk 33
 
     defaultConfig {
-        applicationId app.applicationId
-        minSdk app.minSdk
-        targetSdk app.targetSdk
-        versionCode app.versionCode
-        versionName app.versionName
+        applicationId 'com.apkide.ui'
+        minSdk 21
+        targetSdk 33
+        versionCode 20230315
+        versionName '1.0beta1'
         multiDexEnabled true
         signingConfig signingConfigs.testKey
         renderscriptTargetApi 21
@@ -35,7 +35,6 @@ android {
     sourceSets {
         main {
             java.srcDirs = ['src/main/java']
-            aidl.srcDirs = ['src/main/aidl','src/main/java']
             resources.srcDirs = ['src/main/java', 'src/main/resources']
             jniLibs.srcDirs = ['src/main/jniLibs']
         }
@@ -43,20 +42,17 @@ android {
 
     compileOptions {
         coreLibraryDesugaringEnabled = true
-        sourceCompatibility javaVersion.sourceCompatibility
-        targetCompatibility javaVersion.targetCompatibility
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     buildFeatures {
         viewBinding true
-        aidl true
     }
 
     packagingOptions {
         exclude 'androidsupportmultidexversion.txt'
         exclude 'META-INF/**.version'
-        exclude 'XPP3_1.1.4c_VERSION'
-        exclude 'org/antlr/**'
     }
 
     buildTypes {
@@ -80,15 +76,26 @@ android {
             signingConfig signingConfigs.testKey
         }
     }
-    /* configurations {
-		 configureEach {
-			 exclude group: 'androidx.lifecycle', module: 'lifecycle-runtime-ktx'
-			 exclude group: 'androidx.lifecycle', module: 'lifecycle-viewmodel-ktx'
-		 }
-	 }*/
 }
 
 dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs_nio:2.0.2'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'androidx.preference:preference:1.2.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0-alpha02'
+    implementation 'com.google.android.material:material:1.9.0-alpha02'
+
+    implementation("io.github.Rosemoe.sora-editor:editor:0.21.1")
+
+    implementation 'org.quiltmc:quiltflower:1.9.0'
+    implementation 'com.android.tools.smali:smali:3.0.1'
+    implementation 'com.android.tools.smali:smali-util:3.0.1'
+    implementation 'com.android.tools.smali:smali-baksmali:3.0.1'
+    implementation 'com.google.guava:guava:31.1-android'
+    implementation 'org.apache.commons:commons-text:1.10.0'
+    implementation 'org.yaml:snakeyaml:1.33:android'
+    implementation 'xmlunit:xmlunit:1.6'
 
     constraints {
         implementation("androidx.arch.core:core-runtime:2.2.0-rc01")
@@ -113,21 +120,4 @@ dependencies {
         implementation("org.jetbrains.kotlinx:coroutines-core-jvm:1.6.4")
         implementation("com.goole.errorprone:error_prone_annotations:2.15.0")
     }
-
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs_nio:2.0.2'
-    implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'androidx.preference:preference:1.2.0'
-    implementation 'androidx.appcompat:appcompat:1.7.0-alpha02'
-    implementation 'com.google.android.material:material:1.9.0-alpha02'
-
-    implementation("io.github.Rosemoe.sora-editor:editor:0.21.1")
-    // implementation("io.github.dingyi222666:treeview:1.1.0")
-
-    implementation depends.baksmali
-    implementation depends.smali
-    implementation depends.snakeyaml
-    //implementation depends.xmlpull
-    implementation depends.guava
-    implementation depends.commons_text
 }

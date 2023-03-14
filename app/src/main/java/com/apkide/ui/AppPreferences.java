@@ -13,8 +13,12 @@ public class AppPreferences {
 	private static Context context;
 	private static SharedPreferences preferences;
 	public static void init(Context context){
-		AppPreferences.context=context;
-		preferences=PreferenceManager.getDefaultSharedPreferences(context);
+		AppPreferences.context = context;
+		preferences = PreferenceManager.getDefaultSharedPreferences(context);
+		PreferenceManager.setDefaultValues(context, R.xml.preferences_application, false);
+		PreferenceManager.setDefaultValues(context, R.xml.preferences_editor, false);
+		PreferenceManager.setDefaultValues(context, R.xml.preferences_compiler, false);
+		PreferenceManager.setDefaultValues(context, R.xml.preferences_sourcecontrol, false);
 	}
 	
 	

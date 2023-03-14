@@ -1,8 +1,12 @@
 package com.apkide.language.impl.smali;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.android.tools.smali.smali.smaliFlexLexer;
 import com.android.tools.smali.smali.smaliParser;
 import com.apkide.language.api.Highlighter;
+import com.apkide.language.api.Lexer;
 import com.apkide.language.api.SyntaxKind;
 import com.apkide.language.api.TokenIterator;
 
@@ -11,33 +15,40 @@ import org.antlr.runtime.Token;
 import java.io.Reader;
 
 public class SmaliHighlighter implements Highlighter {
-	public static final int API_VERSION =15;
 	private smaliFlexLexer lexer;
+	
+	@Nullable
 	@Override
-	public int highlightLine(Reader reader, int state, TokenIterator iterator) {
-		if (lexer==null)
-			lexer=new smaliFlexLexer(reader, API_VERSION);
-		else{
+	public Lexer getLexer() {
+		return null;
+	}
+	
+	@Override
+	public int highlightLine(@NonNull Reader reader, int state, @NonNull TokenIterator iterator) {
+		if (lexer == null)
+			lexer = new smaliFlexLexer(reader, 29);//TODO Optional configurations are available
+		else {
 			lexer.yyreset(reader);
 			lexer.yybegin(state);
 		}
 		
-		while (true){
-			Token token=lexer.nextToken();
-			if (token==null||token.getType()==-1)break;
-			iterator.tokenFound(token.getType(),token.getLine()-1,token.getCharPositionInLine());
+		while (true) {
+			Token token = lexer.nextToken();
+			if (token == null || token.getType() == -1) break;
+			iterator.tokenFound(token.getType(), token.getLine() - 1, token.getCharPositionInLine());
 		}
 		return lexer.yystate();
 	}
 	
 	@Override
 	public int getDefaultState() {
-		return smaliFlexLexer.YYINITIAL+1;
+		return smaliFlexLexer.YYINITIAL + 1;
 	}
 	
+	@NonNull
 	@Override
-	public SyntaxKind getSyntaxKind(int token) {
-		switch (token){
+	public SyntaxKind getSyntaxKind(int type) {
+		switch (type) {
 			case smaliParser.CLASS_DIRECTIVE:
 			case smaliParser.SUPER_DIRECTIVE:
 			case smaliParser.IMPLEMENTS_DIRECTIVE:
@@ -131,7 +142,7 @@ public class SmaliHighlighter implements Highlighter {
 			case smaliParser.INSTRUCTION_FORMAT45cc_METHOD:
 			case smaliParser.INSTRUCTION_FORMAT4rcc_METHOD:
 			case smaliParser.INSTRUCTION_FORMAT51l:
-			
+				
 				return SyntaxKind.Keyword;
 			case smaliParser.PARAM_LIST_OR_ID_PRIMITIVE_TYPE:
 			case smaliParser.PRIMITIVE_TYPE:
@@ -139,11 +150,11 @@ public class SmaliHighlighter implements Highlighter {
 			case smaliParser.CLASS_DESCRIPTOR:
 			case smaliParser.ARRAY_TYPE_PREFIX:
 				return SyntaxKind.TypeIdentifier;
-
+			
 			case smaliParser.SIMPLE_NAME:
 			case smaliParser.MEMBER_NAME:
 				return SyntaxKind.Identifier;
-				
+			
 			case smaliParser.DOTDOT:
 			case smaliParser.ARROW:
 			case smaliParser.EQUAL:
@@ -154,7 +165,7 @@ public class SmaliHighlighter implements Highlighter {
 			case smaliParser.OPEN_PAREN:
 			case smaliParser.CLOSE_PAREN:
 				return SyntaxKind.Separator;
-				
+			
 			case smaliParser.POSITIVE_INTEGER_LITERAL:
 			case smaliParser.NEGATIVE_INTEGER_LITERAL:
 			case smaliParser.LONG_LITERAL:
@@ -172,7 +183,7 @@ public class SmaliHighlighter implements Highlighter {
 			case smaliParser.LINE_COMMENT:
 				return SyntaxKind.Comment;
 			case smaliParser.WHITE_SPACE:
-				default:
+			default:
 				return SyntaxKind.Plain;
 		}
 	}

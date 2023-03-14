@@ -1,24 +1,26 @@
 package com.apkide.language.impl.cpp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.apkide.language.api.CommonLanguage;
 import com.apkide.language.api.Highlighter;
+import com.apkide.language.api.HighlighterProxy;
 
 public class CppLanguage extends CommonLanguage {
-	private CppHighlighter highlighter;
-	
 	@NonNull
 	@Override
 	public String getName() {
 		return "Cpp";
 	}
 	
-	@NonNull
+	private Highlighter highlighter;
+	
+	@Nullable
 	@Override
 	public Highlighter getHighlighter() {
 		if (highlighter == null)
-			highlighter = new CppHighlighter();
+			highlighter = new HighlighterProxy(new CppLexer());
 		return highlighter;
 	}
 	

@@ -1,9 +1,11 @@
 package com.apkide.language.impl.json;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.apkide.language.api.CommonLanguage;
 import com.apkide.language.api.Highlighter;
+import com.apkide.language.api.HighlighterProxy;
 
 public class JsonLanguage extends CommonLanguage {
 	@NonNull
@@ -12,13 +14,13 @@ public class JsonLanguage extends CommonLanguage {
 		return "JSON";
 	}
 	
-	private JsonHighlighter highlighter;
+	private Highlighter highlighter;
 	
-	@NonNull
+	@Nullable
 	@Override
 	public Highlighter getHighlighter() {
 		if (highlighter == null)
-			highlighter = new JsonHighlighter();
+			highlighter = new HighlighterProxy(new JsonLexer());
 		return highlighter;
 	}
 	
