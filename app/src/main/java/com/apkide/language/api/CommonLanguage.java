@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.apkide.ui.AppPreferences;
+
 import io.github.rosemoe.sora.lang.EmptyLanguage;
 import io.github.rosemoe.sora.lang.Language;
 import io.github.rosemoe.sora.lang.analysis.AnalyzeManager;
@@ -54,7 +56,7 @@ public abstract class CommonLanguage implements Language {
 	
 	@Override
 	public boolean useTab() {
-		return true;
+		return !AppPreferences.getPreferences().getBoolean("useSpaces", false);
 	}
 	
 	@NonNull

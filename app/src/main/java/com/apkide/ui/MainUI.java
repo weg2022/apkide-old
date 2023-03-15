@@ -9,20 +9,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPreferenceChangeListener {
-	
+
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		App.init(this);
 		super.onCreate(savedInstanceState);
 		AppPreferences.getPreferences().registerOnSharedPreferenceChangeListener(this);
+		IDEEditor editor = new IDEEditor(this);
+		setContentView(editor);
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		AppPreferences.getPreferences().unregisterOnSharedPreferenceChangeListener(this);
 	}
-	
+
 	@Override
 	public void onConfigurationChanged(@NonNull Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
@@ -34,14 +36,14 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
 				changeColorScheme();
 		}
 	}
-	
+
 	private void changeColorScheme() {
-	
+
 	}
-	
-	
+
+
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-	
+
 	}
 }

@@ -4,12 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.apkide.common.FileUtils;
+import com.apkide.language.impl.classfile.ClassFileLanguage;
 import com.apkide.language.impl.cpp.CppLanguage;
 import com.apkide.language.impl.groovy.GroovyLanguage;
-import com.apkide.language.impl.javaclass.JavaClassLanguage;
+import com.apkide.language.impl.java.JavaLanguage;
 import com.apkide.language.impl.javascript.JavaScriptLanguage;
 import com.apkide.language.impl.json.JsonLanguage;
-import com.apkide.language.impl.json5.Json5Language;
 import com.apkide.language.impl.kotlin.KotlinLanguage;
 import com.apkide.language.impl.smali.SmaliLanguage;
 import com.apkide.language.impl.xml.XmlLanguage;
@@ -22,75 +22,77 @@ import java.util.List;
 import java.util.Map;
 
 public final class LanguageManager {
-	
+
 	private static final Map<String, CommonLanguage> languageMap = new HashMap<>();
 	private static final Map<String, List<String>> filePatternMap = new HashMap<>();
-	
+
 	public static void registerDefaults() {
 		languageMap.clear();
 		filePatternMap.clear();
 		addLanguage(new CppLanguage());
 		addLanguage(new GroovyLanguage());
-		addLanguage(new JavaClassLanguage());
-		addLanguage(new JavaClassLanguage());
+		addLanguage(new JavaLanguage());
+		addLanguage(new ClassFileLanguage());
 		addLanguage(new JavaScriptLanguage());
 		addLanguage(new JsonLanguage());
-		addLanguage(new Json5Language());
 		addLanguage(new KotlinLanguage());
 		addLanguage(new SmaliLanguage());
 		addLanguage(new XmlLanguage());
 		addLanguage(new YamlLanguage());
 	}
-	
+
 	public static void addLanguage(@NonNull CommonLanguage language) {
-		if (!languageMap.containsKey(language.getName())) {
-			languageMap.put(language.getName(), language);
-			filePatternMap.put(language.getName(), Arrays.asList(language.getDefaultFilePatterns()));
-		}
+		languageMap.put(language.getName(), language);
+		filePatternMap.put(language.getName(), Arrays.asList(language.getDefaultFilePatterns()));
 	}
-	
+
 	@NonNull
 	public static List<CommonLanguage> getLanguages() {
 		return new ArrayList<>(languageMap.values());
 	}
-	
+
 	@NonNull
 	public static List<String> getLanguageNames() {
 		return new ArrayList<>(languageMap.keySet());
 	}
-	
-	
+
+
 	public static boolean containsLanguage(@NonNull String languageName) {
 		return languageMap.containsKey(languageName);
 	}
-	
+
 	@Nullable
-	public static CommonLanguage findLanguage(@NonNull String name) {
-		return languageMap.get(name);
+	public static CommonLanguage getLanguageByName(@Nullable String languageName) {
+		if (languageName == null) return null;
+		return languageMap.get(languageName);
 	}
-	
+
 	@Nullable
-	public static String getLanguageName(@NonNull String fileName) {
+	public static String findLanguageName(@NonNull String filePath) {
 		for (String key : filePatternMap.keySet()) {
 			List<String> patterns = getFilePattern(key);
 			if (patterns != null) {
 				for (String pattern : patterns) {
-					if (pattern.startsWith("*."))
-						pattern = pattern.substring(2);
+					if (pattern.startsWith("*.")) pattern = pattern.substring(2);
 					String mExt = FileUtils.getExtension(pattern);
-					String ext = FileUtils.getExtension(fileName);
-					if (pattern.equals(fileName) || ext.equals(pattern) || mExt.equals(ext))
+					String ext = FileUtils.getExtension(filePath);
+					if (pattern.equals(filePath) || ext.equals(pattern) || mExt.equals(ext))
 						return key;
 				}
 			}
 		}
 		return null;
 	}
-	
+
+	@Nullable
+	public static CommonLanguage findLanguage(@NonNull String filePath) {
+		return getLanguageByName(findLanguageName(filePath));
+	}
+
 	@Nullable
 	public static List<String> getFilePattern(@NonNull String languageName) {
 		return filePatternMap.get(languageName);
 	}
-	
-	
+
+
 }
