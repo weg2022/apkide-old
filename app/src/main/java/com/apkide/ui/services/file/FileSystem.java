@@ -31,7 +31,6 @@ public class FileSystem {
 		long difference = Math.abs(time1 - time2);
 		if (difference <= 1000)
 			return true;
-		// Workarround for mtime bug
 		if (difference % 3600000 <= 0)
 			return difference <= 13 * 3600000;
 		if ((difference - 1000) % 3600000 == 0)
@@ -42,9 +41,9 @@ public class FileSystem {
 	}
 
 	public static boolean isBinary(String filepath) {
-		if (isJarFileEntry(filepath)) {
+		if (isJarFileEntry(filepath))
 			return false;
-		}
+
 		long fileLength = new File(filepath).length();
 		int readCount = BINARY_CHECK_BYTE_COUNT < fileLength ? BINARY_CHECK_BYTE_COUNT : (int) fileLength;
 		try {
@@ -52,9 +51,8 @@ public class FileSystem {
 				byte[] bytes = new byte[readCount];
 				new DataInputStream(fis).readFully(bytes);
 				for (byte aByte : bytes) {
-					if (aByte == 0) {
+					if (aByte == 0)
 						return true;
-					}
 				}
 				return false;
 			}
@@ -64,29 +62,24 @@ public class FileSystem {
 	}
 
 	public static Reader readFile(String filepath) throws IOException {
-		if (isNormalFile(filepath)) {
+		if (isNormalFile(filepath))
 			return new FileReader(filepath);
-		} else if (isJarFileEntry(filepath)) {
+		else if (isJarFileEntry(filepath))
 			return readJarFileEntry(filepath);
-		}
 		throw new IOException();
 	}
 
 	public static boolean isRegexContainedInFile(String regex, String filepath) {
 		try {
 			Pattern pattern = Pattern.compile(regex);
-			Reader r = readFile(filepath);
-			try {
+			try (Reader r = readFile(filepath)) {
 				BufferedReader bufferedReader = new BufferedReader(r);
 				String line;
 				while ((line = bufferedReader.readLine()) != null) {
-					if (pattern.matcher(line).find()) {
+					if (pattern.matcher(line).find())
 						return true;
-					}
 				}
 				return false;
-			} finally {
-				r.close();
 			}
 		} catch (IOException e) {
 			return false;
@@ -110,9 +103,9 @@ public class FileSystem {
 		return new File(path).isFile() && (path.endsWith(".jar") || path.endsWith(".zip"));
 	}
 
-	private static Reader readJarFileEntry(String filepath) throws IOException {
-		String jarFilepath = getEnclosingJar(filepath);
-		String entryPath = getJarFileEntryRelativePath(filepath);
+	private static Reader readJarFileEntry(String filePath) throws IOException {
+		String jarFilepath = getEnclosingJar(filePath);
+		String entryPath = getJarFileEntryRelativePath(filePath);
 		final Reader reader = archiveReader.getArchiveEntryReader(jarFilepath, entryPath, null);
 		return new Reader() {
 			@Override
@@ -139,8 +132,8 @@ public class FileSystem {
 		return IOUtils.readString(reader);
 	}
 
-	public static void writeFile(String filepath, Reader content) throws IOException {
-		FileWriter writer = new FileWriter(filepath, false);
+	public static void writeFile(String filePath, Reader content) throws IOException {
+		FileWriter writer = new FileWriter(filePath, false);
 		writer.append(readFully(content));
 		writer.close();
 	}
@@ -204,8 +197,8 @@ public class FileSystem {
 	public static List<String> getChildEntries(String dirPath) throws IOException {
 		if (isJarEntry(dirPath)) {
 			String jarFilepath = getEnclosingJar(dirPath);
-			String entrypath = getJarFileEntryRelativePath(dirPath);
-			List<String> entries = archiveReader.getArchiveDirectoryEntries(jarFilepath, entrypath);
+			String entryPath = getJarFileEntryRelativePath(dirPath);
+			List<String> entries = archiveReader.getArchiveDirectoryEntries(jarFilepath, entryPath);
 			if (entries == null)
 				return new ArrayList<>();
 			return entries;
@@ -232,8 +225,8 @@ public class FileSystem {
 		return entryPath != null && (entryPath.equals(path) || entryPath.startsWith(path + "/"));
 	}
 
-	public static String getFilepathAfterRename(String filepath, String oldPath, String newPath) {
-		return newPath + filepath.substring(oldPath.length());
+	public static String getFilePathAfterRename(String filePath, String oldPath, String newPath) {
+		return newPath + filePath.substring(oldPath.length());
 	}
 
 	public static void rename(String path, String newPath) throws IOException {
@@ -271,9 +264,8 @@ public class FileSystem {
 		if (file.isDirectory()) {
 			String[] children = file.list();
 			if (children != null) {
-				for (String child : children) {
+				for (String child : children)
 					delete(new File(file, child));
-				}
 			}
 		}
 		if (!file.delete())
@@ -284,16 +276,16 @@ public class FileSystem {
 		return new File(dirPath).mkdirs();
 	}
 
-	public static long getLastModified(String filepath) {
-		return new File(filepath).lastModified();
+	public static long getLastModified(String filePath) {
+		return new File(filePath).lastModified();
 	}
 
-	public static long getLen(String filepath) {
-		return new File(filepath).length();
+	public static long getLength(String filePath) {
+		return new File(filePath).length();
 	}
 
-	public static String getExtension(String filepath) {
-		String filename = getName(filepath);
+	public static String getExtension(String filePath) {
+		String filename = getName(filePath);
 		int i = filename.lastIndexOf('.');
 		if (i < 0)
 			return "";
@@ -317,12 +309,12 @@ public class FileSystem {
 		String relPath = relativeOrAbsolutePath;
 		relPath = relPath.replace("\\\\", "/");
 		relPath = relPath.replace("\\", "/");
-		if (!relPath.contains("/")) {
+		if (!relPath.contains("/"))
 			return rootPath + "/" + relPath;
-		}
-		if (relPath.startsWith("/")) {
+
+		if (relPath.startsWith("/"))
 			relPath = ".." + relPath;
-		}
+
 		String tryRelative = getCanonicalPathPreservingSymlinks(new File(rootPath, relPath));
 		if (new File(tryRelative).exists())
 			return tryRelative;
@@ -334,17 +326,14 @@ public class FileSystem {
 		String absolutePath = f.getAbsolutePath();
 		String[] absPathComponents = absolutePath.split("[/\\\\]");
 		for (String absPathComponent : absPathComponents) {
-			if (absPathComponent.length() == 0 || ".".equals(absPathComponent)) {
-				continue;
-			} else if ("..".equals(absPathComponent)) {
-				if (canonicalPathComponents.isEmpty()) {
-					// can't go "up" return original path
-					return absolutePath;
-				} else {
-					canonicalPathComponents.remove(canonicalPathComponents.size() - 1);
-				}
-			} else {
-				canonicalPathComponents.add(absPathComponent);
+			if (absPathComponent.length() != 0 && !".".equals(absPathComponent)) {
+				if ("..".equals(absPathComponent)) {
+					if (canonicalPathComponents.isEmpty()) {
+						return absolutePath;
+					} else
+						canonicalPathComponents.remove(canonicalPathComponents.size() - 1);
+				} else
+					canonicalPathComponents.add(absPathComponent);
 			}
 		}
 		StringBuilder resBuilder = new StringBuilder();
@@ -393,9 +382,8 @@ public class FileSystem {
 			return count;
 		} else if (isNormalFile(path)) {
 			for (String suffix : suffixes) {
-				if (path.endsWith(suffix)) {
+				if (path.endsWith(suffix))
 					return 1;
-				}
 			}
 			return 0;
 		} else {
