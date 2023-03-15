@@ -27,6 +27,6 @@ public class JavaLanguage extends CommonLanguage {
 	@NonNull
 	@Override
 	public String[] getDefaultFilePatterns() {
-		return new String[]{"*.java", "*.class"};
+		return new String[]{"*.java"};
 	}
 }
