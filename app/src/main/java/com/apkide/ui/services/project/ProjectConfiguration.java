@@ -1,6 +1,4 @@
 package com.apkide.ui.services.project;
 
-public class ProjectModel {
-
-
+public interface ProjectConfiguration<T> {
 }

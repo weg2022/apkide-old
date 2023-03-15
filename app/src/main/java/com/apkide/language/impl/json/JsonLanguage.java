@@ -11,7 +11,7 @@ public class JsonLanguage extends CommonLanguage {
 	@NonNull
 	@Override
 	public String getName() {
-		return "JSON";
+		return "JSON5";
 	}
 	
 	private Highlighter highlighter;
@@ -29,7 +29,8 @@ public class JsonLanguage extends CommonLanguage {
 	public String[] getDefaultFilePatterns() {
 		return new String[]{
 				"*.har",
-				"*.json"
+				"*.json",
+				"*.json5"
 		};
 	}
 }

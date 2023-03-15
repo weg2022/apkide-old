@@ -1,4 +1,4 @@
-package com.apkide.language.impl.javaclass;
+package com.apkide.language.impl.classfile;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -8,15 +8,15 @@ import com.apkide.language.api.Highlighter;
 import com.apkide.language.api.HighlighterProxy;
 import com.apkide.language.impl.java.JavaLexer;
 
-public class JavaClassLanguage extends CommonLanguage {
+public class ClassFileLanguage extends CommonLanguage {
 	@NonNull
 	@Override
 	public String getName() {
 		return "Java-Class";
 	}
-	
+
 	private Highlighter highlighter;
-	
+
 	@Nullable
 	@Override
 	public Highlighter getHighlighter() {
@@ -24,7 +24,7 @@ public class JavaClassLanguage extends CommonLanguage {
 			highlighter = new HighlighterProxy(new JavaLexer());
 		return highlighter;
 	}
-	
+
 	@NonNull
 	@Override
 	public String[] getDefaultFilePatterns() {
