@@ -11,7 +11,7 @@ public class JavaScriptLanguage extends CommonLanguage {
 	@NonNull
 	@Override
 	public String getName() {
-		return "JS";
+		return "Java Script";
 	}
 	
 	private Highlighter highlighter;

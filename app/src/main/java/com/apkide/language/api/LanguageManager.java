@@ -1,9 +1,11 @@
 package com.apkide.language.api;
 
+import static com.apkide.common.FileUtils.getExtension;
+import static java.util.Arrays.asList;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.apkide.common.FileUtils;
 import com.apkide.language.impl.classfile.ClassFileLanguage;
 import com.apkide.language.impl.cpp.CppLanguage;
 import com.apkide.language.impl.groovy.GroovyLanguage;
@@ -16,7 +18,6 @@ import com.apkide.language.impl.xml.XmlLanguage;
 import com.apkide.language.impl.yaml.YamlLanguage;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +44,7 @@ public final class LanguageManager {
 
 	public static void addLanguage(@NonNull CommonLanguage language) {
 		languageMap.put(language.getName(), language);
-		filePatternMap.put(language.getName(), Arrays.asList(language.getDefaultFilePatterns()));
+		filePatternMap.put(language.getName(), asList(language.getDefaultFilePatterns()));
 	}
 
 	@NonNull
@@ -74,8 +75,8 @@ public final class LanguageManager {
 			if (patterns != null) {
 				for (String pattern : patterns) {
 					if (pattern.startsWith("*.")) pattern = pattern.substring(2);
-					String mExt = FileUtils.getExtension(pattern);
-					String ext = FileUtils.getExtension(filePath);
+					String mExt = getExtension(pattern);
+					String ext = getExtension(filePath);
 					if (pattern.equals(filePath) || ext.equals(pattern) || mExt.equals(ext))
 						return key;
 				}
