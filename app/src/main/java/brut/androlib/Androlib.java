@@ -19,7 +19,6 @@ package brut.androlib;
 import com.android.tools.smali.dexlib2.iface.DexFile;
 import com.apkide.common.FileUtils;
 
-
 import org.xml.sax.SAXException;
 
 import java.io.BufferedInputStream;
@@ -33,7 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-
 import java.util.regex.Pattern;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;

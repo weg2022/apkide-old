@@ -38,7 +38,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -78,10 +77,10 @@ import brut.directory.ExtFile;
 import brut.directory.FileDirectory;
 import brut.directory.ZipUtils;
 import brut.util.AaptManager;
+import brut.util.AssetsProvider;
 import brut.util.Duo;
 import brut.util.Logger;
 import brut.util.OS;
-import brut.util.SyncAssets;
 
 final public class AndrolibResources {
 	public ResTable getResTable(ExtFile apkFile) throws AndrolibException {
@@ -996,7 +995,7 @@ final public class AndrolibResources {
 		if (BuildOptions.get().getFrameworkFolderLocation()!= null) {
 			path =BuildOptions.get().getFrameworkFolderLocation();
 		} else {
-			File parentPath = SyncAssets.get().getTempDirectory();
+			File parentPath = AssetsProvider.get().getTempDirectory();
 			
 			String xdgDataFolder = System.getenv("XDG_DATA_HOME");
 			if (xdgDataFolder != null) {
@@ -1060,7 +1059,7 @@ final public class AndrolibResources {
 	public InputStream getAndroidFrameworkResourcesAsStream() {
 		// return SyncAssets.get().open("android-framework.jar");
 		try {
-			return Files.newInputStream(SyncAssets.get().foundFile("android.jar").toPath());
+			return Files.newInputStream(AssetsProvider.get().foundFile("android.jar").toPath());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

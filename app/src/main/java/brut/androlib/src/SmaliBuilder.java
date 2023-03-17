@@ -22,7 +22,6 @@ import com.android.tools.smali.dexlib2.writer.io.FileDataStore;
 
 import org.antlr.runtime.RecognitionException;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

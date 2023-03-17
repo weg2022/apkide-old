@@ -18,7 +18,6 @@ package brut.androlib;
 
 import com.android.tools.smali.baksmali.Main;
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
