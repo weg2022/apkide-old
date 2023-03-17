@@ -15,7 +15,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public final class IOUtils {
-	private static final int BUFFER_SIZE = 8192;
+	private static final int BUFFER_SIZE = 4096;
 	
 	@NonNull
 	public static byte[] readBytes(@NonNull InputStream in) throws IOException {

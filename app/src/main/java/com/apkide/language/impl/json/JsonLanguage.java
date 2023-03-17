@@ -11,7 +11,7 @@ public class JsonLanguage extends CommonLanguage {
 	@NonNull
 	@Override
 	public String getName() {
-		return "JSON5";
+		return "JSON";
 	}
 	
 	private Highlighter highlighter;

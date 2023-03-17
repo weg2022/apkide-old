@@ -12,7 +12,7 @@ public class ClassFileLanguage extends CommonLanguage {
 	@NonNull
 	@Override
 	public String getName() {
-		return "Java-Class";
+		return "Java Binary";
 	}
 
 	private Highlighter highlighter;

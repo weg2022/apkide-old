@@ -3,6 +3,7 @@ package com.apkide.ui.services.file;
 import android.os.Environment;
 
 import com.apkide.common.AppLog;
+import com.apkide.common.FileUtils;
 import com.apkide.common.IOUtils;
 import com.apkide.language.impl.classfile.ClassFilePreProcessor;
 
@@ -15,6 +16,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,11 +63,29 @@ public class FileSystem {
 		}
 	}
 
-	public static Reader readFile(String filepath) throws IOException {
-		if (isNormalFile(filepath))
-			return new FileReader(filepath);
-		else if (isJarFileEntry(filepath))
-			return readJarFileEntry(filepath);
+	public static Reader readFile(String path) throws IOException {
+		return readFile(path, null);
+	}
+
+	public static Reader readFile(String filepath, String encoding) throws IOException {
+		if (isNormalFile(filepath)) {
+			if (archiveReader.isArchiveFileEntry(filepath)) {
+				Reader reader = archiveReader.getArchiveEntryReader(new File(filepath).getParent(), FileUtils.getFileName(filepath), encoding);
+				return new Reader() {
+					@Override
+					public int read(char[] cbuf, int off, int len) throws IOException {
+						return reader.read(cbuf, off, len);
+					}
+
+					@Override
+					public void close() throws IOException {
+						archiveReader.closeArchive();
+					}
+				};
+			}
+			return encoding == null ? new FileReader(filepath) : new InputStreamReader(new FileInputStream(filepath), encoding);
+		} else if (isJarFileEntry(filepath))
+			return readJarFileEntry(filepath, encoding);
 		throw new IOException();
 	}
 
@@ -103,10 +123,10 @@ public class FileSystem {
 		return new File(path).isFile() && (path.endsWith(".jar") || path.endsWith(".zip"));
 	}
 
-	private static Reader readJarFileEntry(String filePath) throws IOException {
+	private static Reader readJarFileEntry(String filePath, String encoding) throws IOException {
 		String jarFilepath = getEnclosingJar(filePath);
 		String entryPath = getJarFileEntryRelativePath(filePath);
-		final Reader reader = archiveReader.getArchiveEntryReader(jarFilepath, entryPath, null);
+		final Reader reader = archiveReader.getArchiveEntryReader(jarFilepath, entryPath, encoding);
 		return new Reader() {
 			@Override
 			public int read(char[] buf, int offset, int count) throws IOException {

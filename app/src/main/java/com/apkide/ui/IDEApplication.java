@@ -8,7 +8,6 @@ import android.os.Build;
 
 import androidx.multidex.MultiDexApplication;
 
-import com.apkide.common.AppLog;
 import com.apkide.common.FileUtils;
 import com.apkide.language.api.LanguageManager;
 
@@ -27,7 +26,7 @@ public class IDEApplication extends MultiDexApplication {
 	public void onCreate() {
 		super.onCreate();
 		AppPreferences.init(getApplicationContext());
-
+		App.initApp(getApplicationContext());
 		AssetsProvider.set(new AssetsProvider() {
 			@Override
 			public File foundBinary(String binaryName) {
@@ -45,8 +44,6 @@ public class IDEApplication extends MultiDexApplication {
 					arch = "x64";
 				else if (OSDetection.isX86())
 					arch = "x86";
-
-				AppLog.d("foundBinary: " + binaryName + " to " + targetName);
 
 				File targetFile = new File(getApplicationContext().getFilesDir(), targetName);
 				if (targetFile.exists()) {
