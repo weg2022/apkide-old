@@ -3,8 +3,6 @@ package com.apkide.language.impl.classfile;
 
 import androidx.annotation.NonNull;
 
-import com.apkide.common.AppLog;
-
 import org.jd.core.v1.api.printer.Printer;
 
 public class StringBuilderPrinter implements Printer {
@@ -14,15 +12,10 @@ public class StringBuilderPrinter implements Printer {
 	protected StringBuilder sb = new StringBuilder(8192);
 	protected String format;
 
-	private boolean printLineNumbers = false;
 	private boolean escapeUnicode = false;
 
 	public void setEscapeUnicode(boolean escapeUnicode) {
 		this.escapeUnicode = escapeUnicode;
-	}
-
-	public void setPrintLineNumbers(boolean printLineNumbers) {
-		this.printLineNumbers = printLineNumbers;
 	}
 
 	public void init() {
@@ -37,7 +30,7 @@ public class StringBuilderPrinter implements Printer {
 
 	@Override
 	public void start(int maxLineNumber, int majorVersion, int minorVersion) {
-		/*this.indentationCount = 0;
+		this.indentationCount = 0;
 
 		if (maxLineNumber == 0) {
 			format = "%4d";
@@ -50,7 +43,7 @@ public class StringBuilderPrinter implements Printer {
 			}
 
 			format = "%" + width + "d";
-		}*/
+		}
 	}
 
 	@Override
@@ -60,7 +53,6 @@ public class StringBuilderPrinter implements Printer {
 	@Override
 	public void printText(String text) {
 		if (escapeUnicode) {
-			AppLog.d(text);
 			for (int i = 0, len = text.length(); i < len; i++) {
 				char c = text.charAt(i);
 
@@ -122,8 +114,6 @@ public class StringBuilderPrinter implements Printer {
 
 	@Override
 	public void startLine(int lineNumber) {
-		printLineNumber(lineNumber);
-
 		for (int i = 0; i < indentationCount; i++) {
 			sb.append(INDENTATION);
 		}
@@ -137,7 +127,6 @@ public class StringBuilderPrinter implements Printer {
 	@Override
 	public void extraLine(int count) {
 		while (count-- > 0) {
-			printLineNumber(0);
 			sb.append("\n");
 		}
 	}
@@ -150,11 +139,4 @@ public class StringBuilderPrinter implements Printer {
 	public void endMarker(int type) {
 	}
 
-	protected void printLineNumber(int lineNumber) {
-		if (printLineNumbers) {
-			sb.append("/* ");
-			sb.append(String.format(format, lineNumber));
-			sb.append(" */ ");
-		}
-	}
 }

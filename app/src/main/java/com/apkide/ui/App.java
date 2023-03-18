@@ -1,5 +1,6 @@
 package com.apkide.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 
@@ -8,7 +9,9 @@ import com.apkide.ui.services.file.OpenFileService;
 import com.apkide.ui.services.project.ProjectService;
 import com.apkide.ui.services.scm.GitService;
 
+@SuppressLint("StaticFieldLeak")
 public final class App {
+
 
 	private static Context context;
 	private static App app;
