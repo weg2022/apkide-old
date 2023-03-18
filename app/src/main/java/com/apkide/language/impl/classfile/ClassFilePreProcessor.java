@@ -3,7 +3,6 @@ package com.apkide.language.impl.classfile;
 import static java.io.File.separator;
 
 import com.apkide.common.AppLog;
-import com.apkide.common.FileUtils;
 import com.apkide.common.IOUtils;
 
 import org.jd.core.v1.ClassFileToJavaSourceDecompiler;
@@ -18,7 +17,6 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -26,16 +24,11 @@ import java.util.zip.ZipFile;
 import brut.util.AssetsProvider;
 
 public class ClassFilePreProcessor {
-	private ZipFile androidJarFile;//Need to destroy ?
+	private ZipFile androidJarFile;
 	private boolean archiveOpened = false;
 	private String filePath;
 	private ZipFile archiveFile;
-	private final HashMap<String, ZipFile> cachedArchives = new HashMap<>();
-	private final HashMap<String, byte[]> cachedFiles = new HashMap<>();
-	private final HashMap<String, Boolean> cachedFilesLoaded = new HashMap<>();
-	private static final ThreadLocal<ClassFileToJavaSourceDecompiler> DECOMPILER_TL = ThreadLocal
-			.withInitial(ClassFileToJavaSourceDecompiler::new);
-
+	private static final ClassFileToJavaSourceDecompiler DECOMPILER_TL = new ClassFileToJavaSourceDecompiler();
 	private final StringBuilderPrinter printer = new StringBuilderPrinter();
 	private final Loader loader = new Loader() {
 		@Override
@@ -45,37 +38,20 @@ public class ClassFilePreProcessor {
 				internalName += ".class";
 
 			if (archiveOpened) {
-				if (cachedFilesLoaded.containsKey(archiveFile.getName() + "/" + internalName))
-					return Boolean.TRUE.equals(cachedFilesLoaded.get(archiveFile.getName() + "/" + internalName));
-
 				ZipEntry entry = archiveFile.getEntry(internalName);
 				if (entry == null)
 					entry = archiveFile.getEntry("src/" + internalName);
 				if (entry == null)
 					entry = archiveFile.getEntry("src\\" + internalName);
-				if (entry != null) {
-					cachedFilesLoaded.put(archiveFile.getName() + "/" + internalName, true);
+				if (entry != null)
 					return true;
-				}
-			}
-			if (cachedFilesLoaded.containsKey(androidJarFile.getName() + "/" + internalName)) {
-				return Boolean.TRUE.equals(cachedFilesLoaded.get(androidJarFile.getName() + "/" + internalName));
 			}
 
-			if (androidJarFile.getEntry(internalName) != null) {
-				cachedFilesLoaded.put(androidJarFile.getName(), true);
+			if (androidJarFile.getEntry(internalName) != null)
 				return true;
-			}
-
-			if (cachedFilesLoaded.containsKey(internalName))
-				return Boolean.TRUE.equals(cachedFilesLoaded.get(internalName));
 
 			File file = new File(internalName);
-			if (file.exists()) {
-				cachedFilesLoaded.put(file.getAbsolutePath(), true);
-				return true;
-			}
-			return false;
+			return file.exists();
 		}
 
 		@Override
@@ -86,9 +62,6 @@ public class ClassFilePreProcessor {
 					internalName += ".class";
 
 				if (archiveOpened) {
-					if (cachedFiles.containsKey(archiveFile.getName() + "/" + internalName)) {
-						return cachedFiles.get(archiveFile.getName() + "/" + internalName);
-					}
 					ZipEntry entry = archiveFile.getEntry(internalName);
 					if (entry == null)
 						entry = archiveFile.getEntry("src/" + internalName);
@@ -99,12 +72,7 @@ public class ClassFilePreProcessor {
 				}
 
 				if (androidJarFile.getEntry(internalName) != null) {
-					if (cachedFiles.containsKey(androidJarFile.getName() + "/" + internalName)) {
-						return cachedFiles.get(androidJarFile.getName() + "/" + internalName);
-					}
-					byte[] bytes = IOUtils.readBytes(androidJarFile.getInputStream(androidJarFile.getEntry(internalName)), true);
-					cachedFiles.put(androidJarFile.getName() + "/" + internalName, bytes);
-					return bytes;
+					return IOUtils.readBytes(androidJarFile.getInputStream(androidJarFile.getEntry(internalName)), true);
 				}
 
 				if (filePath != null)
@@ -133,9 +101,6 @@ public class ClassFilePreProcessor {
 		IOUtils.safeClose(archiveFile);
 		archiveFile = null;
 		archiveOpened = false;
-		cachedArchives.clear();
-		cachedFiles.clear();
-		cachedArchives.clear();
 	}
 
 	public Reader getArchiveEntryReader(String archivePath, String entryPath, String encoding) throws IOException {
@@ -146,9 +111,9 @@ public class ClassFilePreProcessor {
 				printer.setEscapeUnicode(true);
 				this.filePath = archivePath + File.separator + entryPath;
 				try {
-					DECOMPILER_TL.get().decompile(loader, printer, FileUtils.getFileName(entryPath));
+					DECOMPILER_TL.decompile(loader, printer, "");
 				} catch (Exception e) {
-					throw new RuntimeException(e);
+					return new StringReader(e.getMessage());
 				}
 				return new StringReader(printer.toString());
 			}
@@ -162,9 +127,9 @@ public class ClassFilePreProcessor {
 				printer.setEscapeUnicode(false);
 				this.archiveFile = new ZipFile(archivePath);
 				try {
-					DECOMPILER_TL.get().decompile(loader, printer, entryPath);
+					DECOMPILER_TL.decompile(loader, printer, entryPath);
 				} catch (Exception e) {
-					throw new RuntimeException(e);
+					return new StringReader(e.getMessage());
 				}
 				return new StringReader(printer.toString());
 			}
@@ -187,12 +152,9 @@ public class ClassFilePreProcessor {
 	public List<String> getArchiveDirectoryEntries(String archivePath, String entryPath) throws IOException {
 		ArrayList<String> entities = new ArrayList<>();
 		Enumeration<? extends ZipEntry> entries;
-		if (cachedArchives.get(archivePath) == null) {
-			ZipFile zipFile = new ZipFile(archivePath);
-			cachedArchives.put(archivePath, zipFile);
-		}
+		ZipFile zipFile = new ZipFile(archivePath);
 
-		entries = cachedArchives.get(archivePath).entries();
+		entries = zipFile.entries();
 		while (entries.hasMoreElements()) {
 			ZipEntry nextElement = entries.nextElement();
 			String name = nextElement.getName();
@@ -212,7 +174,7 @@ public class ClassFilePreProcessor {
 				}
 			}
 		}
-		closeArchive();
+		zipFile.close();
 		return entities;
 	}
 

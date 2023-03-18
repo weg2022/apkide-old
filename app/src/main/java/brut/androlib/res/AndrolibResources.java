@@ -16,6 +16,8 @@
  */
 package brut.androlib.res;
 
+import android.text.TextUtils;
+
 import com.apkide.common.IOUtils;
 
 import org.xmlpull.v1.XmlSerializer;
@@ -642,9 +644,9 @@ final public class AndrolibResources {
 	
 	public void aaptPackage(File apkFile, File manifest, File resDir, File rawDir, File assetDir, File[] include)
 			throws AndrolibException {
-		
+
 		String aaptPath = BuildOptions.get().getAaptPath();
-		boolean customAapt = !aaptPath.isEmpty();
+		boolean customAapt = !TextUtils.isEmpty(aaptPath);
 		List<String> cmd = new ArrayList<>();
 		
 		try {

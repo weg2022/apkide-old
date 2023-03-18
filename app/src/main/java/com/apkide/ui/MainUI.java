@@ -28,13 +28,11 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
 		IDEEditor editor = new IDEEditor(this);
 		setContentView(editor);
 		editor.setEditorLanguage(new JavaLanguage());
+		//Testing only, because I haven't written the UI yet
 		try {
-		/*	Reader reader= FileSystem.readFile(
-					AssetsProvider.get().foundFile("android.jar")
-							.getAbsolutePath()+"/android/widget/TextView.class");*/
 			Reader reader = FileSystem.readFile(
-					AssetsProvider.get().foundFile("JavaLexer.class")
-							.getAbsolutePath());
+					AssetsProvider.get().foundFile("android.jar")
+							.getAbsolutePath() + "/android/widget/TextView.class");
 			editor.setText(ContentIO.createFrom(reader));
 		} catch (IOException e) {
 			editor.setText(e.getMessage());
