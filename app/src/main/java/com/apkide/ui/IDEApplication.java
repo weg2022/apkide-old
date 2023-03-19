@@ -103,6 +103,11 @@ public class IDEApplication extends MultiDexApplication {
 			public File getTempDirectory() {
 				return getApplicationContext().getExternalFilesDir(".temp");
 			}
+
+			@Override
+			public String getString(int resId) {
+				return getApplicationContext().getString(resId);
+			}
 		});
 
 		BuildOptions.set(new BuildOptions() {

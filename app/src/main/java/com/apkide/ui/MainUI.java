@@ -8,15 +8,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.apkide.language.impl.java.JavaLanguage;
-import com.apkide.ui.services.file.FileSystem;
-
-import java.io.IOException;
-import java.io.Reader;
-
-import brut.util.AssetsProvider;
-import io.github.rosemoe.sora.text.ContentIO;
-
 public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPreferenceChangeListener {
 	IDEEditor editor;
 
@@ -27,16 +18,6 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
 		AppPreferences.getPreferences().registerOnSharedPreferenceChangeListener(this);
 		IDEEditor editor = new IDEEditor(this);
 		setContentView(editor);
-		editor.setEditorLanguage(new JavaLanguage());
-		//Testing only, because I haven't written the UI yet
-		try {
-			Reader reader = FileSystem.readFile(
-					AssetsProvider.get().foundFile("android.jar")
-							.getAbsolutePath() + "/android/widget/TextView.class");
-			editor.setText(ContentIO.createFrom(reader));
-		} catch (IOException e) {
-			editor.setText(e.getMessage());
-		}
 	}
 
 	@Override

@@ -94,7 +94,7 @@ public class OS {
 			ProcessBuilder builder = new ProcessBuilder(cmd);
 			ps = builder.start();
 
-			builder.redirectErrorStream(true);
+			//builder.redirectErrorStream(true);
 
 			new StreamForwarder(ps.getErrorStream(), "ERROR").start();
 			new StreamForwarder(ps.getInputStream(), "OUTPUT").start();
@@ -114,7 +114,7 @@ public class OS {
 		ExecutorService executor = Executors.newCachedThreadPool();
 		try {
 			ProcessBuilder builder = new ProcessBuilder(cmd);
-			builder.redirectErrorStream(true);
+			//builder.redirectErrorStream(true);
 			Process process = builder.start();
 			StreamCollector collector = new StreamCollector(process.getInputStream());
 			executor.execute(collector);
