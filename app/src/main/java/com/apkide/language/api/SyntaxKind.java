@@ -1,6 +1,8 @@
 package com.apkide.language.api;
 
 public enum SyntaxKind {
+	Error,
+	Warning,
 	Plain,
 	Keyword,
 	Operator,
