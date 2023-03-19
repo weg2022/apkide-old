@@ -174,7 +174,7 @@ public class IDEApplication extends MultiDexApplication {
 
 			@Override
 			public boolean isUseAapt2() {
-				return AppPreferences.isUseAapt2();
+				return true;//Always use AAPT 2
 			}
 
 			@Override
