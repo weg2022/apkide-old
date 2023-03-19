@@ -11,7 +11,7 @@ Internally use ApkTool 2.7.0
 
 - [x] Zip/Jar Archive Reader & Class Reader
 - [x] Compilation & DeCompilation Apks
-- [x] AAPT & AAPT2 Support
+- [x] AAPT2 & Zipalign Support
 - [x] Code Highlighting (smali,java & class,c,cpp,groovy,java script,json,kotlin,xml,yaml)
 - [ ] Syntax Highlighting (smali)
 - [ ] Code Completion (smali)
