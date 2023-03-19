@@ -36,7 +36,8 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
 	}
 
 	private void changeColorScheme(boolean dark) {
-		editor.setDarkTheme(dark);
+		if (editor != null)
+			editor.setDarkTheme(dark);
 	}
 
 

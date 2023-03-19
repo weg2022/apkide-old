@@ -32,7 +32,9 @@ public class ColorScheme extends EditorColorScheme {
 		setColor(SELECTION_HANDLE, 0xff0099cc);
 		setColor(SELECTION_INSERT, darkMode ? 0xffffffff : 0xff000000);
 		setColor(LINE_NUMBER_CURRENT, darkMode ? 0xff6ab0e2 : 0xffd0d0d0);
-		
+
+		setColor(SyntaxKind.Error.ordinal() + 100, darkMode ? 0xffff8e8e : 0xffbc0000);
+		setColor(SyntaxKind.Warning.ordinal() + 100, darkMode ? 0xff7f3f16 : 0xffE69317);
 		setColor(SyntaxKind.Plain.ordinal() + 100, darkMode ? 0xffeeeeee : 0xff000000);
 		setColor(SyntaxKind.Keyword.ordinal() + 100, darkMode ? 0xff6ab0e2 : 0xff2c82c8);
 		setColor(SyntaxKind.Operator.ordinal() + 100, darkMode ? 0xff8ab0e2 : 0xff007c1f);
@@ -42,7 +44,7 @@ public class ColorScheme extends EditorColorScheme {
 		setColor(SyntaxKind.Identifier.ordinal() + 100, darkMode ? 0xffeeeeee : 0xff000000);
 		setColor(SyntaxKind.TypeIdentifier.ordinal() + 100, darkMode ? 0xff99ccee : 0xff0096ff);
 		setColor(SyntaxKind.NamespaceIdentifier.ordinal() + 100, darkMode ? 0xffaaaaaa : 0xff5d5d5d);
-		setColor(SyntaxKind.DelegateIdentifier.ordinal() + 100, darkMode ? 0xffeeeeee : 0xff000000);
+		setColor(SyntaxKind.DelegateIdentifier.ordinal() + 100, darkMode ? 0xff00bde9 : 0xff00627A);
 		setColor(SyntaxKind.Comment.ordinal() + 100, darkMode ? 0xff50bb50 : 0xff009b00);
 		setColor(SyntaxKind.DocComment.ordinal() + 100, darkMode ? 0xff50bb50 : 0xff009b00);
 	}

@@ -36,6 +36,10 @@ public interface Highlighter {
 	default SyntaxKind getSyntaxKind(int type) {
 		if (getLexer() == null) return SyntaxKind.Plain;
 		switch (type) {
+			case Lexer.Error:
+				return SyntaxKind.Error;
+			case Lexer.Warning:
+				return SyntaxKind.Warning;
 			case Lexer.Keyword:
 				return SyntaxKind.Keyword;
 			case Lexer.Operator:

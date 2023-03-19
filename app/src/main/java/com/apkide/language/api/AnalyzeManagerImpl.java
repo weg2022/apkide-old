@@ -27,7 +27,9 @@ public class AnalyzeManagerImpl extends SimpleAnalyzeManager<Void> {
 
 		reader.reset();
 		reader.setBuffer(text);
+		Styles styles = new Styles();
 		MappedSpans.Builder builder = new MappedSpans.Builder(1000);
+
 		highlighter.highlightLine(reader, highlighter.getDefaultState(), (type, line, column) -> {
 			if (delegate.isCancelled()) return;
 			SyntaxKind kind = highlighter.getSyntaxKind(type);
@@ -35,13 +37,15 @@ public class AnalyzeManagerImpl extends SimpleAnalyzeManager<Void> {
 			boolean italic = false;
 			if (kind == SyntaxKind.Keyword) {
 				bold = true;
-			} else if (kind == SyntaxKind.NamespaceIdentifier || kind == SyntaxKind.DelegateIdentifier || kind == SyntaxKind.DocComment) {
+			} else if (kind == SyntaxKind.DocComment || kind == SyntaxKind.Comment) {
 				italic = true;
 			}
+
 			long style = TextStyle.makeStyle(kind.ordinal() + 100, 0, bold, italic, false);
 			builder.add(line, Span.obtain(column, style));
 		});
-		return new Styles(builder.build(), false);
+		styles.spans = builder.build();
+		return styles;
 	}
 
 

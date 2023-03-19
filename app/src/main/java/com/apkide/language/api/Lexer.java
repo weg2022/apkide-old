@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.Reader;
 
 public interface Lexer {
+	int Error = -3;
+	int Warning = -2;
+
 	int Plain = 0;
 	int Keyword = 1;
 	int Operator = 2;
@@ -16,7 +19,6 @@ public interface Lexer {
 	int DelegateIdentifier = 9;
 	int Comment = 10;
 	int DocComment = 11;
-	
 	void setReader(Reader reader);
 	
 	void reset(Reader reader);
