@@ -1,5 +1,7 @@
 package brut.util;
 
+import androidx.annotation.StringRes;
+
 import java.io.File;
 
 public abstract class AssetsProvider {
@@ -9,6 +11,8 @@ public abstract class AssetsProvider {
 	public abstract File foundFile(String fileName);
 
 	public abstract File getTempDirectory();
+
+	public abstract String getString(@StringRes int resId);
 
 	private static final Object lock = new Object();
 

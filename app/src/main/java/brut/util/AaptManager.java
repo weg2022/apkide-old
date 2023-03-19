@@ -16,6 +16,8 @@
  */
 package brut.util;
 
+import android.text.TextUtils;
+
 import java.io.File;
 
 import brut.common.BrutException;
@@ -45,7 +47,7 @@ public class AaptManager {
 	}
 
 	public static String getAaptExecutionCommand(String aaptPath, File aapt) throws BrutException {
-		if (!aaptPath.isEmpty()) {
+		if (!TextUtils.isEmpty(aaptPath)) {
 			File aaptFile = new File(aaptPath);
 			if (aaptFile.canRead() && aaptFile.exists()) {
 				aaptFile.setExecutable(true);

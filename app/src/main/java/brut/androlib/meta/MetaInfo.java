@@ -17,6 +17,7 @@
 package brut.androlib.meta;
 
 import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.introspector.PropertyUtils;
 
@@ -53,7 +54,10 @@ public class MetaInfo {
         PropertyUtils propertyUtils = representer.getPropertyUtils();
         propertyUtils.setSkipMissingProperties(true);
 
-        return new Yaml(new ClassSafeConstructor(), representer, options);
+        LoaderOptions loaderOptions = new LoaderOptions();
+        loaderOptions.setCodePointLimit(10 * 1024 * 1024);
+
+        return new Yaml(new ClassSafeConstructor(), representer, options, loaderOptions);
     }
 
     public void save(Writer output) {
