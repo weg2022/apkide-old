@@ -16,6 +16,8 @@
  */
 package brut.util;
 
+import android.os.Build;
+
 import com.apkide.common.AppLog;
 import com.apkide.common.IOUtils;
 
@@ -118,11 +120,19 @@ public class OS {
 			Process process = builder.start();
 			StreamCollector collector = new StreamCollector(process.getInputStream());
 			executor.execute(collector);
-			process.waitFor();
-			if (!executor.awaitTermination(15, TimeUnit.SECONDS)) {
+			if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
+				process.waitFor(15, TimeUnit.SECONDS);
 				executor.shutdownNow();
-				if (!executor.awaitTermination(5, TimeUnit.SECONDS))
+				if (! executor.awaitTermination(5, TimeUnit.SECONDS)) {
 					AppLog.e("Stream collector did not terminate.");
+				}
+			}else {
+				process.waitFor();
+				if (!executor.awaitTermination(15, TimeUnit.SECONDS)) {
+					executor.shutdownNow();
+					if (!executor.awaitTermination(5, TimeUnit.SECONDS))
+						AppLog.e("Stream collector did not terminate.");
+				}
 			}
 			return collector.get();
 		} catch (IOException | InterruptedException e) {
