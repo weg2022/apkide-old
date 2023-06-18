@@ -10,6 +10,8 @@ public abstract class AssetsProvider {
 
 	public abstract File foundFile(String fileName);
 
+	public abstract File foundAndroidFrameworkFile();
+
 	public abstract File getTempDirectory();
 
 	public abstract String getString(@StringRes int resId);

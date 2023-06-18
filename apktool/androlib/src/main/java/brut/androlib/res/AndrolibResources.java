@@ -18,7 +18,10 @@ package brut.androlib.res;
 
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import com.apkide.common.IOUtils;
+import com.apkide.common.SafeRunner;
 
 import org.xmlpull.v1.XmlSerializer;
 
@@ -1058,7 +1061,7 @@ final public class AndrolibResources {
 	public InputStream getAndroidFrameworkResourcesAsStream() {
 		// return SyncAssets.get().open("android-framework.jar");
 		try {
-			return Files.newInputStream(AssetsProvider.get().foundFile("android.jar").toPath());
+			return Files.newInputStream(AssetsProvider.get().foundAndroidFrameworkFile().toPath());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

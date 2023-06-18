@@ -105,6 +105,12 @@ public final class IOUtils {
 			AppLog.e(e);
 		}
 	}
-	
+
+	public static void safeClose(Closeable... closeable) {
+		if (closeable==null)return;
+		for (Closeable c : closeable) {
+			safeClose(c);
+		}
+	}
 	
 }
