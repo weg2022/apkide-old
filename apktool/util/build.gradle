@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.apkide.common'
+    namespace 'brut.util'
     compileSdk 33
 
     defaultConfig {
@@ -35,21 +35,10 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs_nio:2.0.2'
-    //implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'androidx.preference:preference:1.2.0'
-    implementation 'androidx.appcompat:appcompat:1.7.0-alpha02'
-    implementation 'com.google.android.material:material:1.9.0-beta01'
-
-    api 'com.android.tools.smali:smali:3.0.2'
-    api 'com.android.tools.smali:smali-util:3.0.2'
-    api 'com.android.tools.smali:smali-baksmali:3.0.2'
-    //noinspection GradleDependency
-    api 'com.google.guava:guava:31.1-android'
-    api 'org.apache.commons:commons-text:1.10.0'
-    api 'org.yaml:snakeyaml:1.33:android'
-    api 'xmlunit:xmlunit:1.6'
+    implementation project(':common')
+    implementation project(':apktool:common')
+    implementation 'androidx.annotation:annotation:1.6.0'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

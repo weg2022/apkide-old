@@ -64,6 +64,7 @@ import brut.util.Logger;
 import brut.util.OS;
 
 public class Androlib {
+    public static final String VERSION="2.7.0";
     private final AndrolibResources mAndRes = new AndrolibResources();
     protected final ResUnknownFiles mResUnknownFiles = new ResUnknownFiles();
     private int mMinSdkVersion = 0;
@@ -788,7 +789,7 @@ public class Androlib {
     }
 
     public static String getVersion() {
-        return ApktoolProperties.get("application.version");
+        return VERSION;
     }
 
     private File[] parseUsesFramework(UsesFramework usesFramework)

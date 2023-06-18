@@ -10,6 +10,11 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/apktool" />
+            <option value="$PROJECT_DIR$/apktool/androlib" />
+            <option value="$PROJECT_DIR$/apktool/common" />
+            <option value="$PROJECT_DIR$/apktool/directory" />
+            <option value="$PROJECT_DIR$/apktool/util" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/common" />
           </set>

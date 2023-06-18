@@ -39,9 +39,9 @@ public class IDEApplication extends MultiDexApplication {
 				if (OSDetection.isAarch64())
 					arch = "aarch64";
 				else if (OSDetection.isAarch32())
-					arch = "aarch32";
+					arch = "arm";
 				else if (OSDetection.isX86_64())
-					arch = "x64";
+					arch = "x86-pie";
 				else if (OSDetection.isX86())
 					arch = "x86";
 
