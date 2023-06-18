@@ -16,7 +16,7 @@ buildscript {
 		maven { url 'https://oss.sonatype.org/service/local/repositories/releases/content/' }
 	}
 	dependencies {
-		classpath 'com.android.tools.build:gradle:8.1.0-alpha09'
+		classpath 'com.android.tools.build:gradle:8.2.0-alpha08'
 	}
 }
 
