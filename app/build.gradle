@@ -87,15 +87,14 @@ dependencies {
     implementation 'com.google.android.material:material:1.9.0-beta01'
 
     implementation project(':common')
+    implementation project(':language')
 
     implementation project(':apktool:androlib')
     implementation project(':apktool:common')
     implementation project(':apktool:directory')
     implementation project(':apktool:util')
 
-    implementation("io.github.Rosemoe.sora-editor:editor:0.21.1")
 
-    implementation 'org.jd:jd-core:1.1.3'
 
     constraints {
         implementation("androidx.arch.core:core-runtime:2.2.0-rc01")

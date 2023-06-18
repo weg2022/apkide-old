@@ -10,16 +10,11 @@ Internally use ApkTool 2.7.0
 ## Features
 
 - [x] Zip/Jar Archive Reader & Class Reader
-- [x] Compilation & DeCompilation Apks
-- [x] AAPT2 & Zipalign Support
-- [x] Code Highlighting (smali,java & class,c,cpp,groovy,java script,json,kotlin,xml,yaml)
-- [ ] Syntax Highlighting (smali)
-- [ ] Code Completion (smali)
-- [ ] Code Navigation (smali)
-- [ ] Code GotoSymbol (smali)
-- [ ] Code Analysis (smali)
-- [ ] Code Diagnostic (smali)
-- [ ] Code Refactoring (smali)
+- [x] Compilation & DeCompilation Apks (Apktool)
+- [x] AAPT v1/v2 Support
+- [x] Zipalign Support
+- [x] Syntax Highlighting (smali,java & class,c,cpp,groovy,java script,json,kotlin,xml,yaml)
+- [ ] Language Service (smali?)
 - [ ] Java Compilation and Conversion to smali code
 
 ### Libraries used
@@ -27,10 +22,7 @@ Internally use ApkTool 2.7.0
 * [androidx](https://github.com/androidx/androidx)
 * [material-components-android](https://github.com/material-components/material-components-android)
 * [apktool](https://github.com/iBotPeaches/Apktool)
-* [sora-editor](https://github.com/Rosemoe/sora-editor)
-* [quiltflower](https://github.com/QuiltMC/quiltflower)
 * [jd-core](https://github.com/java-decompiler/jd-core)
-* [JetBrainsMono](https://github.com/JetBrains/JetBrainsMono)
 * [cascadia-code](https://github.com/microsoft/cascadia-code)
 * [smali](https://github.com/google/smali)
 * [commons-text](https://github.com/apache/commons-text)

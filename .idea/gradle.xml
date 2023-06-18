@@ -17,6 +17,7 @@
             <option value="$PROJECT_DIR$/apktool/util" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/common" />
+            <option value="$PROJECT_DIR$/language" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />
