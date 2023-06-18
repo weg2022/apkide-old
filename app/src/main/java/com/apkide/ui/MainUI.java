@@ -9,15 +9,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPreferenceChangeListener {
-	IDEEditor editor;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		App.init(this);
 		super.onCreate(savedInstanceState);
 		AppPreferences.getPreferences().registerOnSharedPreferenceChangeListener(this);
-		IDEEditor editor = new IDEEditor(this);
-		setContentView(editor);
 	}
 
 	@Override
@@ -36,8 +33,7 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
 	}
 
 	private void changeColorScheme(boolean dark) {
-		if (editor != null)
-			editor.setDarkTheme(dark);
+
 	}
 
 
