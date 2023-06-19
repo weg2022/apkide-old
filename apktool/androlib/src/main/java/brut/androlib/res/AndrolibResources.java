@@ -18,10 +18,7 @@ package brut.androlib.res;
 
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
-
 import com.apkide.common.IOUtils;
-import com.apkide.common.SafeRunner;
 
 import org.xmlpull.v1.XmlSerializer;
 
@@ -48,7 +45,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
-import brut.androlib.AndrolibException;
+import brut.androlib.err.AndrolibException;
 import brut.androlib.err.CantFindFrameworkResException;
 import brut.androlib.meta.MetaInfo;
 import brut.androlib.meta.PackageInfo;

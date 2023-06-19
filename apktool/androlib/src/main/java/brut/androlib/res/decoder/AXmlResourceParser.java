@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 
-import brut.androlib.AndrolibException;
+import brut.androlib.err.AndrolibException;
 import brut.androlib.res.data.ResID;
 import brut.androlib.res.util.TypedValue;
 import brut.androlib.res.xml.ResXmlEncoders;

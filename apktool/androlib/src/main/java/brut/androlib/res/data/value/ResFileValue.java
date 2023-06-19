@@ -18,7 +18,7 @@ package brut.androlib.res.data.value;
 
 import androidx.annotation.NonNull;
 
-import brut.androlib.AndrolibException;
+import brut.androlib.err.AndrolibException;
 
 public class ResFileValue extends ResIntBasedValue {
     private final String mPath;

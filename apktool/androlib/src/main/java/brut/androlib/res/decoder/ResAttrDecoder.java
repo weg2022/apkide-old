@@ -16,7 +16,7 @@
  */
 package brut.androlib.res.decoder;
 
-import brut.androlib.AndrolibException;
+import brut.androlib.err.AndrolibException;
 import brut.androlib.err.UndefinedResObjectException;
 import brut.androlib.res.data.ResID;
 import brut.androlib.res.data.ResPackage;

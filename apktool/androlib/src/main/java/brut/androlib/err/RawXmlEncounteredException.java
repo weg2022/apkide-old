@@ -16,8 +16,6 @@
  */
 package brut.androlib.err;
 
-import brut.androlib.AndrolibException;
-
 public class RawXmlEncounteredException extends AndrolibException {
     public RawXmlEncounteredException(String message, Throwable cause) {
         super(message, cause);

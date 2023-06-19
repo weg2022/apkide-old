@@ -23,7 +23,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 
-import brut.androlib.AndrolibException;
+import brut.androlib.err.AndrolibException;
 import brut.androlib.err.CantFind9PatchChunkException;
 import brut.androlib.err.RawXmlEncounteredException;
 import brut.androlib.res.data.ResResource;

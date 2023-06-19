@@ -32,7 +32,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
-import brut.androlib.AndrolibException;
+import brut.androlib.err.AndrolibException;
 import brut.androlib.res.data.ResConfigFlags;
 import brut.androlib.res.data.ResID;
 import brut.androlib.res.data.ResPackage;

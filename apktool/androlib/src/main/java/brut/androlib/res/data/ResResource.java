@@ -18,7 +18,7 @@ package brut.androlib.res.data;
 
 import androidx.annotation.NonNull;
 
-import brut.androlib.AndrolibException;
+import brut.androlib.err.AndrolibException;
 import brut.androlib.res.data.value.ResValue;
 
 public class ResResource {

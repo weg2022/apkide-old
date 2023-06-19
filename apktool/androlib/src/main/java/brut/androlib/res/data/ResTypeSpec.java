@@ -21,7 +21,7 @@ import androidx.annotation.NonNull;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import brut.androlib.AndrolibException;
+import brut.androlib.err.AndrolibException;
 import brut.androlib.err.UndefinedResObjectException;
 
 public final class ResTypeSpec {

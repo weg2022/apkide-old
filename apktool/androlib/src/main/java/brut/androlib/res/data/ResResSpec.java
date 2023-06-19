@@ -18,15 +18,12 @@ package brut.androlib.res.data;
 
 import androidx.annotation.NonNull;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import brut.androlib.AndrolibException;
+import brut.androlib.err.AndrolibException;
 import brut.androlib.err.UndefinedResObjectException;
 
 public class ResResSpec {

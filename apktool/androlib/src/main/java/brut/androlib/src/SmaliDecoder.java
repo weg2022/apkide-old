@@ -31,7 +31,7 @@ import com.android.tools.smali.dexlib2.iface.MultiDexContainer;
 import java.io.File;
 import java.io.IOException;
 
-import brut.androlib.AndrolibException;
+import brut.androlib.err.AndrolibException;
 
 public class SmaliDecoder {
 

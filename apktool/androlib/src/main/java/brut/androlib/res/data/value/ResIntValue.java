@@ -16,7 +16,7 @@
  */
 package brut.androlib.res.data.value;
 
-import brut.androlib.AndrolibException;
+import brut.androlib.err.AndrolibException;
 import brut.androlib.res.util.TypedValue;
 
 public class ResIntValue extends ResScalarValue {

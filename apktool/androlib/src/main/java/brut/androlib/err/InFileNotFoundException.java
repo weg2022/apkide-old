@@ -16,8 +16,6 @@
  */
 package brut.androlib.err;
 
-import brut.androlib.AndrolibException;
-
 public class InFileNotFoundException extends AndrolibException {
 	public InFileNotFoundException() {
 	}
