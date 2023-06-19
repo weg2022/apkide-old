@@ -2,13 +2,13 @@ package com.apkide.common;
 
 import androidx.annotation.NonNull;
 
-public interface Action {
+public interface Command {
+    @NonNull
+    String getName();
+
     boolean isEnabled();
 
     void setEnabled(boolean enabled);
 
-    @NonNull
-    String getName();
-
-    void actionPerformed(ActionEvent event);
+    boolean commandPerformed();
 }
