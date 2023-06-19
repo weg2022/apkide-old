@@ -16,6 +16,7 @@
  */
 package brut.androlib.meta;
 
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.constructor.AbstractConstruct;
 import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.error.YAMLException;
@@ -30,6 +31,7 @@ public class ClassSafeConstructor extends Constructor {
     protected final List<Class<?>> allowableClasses = new ArrayList<>();
 
     public ClassSafeConstructor() {
+        super(new LoaderOptions());
         this.yamlConstructors.put(Tag.STR, new ConstructStringEx());
 
         this.allowableClasses.add(MetaInfo.class);
