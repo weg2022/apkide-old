@@ -89,6 +89,10 @@ public class EditorView extends View {
         caret.removeSelectionListener(listener);
     }
 
+    public void redraw(){
+        renderer.redraw();
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         renderer.draw(canvas);

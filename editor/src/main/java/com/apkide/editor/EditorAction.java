@@ -7,6 +7,7 @@ import com.apkide.common.Action;
 public abstract class EditorAction implements Action {
 
     private final EditorView view;
+    private boolean enabled;
     public EditorAction(EditorView view){
         this.view=view;
     }
@@ -18,11 +19,11 @@ public abstract class EditorAction implements Action {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 
     @Override
     public void setEnabled(boolean enabled) {
-
+        this.enabled=enabled;
     }
 }
