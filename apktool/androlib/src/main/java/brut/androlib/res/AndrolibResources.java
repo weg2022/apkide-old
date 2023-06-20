@@ -991,7 +991,7 @@ final public class AndrolibResources {
 		String path;
 
 		// if a framework path was specified on the command line, use it
-		if (BuildOptions.get().getFrameworkFolderLocation() != null) {
+		if (!TextUtils.isEmpty(BuildOptions.get().getFrameworkFolderLocation())) {
 			path = BuildOptions.get().getFrameworkFolderLocation();
 		} else {
 			File parentPath = AssetsProvider.get().getTempDirectory();
@@ -1016,7 +1016,7 @@ final public class AndrolibResources {
 
 		if (!dir.exists()) {
 			if (!dir.mkdirs()) {
-				if (BuildOptions.get().getFrameworkFolderLocation() != null) {
+				if (!TextUtils.isEmpty(BuildOptions.get().getFrameworkFolderLocation())) {
 					Logger.get().error("Can't create Framework directory: " + dir);
 				}
 				throw new AndrolibException(String.format(
@@ -1025,7 +1025,7 @@ final public class AndrolibResources {
 			}
 		}
 
-		if (BuildOptions.get().getFrameworkFolderLocation() == null) {
+		if (TextUtils.isEmpty(BuildOptions.get().getFrameworkFolderLocation())) {
 			if (!dir.canWrite()) {
 				Logger.get().error(String.format("WARNING: Could not write to (%1$s), using %2$s instead...",
 						dir.getAbsolutePath(), System.getProperty("java.io.tmpdir")));

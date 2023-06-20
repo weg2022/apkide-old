@@ -27,12 +27,12 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
 	public void onConfigurationChanged(@NonNull Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-			changeColorScheme(newConfig.isNightModeActive());
+			changeTheme(newConfig.isNightModeActive());
 		else
-			changeColorScheme(isNightModeActive(newConfig.uiMode));
+			changeTheme(isNightModeActive(newConfig.uiMode));
 	}
 
-	private void changeColorScheme(boolean dark) {
+	private void changeTheme(boolean dark){
 
 	}
 

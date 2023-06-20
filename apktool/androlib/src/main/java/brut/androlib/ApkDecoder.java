@@ -362,7 +362,7 @@ public class ApkDecoder {
         meta.usesFramework = new UsesFramework();
         meta.usesFramework.ids = Arrays.asList(ids);
 
-        if (BuildOptions.get().getFrameworkTag() != null) {
+        if (!TextUtils.isEmpty(BuildOptions.get().getFrameworkTag())) {
             meta.usesFramework.tag = BuildOptions.get().getFrameworkTag();
         }
     }
