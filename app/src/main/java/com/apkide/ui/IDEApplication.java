@@ -52,20 +52,12 @@ public class IDEApplication extends MultiDexApplication {
 
                 String fullFileName = "bin" + separator + arch + separator + binaryName;
 
-                SafeRunner.run(new SafeRunner.SafeRunnerCallback() {
-                    @Override
-                    public void handleException(@NonNull Throwable e) {
-                        throw new RuntimeException(e);
-                    }
-
-                    @Override
-                    public void run() throws Exception {
-                        targetFile.createNewFile();
-                        InputStream inputStream = getApplicationContext().getAssets().open(fullFileName);
-                        FileOutputStream outputStream = new FileOutputStream(targetFile);
-                        copyBytes(inputStream, outputStream);
-                        safeClose(inputStream, outputStream);
-                    }
+                SafeRunner.run(() -> {
+                    targetFile.createNewFile();
+                    InputStream inputStream = getApplicationContext().getAssets().open(fullFileName);
+                    FileOutputStream outputStream = new FileOutputStream(targetFile);
+                    copyBytes(inputStream, outputStream);
+                    safeClose(inputStream, outputStream);
                 });
 
                 if (!targetFile.canExecute())
@@ -82,20 +74,12 @@ public class IDEApplication extends MultiDexApplication {
                     return targetFile;
                 }
 
-                SafeRunner.run(new SafeRunner.SafeRunnerCallback() {
-                    @Override
-                    public void handleException(@NonNull Throwable e) {
-                        throw new RuntimeException(e);
-                    }
-
-                    @Override
-                    public void run() throws Exception {
-                        targetFile.createNewFile();
-                        InputStream inputStream = getApplicationContext().getAssets().open(fileName);
-                        FileOutputStream outputStream = new FileOutputStream(targetFile);
-                        copyBytes(inputStream, outputStream);
-                        safeClose(inputStream, outputStream);
-                    }
+                SafeRunner.run(() -> {
+                    targetFile.createNewFile();
+                    InputStream inputStream = getApplicationContext().getAssets().open(fileName);
+                    FileOutputStream outputStream = new FileOutputStream(targetFile);
+                    copyBytes(inputStream, outputStream);
+                    safeClose(inputStream, outputStream);
                 });
 
                 return targetFile;
