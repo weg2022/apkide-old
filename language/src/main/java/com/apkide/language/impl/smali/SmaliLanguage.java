@@ -6,7 +6,7 @@ import androidx.annotation.Nullable;
 import com.apkide.language.api.Language;
 import com.apkide.language.api.Highlighter;
 
-public class SmaliLanguage extends Language {
+public class SmaliLanguage implements Language {
 	
 	private SmaliHighlighter highlighter;
 	

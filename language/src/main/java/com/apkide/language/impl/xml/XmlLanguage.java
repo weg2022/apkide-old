@@ -5,9 +5,9 @@ import androidx.annotation.Nullable;
 
 import com.apkide.language.api.Language;
 import com.apkide.language.api.Highlighter;
-import com.apkide.language.api.HighlighterProxy;
+import com.apkide.language.api.DefaultHighlighter;
 
-public class XmlLanguage extends Language {
+public class XmlLanguage implements Language {
 	private Highlighter highlighter;
 	
 	@NonNull
@@ -20,7 +20,7 @@ public class XmlLanguage extends Language {
 	@Override
 	public Highlighter getHighlighter() {
 		if (highlighter == null)
-			highlighter = new HighlighterProxy(new XmlLexer());
+			highlighter = new DefaultHighlighter(new XmlLexer());
 		return highlighter;
 	}
 	

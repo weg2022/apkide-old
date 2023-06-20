@@ -3,15 +3,15 @@ package com.apkide.language.api;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public abstract class Language {
+public  interface Language {
 
     @NonNull
-    public abstract String getName();
+    String getName();
 
     @Nullable
-    public abstract Highlighter getHighlighter();
+    Highlighter getHighlighter();
 
     @NonNull
-    public abstract String[] getDefaultFilePatterns();
+    String[] getDefaultFilePatterns();
 
 }

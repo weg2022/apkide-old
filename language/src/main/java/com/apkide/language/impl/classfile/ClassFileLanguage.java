@@ -5,10 +5,10 @@ import androidx.annotation.Nullable;
 
 import com.apkide.language.api.Language;
 import com.apkide.language.api.Highlighter;
-import com.apkide.language.api.HighlighterProxy;
+import com.apkide.language.api.DefaultHighlighter;
 import com.apkide.language.impl.java.JavaLexer;
 
-public class ClassFileLanguage extends Language {
+public class ClassFileLanguage implements Language {
 	@NonNull
 	@Override
 	public String getName() {
@@ -21,7 +21,7 @@ public class ClassFileLanguage extends Language {
 	@Override
 	public Highlighter getHighlighter() {
 		if (highlighter == null)
-			highlighter = new HighlighterProxy(new JavaLexer());
+			highlighter = new DefaultHighlighter(new JavaLexer());
 		return highlighter;
 	}
 

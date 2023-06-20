@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.io.Reader;
 
 public interface Lexer {
-	int Error = -3;
+	int Info=-3;
 	int Warning = -2;
+
+	int Error = -1;
 
 	int Plain = 0;
 	int Keyword = 1;

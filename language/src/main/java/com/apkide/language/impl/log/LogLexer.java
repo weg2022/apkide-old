@@ -779,7 +779,7 @@ public class LogLexer implements Lexer {
       } else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1: {
-            return Plain;
+            return Info;
           }
           // fall through
           case 4:

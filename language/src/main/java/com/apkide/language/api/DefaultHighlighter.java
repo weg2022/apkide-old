@@ -3,10 +3,10 @@ package com.apkide.language.api;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public class HighlighterProxy implements Highlighter {
+public class DefaultHighlighter implements Highlighter {
 	private final Lexer lexer;
 	
-	public HighlighterProxy(@NonNull Lexer lexer) {
+	public DefaultHighlighter(@NonNull Lexer lexer) {
 		this.lexer = lexer;
 	}
 	

@@ -5,9 +5,9 @@ import androidx.annotation.Nullable;
 
 import com.apkide.language.api.Language;
 import com.apkide.language.api.Highlighter;
-import com.apkide.language.api.HighlighterProxy;
+import com.apkide.language.api.DefaultHighlighter;
 
-public class JavaScriptLanguage extends Language {
+public class JavaScriptLanguage implements Language {
 	@NonNull
 	@Override
 	public String getName() {
@@ -20,7 +20,7 @@ public class JavaScriptLanguage extends Language {
 	@Override
 	public Highlighter getHighlighter() {
 		if (highlighter == null)
-			highlighter = new HighlighterProxy(new JavaScriptLexer());
+			highlighter = new DefaultHighlighter(new JavaScriptLexer());
 		return highlighter;
 	}
 	
