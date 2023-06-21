@@ -9,13 +9,13 @@ Internally use ApkTool 2.7.0
 
 ## Features
 
-- [x] Zip/Jar Archive Reader & Class Reader
+- [x] Access Archive File & Class File
 - [x] Compilation & DeCompilation Apks (Apktool)
-- [x] AAPT v1/v2 Support
-- [x] Zipalign Support
-- [x] Syntax Highlighting (smali,java & class,c,cpp,groovy,java script,json,kotlin,xml,yaml)
+- [x] AAPT v1/v2 Support (v1 Not working)
+- [x] Zip Align Support (Zipalign)
+- [x] Code Highlighting (smali,java,c,cpp,groovy,java script,json,kotlin,xml,yaml)
 - [ ] Language Service (smali?)
-- [ ] Java Compilation and Conversion to smali code
+- [ ] Java to Smali and Smali to Java (java2Smali & smali2Java)
 
 ### Libraries used
 

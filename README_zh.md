@@ -5,13 +5,13 @@ APK-IDE是一款用于反编译，编译和修改APK的安卓软件。
 
 ## 功能
 
-- [x] ZIP/JAR 文件访问 & Class 文件阅读
-- [x] 编译 & 反编译 APK (Apktool)
-- [x] AAPT v1/v2 支持
-- [x] Zipalign 支持
-- [x] 语法高亮 (smali,java & class,c,cpp,groovy,java script,json,kotlin,xml,yaml)
+- [x] 访问存档文件和类文件
+- [x] 反编译和回编译APK (Apktool)
+- [x] AAPT v1/v2 支持 (v1 Not working)
+- [x] Zip Align 支持 (Zipalign)
+- [x] 代码高亮 (smali,java,c,cpp,groovy,java script,json,kotlin,xml,yaml)
 - [ ] 语言服务 (smali?)
-- [ ] Java 编译和转换为 smali 代码
+- [ ] Java 转 Smali 和 Smali 转 Java (java2Smali & smali2Java)
 
 ### Libraries used
 
