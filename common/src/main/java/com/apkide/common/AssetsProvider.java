@@ -1,4 +1,4 @@
-package brut.util;
+package com.apkide.common;
 
 import androidx.annotation.StringRes;
 

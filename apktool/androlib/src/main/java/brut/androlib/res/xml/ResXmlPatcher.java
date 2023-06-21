@@ -42,7 +42,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import brut.util.Logger;
+import com.apkide.common.Logger;
 
 public final class ResXmlPatcher {
 

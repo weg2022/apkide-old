@@ -30,7 +30,7 @@ import java.util.List;
 
 import brut.androlib.res.xml.ResXmlEncoders;
 import brut.util.ExtDataInput;
-import brut.util.Logger;
+import com.apkide.common.Logger;
 
 public class StringBlock {
 

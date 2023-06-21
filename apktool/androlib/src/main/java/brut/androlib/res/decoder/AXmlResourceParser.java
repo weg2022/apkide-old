@@ -31,7 +31,7 @@ import brut.androlib.res.data.ResID;
 import brut.androlib.res.util.TypedValue;
 import brut.androlib.res.xml.ResXmlEncoders;
 import brut.util.ExtDataInput;
-import brut.util.Logger;
+import com.apkide.common.Logger;
 
 /**
  * Binary xml files parser.

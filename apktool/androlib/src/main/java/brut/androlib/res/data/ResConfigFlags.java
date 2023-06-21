@@ -18,7 +18,7 @@ package brut.androlib.res.data;
 
 import androidx.annotation.NonNull;
 
-import brut.util.Logger;
+import com.apkide.common.Logger;
 
 
 public class ResConfigFlags {

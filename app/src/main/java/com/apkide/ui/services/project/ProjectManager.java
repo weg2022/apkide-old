@@ -9,7 +9,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import brut.util.AssetsProvider;
+import com.apkide.common.AssetsProvider;
 
 public final class ProjectManager {
 

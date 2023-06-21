@@ -19,6 +19,7 @@ APK-IDE是一款用于反编译，编译和修改APK的安卓软件。
 * [material-components-android](https://github.com/material-components/material-components-android)
 * [apktool](https://github.com/iBotPeaches/Apktool)
 * [jd-core](https://github.com/java-decompiler/jd-core)
+* [lsp4j](https://github.com/eclipse-lsp4j/lsp4j)
 * [cascadia-code](https://github.com/microsoft/cascadia-code)
 * [smali](https://github.com/google/smali)
 * [commons-text](https://github.com/apache/commons-text)

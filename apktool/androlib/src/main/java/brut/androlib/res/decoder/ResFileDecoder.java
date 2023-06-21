@@ -32,7 +32,7 @@ import brut.androlib.res.data.value.ResFileValue;
 import brut.directory.DirUtil;
 import brut.directory.Directory;
 import brut.directory.DirectoryException;
-import brut.util.Logger;
+import com.apkide.common.Logger;
 
 public class ResFileDecoder {
     private final ResStreamDecoderContainer mDecoders;

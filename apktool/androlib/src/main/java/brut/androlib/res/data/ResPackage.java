@@ -34,7 +34,7 @@ import brut.androlib.res.data.value.ResFileValue;
 import brut.androlib.res.data.value.ResValueFactory;
 import brut.androlib.res.xml.ResValuesXmlSerializable;
 import brut.util.Duo;
-import brut.util.Logger;
+import com.apkide.common.Logger;
 
 public class ResPackage {
     private final ResTable mResTable;

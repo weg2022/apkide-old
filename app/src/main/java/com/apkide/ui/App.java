@@ -21,7 +21,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
-import brut.util.AssetsProvider;
+import com.apkide.common.AssetsProvider;
 import brut.util.OSDetection;
 
 @SuppressLint("StaticFieldLeak")

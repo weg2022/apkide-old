@@ -61,7 +61,7 @@ import brut.directory.Directory;
 import brut.directory.DirectoryException;
 import brut.directory.ExtFile;
 import brut.util.BrutIO;
-import brut.util.Logger;
+import com.apkide.common.Logger;
 import brut.util.OS;
 
 public class Androlib {

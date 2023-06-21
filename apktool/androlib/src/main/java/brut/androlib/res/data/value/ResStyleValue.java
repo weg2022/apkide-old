@@ -25,7 +25,7 @@ import brut.androlib.res.data.ResResSpec;
 import brut.androlib.res.data.ResResource;
 import brut.androlib.res.xml.ResValuesXmlSerializable;
 import brut.util.Duo;
-import brut.util.Logger;
+import com.apkide.common.Logger;
 
 public class ResStyleValue extends ResBagValue implements
         ResValuesXmlSerializable {

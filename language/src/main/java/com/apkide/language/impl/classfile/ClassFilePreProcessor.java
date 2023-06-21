@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import brut.util.AssetsProvider;
+import com.apkide.common.AssetsProvider;
 
 public class ClassFilePreProcessor {
 	private ZipFile androidJarFile;

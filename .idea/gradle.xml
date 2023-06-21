@@ -18,6 +18,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/common" />
             <option value="$PROJECT_DIR$/editor" />
+            <option value="$PROJECT_DIR$/java2smali" />
             <option value="$PROJECT_DIR$/language" />
           </set>
         </option>

@@ -18,6 +18,8 @@ package brut.util;
 
 import android.text.TextUtils;
 
+import com.apkide.common.AssetsProvider;
+
 import java.io.File;
 
 import brut.common.BrutException;

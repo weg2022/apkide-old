@@ -1,4 +1,4 @@
-package brut.util;
+package com.apkide.common;
 
 public abstract class Logger {
 

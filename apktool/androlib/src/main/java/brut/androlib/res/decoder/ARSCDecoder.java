@@ -52,7 +52,7 @@ import brut.androlib.res.data.value.ResValueFactory;
 import brut.androlib.res.util.TypedValue;
 import brut.util.Duo;
 import brut.util.ExtDataInput;
-import brut.util.Logger;
+import com.apkide.common.Logger;
 
 public class ARSCDecoder {
     public static ARSCData decode(InputStream arscStream, boolean findFlagsOffsets, boolean keepBroken)

@@ -79,9 +79,9 @@ import brut.directory.ExtFile;
 import brut.directory.FileDirectory;
 import brut.directory.ZipUtils;
 import brut.util.AaptManager;
-import brut.util.AssetsProvider;
+import com.apkide.common.AssetsProvider;
 import brut.util.Duo;
-import brut.util.Logger;
+import com.apkide.common.Logger;
 import brut.util.OS;
 
 final public class AndrolibResources {

@@ -31,7 +31,7 @@ import brut.androlib.err.AndrolibException;
 import brut.androlib.mod.SmaliMod;
 import brut.directory.DirectoryException;
 import brut.directory.ExtFile;
-import brut.util.Logger;
+import com.apkide.common.Logger;
 
 public class SmaliBuilder {
 	
