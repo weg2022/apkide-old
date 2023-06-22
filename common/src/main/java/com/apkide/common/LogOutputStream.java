@@ -1,7 +1,5 @@
 package com.apkide.common;
 
-import com.apkide.common.Logger;
-
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -35,13 +33,13 @@ public class LogOutputStream extends OutputStream {
     public void flush() throws IOException {
         switch (level) {
             case LEVEL_ERROR:
-                Logger.get().error(msg.toString());
+                Logger.get(name).error(msg.toString());
                 break;
             case LEVEL_WARNING:
-                Logger.get().warning(msg.toString());
+                Logger.get(name).warning(msg.toString());
                 break;
             case LEVEL_INFO:
-                Logger.get().info(msg.toString());
+                Logger.get(name).info(msg.toString());
                 break;
         }
         msg.setLength(0);

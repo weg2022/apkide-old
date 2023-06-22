@@ -16,6 +16,9 @@
  */
 package brut.androlib.res.decoder;
 
+import static brut.androlib.Androlib.LOGGER;
+import static brut.androlib.Androlib.LOG_NAME;
+
 import com.google.common.annotations.VisibleForTesting;
 
 import java.io.IOException;
@@ -215,7 +218,7 @@ public class StringBlock {
             return (m_isUTF8 ? UTF8_DECODER : UTF16LE_DECODER).decode(wrappedBuffer).toString();
         } catch (CharacterCodingException ex) {
             if (!m_isUTF8) {
-                Logger.get().warning("Failed to decode a string at offset " + offset + " of length " + length);
+                LOGGER.warning("Failed to decode a string at offset " + offset + " of length " + length);
                 return null;
             }
         }
@@ -226,7 +229,7 @@ public class StringBlock {
             // If decoding failed, we try to use CESU-8 decoder, which is closer to what Android actually uses.
             return CESU8_DECODER.decode(wrappedBufferRetry).toString();
         } catch (CharacterCodingException e) {
-            Logger.get().warning("Failed to decode a string with CESU-8 decoder.");
+            LOGGER.warning("Failed to decode a string with CESU-8 decoder.");
             return null;
         }
     }

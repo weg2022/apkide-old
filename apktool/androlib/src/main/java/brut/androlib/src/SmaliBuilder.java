@@ -16,6 +16,9 @@
  */
 package brut.androlib.src;
 
+import static brut.androlib.Androlib.LOGGER;
+import static brut.androlib.Androlib.LOG_NAME;
+
 import com.android.tools.smali.dexlib2.Opcodes;
 import com.android.tools.smali.dexlib2.writer.builder.DexBuilder;
 import com.android.tools.smali.dexlib2.writer.io.FileDataStore;
@@ -77,7 +80,7 @@ public class SmaliBuilder {
 				throw new AndrolibException(ex);
 			}
 		} else
-            Logger.get().warning("Unknown file type, ignoring: " + inFile);
+			LOGGER.warning("Unknown file type, ignoring: " + inFile);
 		inStream.close();
 	}
 	

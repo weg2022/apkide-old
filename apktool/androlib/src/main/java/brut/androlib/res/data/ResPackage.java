@@ -16,6 +16,8 @@
  */
 package brut.androlib.res.data;
 
+import static brut.androlib.Androlib.LOGGER;
+
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -150,7 +152,7 @@ public class ResPackage {
 
     public void addType(ResTypeSpec type) {
         if (mTypes.containsKey(type.getName())) {
-            Logger.get().warning("Multiple types detected! " + type + " ignored!");
+            LOGGER.warning("Multiple types detected! " + type + " ignored!");
         } else {
             mTypes.put(type.getName(), type);
         }

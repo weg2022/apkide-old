@@ -16,6 +16,9 @@
  */
 package brut.androlib.res.xml;
 
+import static brut.androlib.Androlib.LOGGER;
+import static brut.androlib.Androlib.LOG_NAME;
+
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -384,7 +387,7 @@ public final class ResXmlPatcher {
             docFactory.setAttribute(ACCESS_EXTERNAL_DTD, " ");
             docFactory.setAttribute(ACCESS_EXTERNAL_SCHEMA, " ");
         } catch (IllegalArgumentException ex) {
-            Logger.get().warning("JAXP 1.5 Support is required to validate XML");
+            LOGGER.warning("JAXP 1.5 Support is required to validate XML");
         }
 
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();

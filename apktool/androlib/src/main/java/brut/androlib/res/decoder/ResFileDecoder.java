@@ -16,6 +16,9 @@
  */
 package brut.androlib.res.decoder;
 
+import static brut.androlib.Androlib.LOGGER;
+import static brut.androlib.Androlib.LOG_NAME;
+
 import com.apkide.common.AppLog;
 
 import java.io.IOException;
@@ -102,7 +105,7 @@ public class ResFileDecoder {
                         return;
                     } catch (CantFind9PatchChunkException ex) {
                         AppLog.e(ex);
-                        Logger.get().warning( String.format(
+                        LOGGER.warning( String.format(
                             "Cant find 9patch chunk in file: \"%s\". Renaming it to *.png.", inFileName
                         ));
                         outDir.removeFile(outFileName);
@@ -132,7 +135,7 @@ public class ResFileDecoder {
             decode(inDir, inFilePath, outDir, outFileName, "raw");
         } catch (AndrolibException ex) {
             AppLog.e(ex);
-            Logger.get().error(String.format(
+            LOGGER.error(String.format(
                 "Could not decode file, replacing by FALSE value: %s",
             inFileName));
             res.replace(new ResBoolValue(false, 0, null));

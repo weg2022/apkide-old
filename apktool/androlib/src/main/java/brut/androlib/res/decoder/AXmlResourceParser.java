@@ -16,6 +16,9 @@
  */
 package brut.androlib.res.decoder;
 
+import static brut.androlib.Androlib.LOGGER;
+import static brut.androlib.Androlib.LOG_NAME;
+
 import com.apkide.common.AppLog;
 import com.google.common.io.LittleEndianDataInputStream;
 
@@ -417,7 +420,7 @@ public class AXmlResourceParser implements XmlResourceParser {
             } catch (AndrolibException ex) {
                 setFirstError(ex);
                 AppLog.e(ex);
-                Logger.get().warning(String.format("Could not decode attr value, using undecoded value "
+                LOGGER.warning(String.format("Could not decode attr value, using undecoded value "
                                 + "instead: ns=%s, name=%s, value=0x%08x",
                         getAttributePrefix(index),
                         getAttributeName(index),

@@ -27,12 +27,7 @@ public class AboutUI extends ThemeUI {
 		setSupportActionBar(binding.toolbar);
 		assert getSupportActionBar() != null;
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		binding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				finish();
-			}
-		});
+		binding.toolbar.setNavigationOnClickListener(v -> finish());
 		binding.webView.loadUrl("file:///android_asset/license.html");
 		binding.webView.getSettings().setSupportZoom(true);
 	}

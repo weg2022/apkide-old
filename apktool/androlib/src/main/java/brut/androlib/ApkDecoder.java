@@ -16,6 +16,9 @@
  */
 package brut.androlib;
 
+import static brut.androlib.Androlib.LOGGER;
+import static brut.androlib.Androlib.LOG_NAME;
+
 import android.text.TextUtils;
 
 import java.io.File;
@@ -94,7 +97,7 @@ public class ApkDecoder {
             OS.rmdir(outDir);
             outDir.mkdirs();
     
-            Logger.get().info("Using Apktool " + Androlib.getVersion() + " on " + mApkFile.getName());
+            LOGGER.info("Using Apktool " + Androlib.getVersion() + " on " + mApkFile.getName());
 
             if (hasResources()) {
                 switch (mDecodeResources) {
@@ -184,7 +187,7 @@ public class ApkDecoder {
             throw new AndrolibException("Invalid decode sources mode: " + mode);
         }
         if (mDecodeSources == DECODE_SOURCES_NONE && mode == DECODE_SOURCES_SMALI_ONLY_MAIN_CLASSES) {
-            Logger.get().info("--only-main-classes cannot be paired with -s/--no-src. Ignoring.");
+            LOGGER.info("--only-main-classes cannot be paired with -s/--no-src. Ignoring.");
             return;
         }
         mDecodeSources = mode;

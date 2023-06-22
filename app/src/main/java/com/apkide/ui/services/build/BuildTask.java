@@ -1,7 +1,10 @@
 package com.apkide.ui.services.build;
 
-public abstract class BuildTask {
-	
-	public abstract void execute() throws BuildException;
-	
+import java.util.concurrent.RunnableFuture;
+
+public abstract class BuildTask implements RunnableFuture<Boolean> {
+
+
+
+
 }

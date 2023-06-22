@@ -16,6 +16,8 @@
  */
 package brut.androlib.res.data;
 
+import static brut.androlib.Androlib.LOGGER;
+
 import androidx.annotation.NonNull;
 
 import com.apkide.common.Logger;
@@ -97,27 +99,27 @@ public class ResConfigFlags {
                           short screenHeightDp, char[] localeScript, char[] localeVariant,
                           byte screenLayout2, byte colorMode, boolean isInvalid, int size) {
         if (orientation < 0 || orientation > 3) {
-            Logger.get().warning("Invalid orientation value: " + orientation);
+            LOGGER.warning("Invalid orientation value: " + orientation);
             orientation = 0;
             isInvalid = true;
         }
         if (touchscreen < 0 || touchscreen > 3) {
-            Logger.get().warning("Invalid touchscreen value: " + touchscreen);
+            LOGGER.warning("Invalid touchscreen value: " + touchscreen);
             touchscreen = 0;
             isInvalid = true;
         }
         if (density < -1) {
-            Logger.get().warning("Invalid density value: " + density);
+            LOGGER.warning("Invalid density value: " + density);
             density = 0;
             isInvalid = true;
         }
         if (keyboard < 0 || keyboard > 3) {
-            Logger.get().warning("Invalid keyboard value: " + keyboard);
+            LOGGER.warning("Invalid keyboard value: " + keyboard);
             keyboard = 0;
             isInvalid = true;
         }
         if (navigation < 0 || navigation > 4) {
-            Logger.get().warning("Invalid navigation value: " + navigation);
+            LOGGER.warning("Invalid navigation value: " + navigation);
             navigation = 0;
             isInvalid = true;
         }

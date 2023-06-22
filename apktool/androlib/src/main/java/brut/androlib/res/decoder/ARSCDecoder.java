@@ -16,6 +16,9 @@
  */
 package brut.androlib.res.decoder;
 
+import static brut.androlib.Androlib.LOGGER;
+import static brut.androlib.Androlib.LOG_NAME;
+
 import android.annotation.SuppressLint;
 
 import com.apkide.common.CountingInputStream;
@@ -137,7 +140,7 @@ public class ARSCDecoder {
         }
 
         if (mTypeIdOffset > 0) {
-            Logger.get().warning("Please report this application to Apktool for a fix: https://github.com/iBotPeaches/Apktool/issues/1728");
+            LOGGER.warning("Please report this application to Apktool for a fix: https://github.com/iBotPeaches/Apktool/issues/1728");
         }
 
         mTypeNames = StringBlock.read(mIn);
@@ -184,7 +187,7 @@ public class ARSCDecoder {
         for (int i = 0; i < libraryCount; i++) {
             packageId = mIn.readInt();
             packageName = mIn.readNullEndedString(128, true);
-            Logger.get().info(String.format("Decoding Shared Library (%s), pkgId: %d", packageName, packageId));
+            LOGGER.info(String.format("Decoding Shared Library (%s), pkgId: %d", packageName, packageId));
         }
 
         while (nextChunk().type == Header.XML_TYPE_TYPE) {
@@ -196,7 +199,7 @@ public class ARSCDecoder {
         int count = mIn.readInt();
 
         for (int i = 0; i < count; i++) {
-            Logger.get().info(String.format("Skipping staged alias stagedId (%h) finalId: %h", mIn.readInt(), mIn.readInt()));
+            LOGGER.info(String.format("Skipping staged alias stagedId (%h) finalId: %h", mIn.readInt(), mIn.readInt()));
         }
 
         nextChunk();
@@ -206,7 +209,7 @@ public class ARSCDecoder {
         checkChunkType(Header.XML_TYPE_OVERLAY);
         String name = mIn.readNullEndedString(256, true);
         String actor = mIn.readNullEndedString(256, true);
-        Logger.get().info(String.format("Overlay name: \"%s\", actor: \"%s\")", name, actor));
+        LOGGER.info(String.format("Overlay name: \"%s\", actor: \"%s\")", name, actor));
 
         nextChunk();
     }
@@ -218,7 +221,7 @@ public class ARSCDecoder {
         int count = mIn.readInt();
 
         for (int i = 0; i < count; i++) {
-            Logger.get().info(String.format("Skipping overlay (%h)", mIn.readInt()));
+            LOGGER.info(String.format("Skipping overlay (%h)", mIn.readInt()));
         }
 
         nextChunk();
@@ -248,7 +251,7 @@ public class ARSCDecoder {
 
             // skip "TYPE 8 chunks" and/or padding data at the end of this chunk
             if (mCountIn.getCount() < mHeader.endPosition) {
-                Logger.get().warning("Unknown data detected. Skipping: " + (mHeader.endPosition - mCountIn.getCount()) + " byte(s)");
+                LOGGER.warning("Unknown data detected. Skipping: " + (mHeader.endPosition - mCountIn.getCount()) + " byte(s)");
                 mCountIn.skip(mHeader.endPosition - mCountIn.getCount());
             }
 
@@ -296,12 +299,12 @@ public class ARSCDecoder {
         // For some APKs there is a disconnect between the reported size of Configs
         // If we find a mismatch skip those bytes.
         if (position != mCountIn.getCount()) {
-            Logger.get().warning("Invalid data detected. Skipping: " + (position - mCountIn.getCount()) + " byte(s)");
+            LOGGER.warning("Invalid data detected. Skipping: " + (position - mCountIn.getCount()) + " byte(s)");
             mIn.skipBytes(position - mCountIn.getCount());
         }
 
         if ((typeFlags & 0x01) != 0) {
-            Logger.get().info("Sparse type flags detected: " + mTypeSpec.getName());
+            LOGGER.info("Sparse type flags detected: " + mTypeSpec.getName());
         }
 
         HashMap<Integer, Integer> entryOffsetMap = new LinkedHashMap<>();
@@ -316,9 +319,9 @@ public class ARSCDecoder {
         if (flags.isInvalid) {
             String resName = mTypeSpec.getName() + flags.getQualifiers();
             if (mKeepBroken) {
-                Logger.get().warning("Invalid config flags detected: " + resName);
+                LOGGER.warning("Invalid config flags detected: " + resName);
             } else {
-                Logger.get().warning("Invalid config flags detected. Dropping resources: " + resName);
+                LOGGER.warning("Invalid config flags detected. Dropping resources: " + resName);
             }
         }
 
@@ -391,7 +394,7 @@ public class ARSCDecoder {
             if (mKeepBroken) {
                 mType.addResource(res, true);
                 spec.addResource(res, true);
-                Logger.get().warning(String.format("Duplicate Resource Detected. Ignoring duplicate: %s", res));
+                LOGGER.warning(String.format("Duplicate Resource Detected. Ignoring duplicate: %s", res));
             } else {
                 throw ex;
             }
@@ -539,11 +542,11 @@ public class ARSCDecoder {
             BigInteger exceedingBI = new BigInteger(1, buf);
 
             if (exceedingBI.equals(BigInteger.ZERO)) {
-                Logger.get().info(String
+                LOGGER.info(String
                         .format("Config flags size > %d, but exceeding bytes are all zero, so it should be ok.",
                                 KNOWN_CONFIG_BYTES));
             } else {
-                Logger.get().warning(String.format("Config flags size > %d. Size = %d. Exceeding bytes: 0x%X.",
+                LOGGER.warning(String.format("Config flags size > %d. Size = %d. Exceeding bytes: 0x%X.",
                         KNOWN_CONFIG_BYTES, size, exceedingBI));
                 isInvalid = true;
             }
@@ -747,7 +750,7 @@ public class ARSCDecoder {
                 throw new AndrolibException("Arsc file contains zero packages");
             } else if (mPackages.length != 1) {
                 int id = findPackageWithMostResSpecs();
-                Logger.get().info("Arsc file contains multiple packages. Using package "
+                LOGGER.info("Arsc file contains multiple packages. Using package "
                         + mPackages[id].getName() + " as default.");
 
                 return mPackages[id];

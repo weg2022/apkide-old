@@ -8,6 +8,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.apkide.common.LogListener;
+import com.apkide.common.Logger;
+
 public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPreferenceChangeListener {
 
 	@Override
