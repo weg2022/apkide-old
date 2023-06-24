@@ -1,4 +1,4 @@
-package com.apkide.language;
+package com.apktool.cl.api;
 
 import static org.junit.Assert.assertEquals;
 
@@ -14,6 +14,4 @@ public class ExampleUnitTest {
     public void addition_isCorrect() {
         assertEquals(4, 2 + 2);
     }
-
-
 }

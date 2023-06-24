@@ -5,7 +5,7 @@ plugins {
 android {
     applicationVariants.configureEach { variant ->
         variant.outputs.configureEach { output ->
-            def appFileName = "APK-IDE-" + variant.versionName + ".apk"
+            def appFileName = "apkide-" + variant.versionName + ".apk"
             outputFileName = appFileName
         }
     }

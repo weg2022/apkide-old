@@ -8,17 +8,18 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
+import android.text.TextUtils;
 
+import com.apkide.common.AppLog;
 import com.apkide.common.AssetsProvider;
 import com.apkide.common.FileUtils;
 import com.apkide.common.SafeRunner;
-import com.apkide.ui.services.build.BuildService;
 import com.apkide.ui.services.file.FileSystem;
-import com.apkide.ui.services.project.ProjectService;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.Arrays;
 
 import brut.util.OSDetection;
 
@@ -30,18 +31,20 @@ public final class App {
     private static Handler handler;
     private static MainUI mainUI;
 
-    private App() {}
+    private App() {
+    }
 
     public static void initApp(Context context) {
         App.context = context;
         AssetsProvider.set(new AssetsProvider() {
 
-
             @Override
             public File foundBinary(String binaryName) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    return new File(context.getApplicationInfo().nativeLibraryDir
-                            + separator + "lib" + binaryName + ".so");
+                    String binaryPath = context.getApplicationInfo().nativeLibraryDir
+                            + separator + "lib" + binaryName + ".so";
+                    AppLog.s(String.format("%s binary file found.", binaryPath));
+                    return new File(binaryPath);
                 }
                 String targetName = FileUtils.getFileName(binaryName);
                 String arch = "";
@@ -57,11 +60,19 @@ public final class App {
                     arch = "x86";
 
                 File targetFile = new File(context.getFilesDir(), targetName);
-                if (targetFile.exists())
+                if (TextUtils.isEmpty(arch)) {
+                    AppLog.e(String.format("Unsupported processor architecture %s.", Arrays.toString(OSDetection.getArchitectures())));
+                    return null;
+                }
+
+                if (targetFile.exists()) {
+                    AppLog.s(String.format("%s binary file found.", targetFile.getAbsolutePath()));
                     return FileUtils.setExecutable(targetFile);
+                }
 
                 String fullFileName = "bin" + separator + arch + separator + binaryName;
 
+                AppLog.s(String.format("Extract binary file %s to %s from assets.", fullFileName, targetFile.getAbsolutePath()));
                 SafeRunner.run(() -> {
                     FileSystem.createFile(targetFile.getAbsolutePath());
                     InputStream inputStream = context.getAssets().open(fullFileName);
@@ -70,6 +81,7 @@ public final class App {
                     safeClose(inputStream, outputStream);
                 });
 
+                AppLog.s(String.format("%s binary found.", targetFile.getAbsolutePath()));
                 return FileUtils.setExecutable(targetFile);
             }
 
@@ -78,9 +90,11 @@ public final class App {
                 String targetName = FileUtils.getFileName(fileName);
                 File targetFile = new File(context.getExternalFilesDir(null), targetName);
                 if (targetFile.exists()) {
+                    AppLog.s(String.format("%s file found.", targetFile.getAbsolutePath()));
                     return targetFile;
                 }
 
+                AppLog.s(String.format("Extract file %s to %s from assets.", fileName, targetFile.getAbsolutePath()));
                 SafeRunner.run(() -> {
                     FileSystem.createFile(targetFile.getAbsolutePath());
                     InputStream inputStream = context.getAssets().open(fileName);
@@ -114,6 +128,7 @@ public final class App {
     }
 
     public static void init(MainUI mainUI) {
+        AppLog.s("App.init");
         app = new App();
         App.mainUI = mainUI;
         App.handler = new Handler();
@@ -126,7 +141,7 @@ public final class App {
 
     public static void shutdown() {
         if (app != null) {
-
+            AppLog.s("App.shutdown");
 
             app = null;
         }

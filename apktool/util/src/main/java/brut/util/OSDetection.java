@@ -5,18 +5,21 @@ import android.os.Build;
 import java.util.Arrays;
 
 public class OSDetection {
-	private static final String[] architectures = Build.SUPPORTED_ABIS;
+    private static final String[] architectures = Build.SUPPORTED_ABIS;
 
+    public static String[] getArchitectures() {
+        return architectures;
+    }
 
-	public static boolean isAarch64() {
-		return Arrays.stream(architectures)
-				.anyMatch(arch -> arch.contains("arm64-v8a"));
-	}
-	
-	public static boolean isAarch32() {
-		return Arrays.stream(architectures)
-				.anyMatch(arch -> arch.contains("armeabi-v7a"));
-	}
+    public static boolean isAarch64() {
+        return Arrays.stream(architectures)
+                .anyMatch(arch -> arch.contains("arm64-v8a"));
+    }
+
+    public static boolean isAarch32() {
+        return Arrays.stream(architectures)
+                .anyMatch(arch -> arch.contains("armeabi-v7a"));
+    }
 
 	public static boolean isArm() {
 		return Arrays.stream(architectures)

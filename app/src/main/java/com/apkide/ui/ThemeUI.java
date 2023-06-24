@@ -14,7 +14,7 @@ public class ThemeUI extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        boolean darkMode = false;
+        boolean darkMode;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
             darkMode = getResources().getConfiguration().isNightModeActive();
         else

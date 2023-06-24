@@ -46,21 +46,6 @@
 	</PreferenceCategory>
 
 	<PreferenceCategory android:title="Java Compile">
-
-		<ListPreference
-			android:defaultValue="8"
-			android:entries="@array/PefJavaVersion"
-			android:entryValues="@array/PefJavaVersionValues"
-			android:key="javaSourceVersion"
-			android:summary="Set the Java version of the Java source file."
-			android:title="Source Version" />
-		<ListPreference
-			android:defaultValue="8"
-			android:entries="@array/PefJavaVersion"
-			android:entryValues="@array/PefJavaVersionValues"
-			android:key="javaTargetVersion"
-			android:summary="Set the Java version of the Java output file."
-			android:title="Target Version" />
 		<SwitchPreference
 			android:key="javaKeepParameters"
 			android:summary="Parameter information is preserved at compile time."

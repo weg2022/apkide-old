@@ -8,18 +8,20 @@ import com.android.tools.smali.dexlib2.DexFileFactory;
 import com.android.tools.smali.dexlib2.Opcodes;
 import com.android.tools.smali.dexlib2.iface.DexFile;
 import com.apkide.common.LogOutputStream;
+import com.apkide.common.Logger;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 public class Java2Smali {
-
+    public static final Logger LOGGER = Logger.get("Java to Smali");
 
     public static boolean dexClassFile(List<String> inputClassFilePaths, String outDexPath) {
+        LOGGER.info("dex classes...");
         DxContext dxContext = new DxContext(
-                new LogOutputStream("Dex-Classes", LogOutputStream.LEVEL_INFO),
-                new LogOutputStream("Dex-Classes", LogOutputStream.LEVEL_ERROR));
+                new LogOutputStream(LOGGER.getName(), LogOutputStream.LEVEL_INFO),
+                new LogOutputStream(LOGGER.getName(), LogOutputStream.LEVEL_ERROR));
 
         Main.Arguments arguments = new Main.Arguments();
         arguments.outName = outDexPath;
@@ -31,12 +33,13 @@ public class Java2Smali {
                 return true;
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            LOGGER.error(e.getLocalizedMessage());
         }
         return false;
     }
 
     public static void disassembleDexFile(String dexFilePath, String outDir) throws IOException {
+        LOGGER.info(String.format("disassemble %s dex to %s dir...", dexFilePath, outDir));
         Opcodes opCodes = Opcodes.getDefault();
         DexFile file = DexFileFactory.loadDexFile(dexFilePath, opCodes);
         BaksmaliOptions options = new BaksmaliOptions();

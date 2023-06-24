@@ -30,13 +30,6 @@
 			android:defaultValue="true"
 			android:summary="When Ligature is enabled, the readability of the code will be improved."
 			android:title="Ligature" />
-		<ListPreference
-			android:key="fontTypeface"
-			android:entries="@array/PefEditorFonts"
-			android:entryValues="@array/PefEditorFontValues"
-			android:defaultValue="JetBrains-Mono-Regular.ttf"
-			android:summary="Select the font used by the editor."
-			android:title="Typeface" />
 	</PreferenceCategory>
 
 	<PreferenceCategory android:title="Tabs &amp; Spaces">

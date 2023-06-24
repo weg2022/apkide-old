@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<string-array name="PefEditorFonts">
-		<item>JetBrains Mono</item>
-		<item>Cascadia Mono</item>
-	</string-array>
-
-	<string-array name="PefEditorFontValues">
-		<item>JetBrainsMono-Regular.ttf</item>
-		<item>CascadiaMono-Regular.ttf</item>
-	</string-array>
 
 	<string-array name="PefEditorTabSize">
 		<item>1</item>
@@ -37,23 +28,4 @@
 		<item>16</item>
 	</string-array>
 
-	<string-array name="PefJavaVersion">
-		<item>Java Version 5</item>
-		<item>Java Version 6</item>
-		<item>Java Version 7</item>
-		<item>Java Version 8</item>
-		<item>Java Version 9</item>
-		<item>Java Version 10</item>
-		<item>Java Version 11</item>
-	</string-array>
-
-	<string-array name="PefJavaVersionValues">
-		<item>5</item>
-		<item>6</item>
-		<item>7</item>
-		<item>8</item>
-		<item>9</item>
-		<item>10</item>
-		<item>11</item>
-	</string-array>
 </resources>
