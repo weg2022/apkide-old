@@ -17,7 +17,6 @@
 package brut.androlib.res.decoder;
 
 import static brut.androlib.Androlib.LOGGER;
-import static brut.androlib.Androlib.LOG_NAME;
 
 import android.annotation.SuppressLint;
 
@@ -55,7 +54,6 @@ import brut.androlib.res.data.value.ResValueFactory;
 import brut.androlib.res.util.TypedValue;
 import brut.util.Duo;
 import brut.util.ExtDataInput;
-import com.apkide.common.Logger;
 
 public class ARSCDecoder {
     public static ARSCData decode(InputStream arscStream, boolean findFlagsOffsets, boolean keepBroken)

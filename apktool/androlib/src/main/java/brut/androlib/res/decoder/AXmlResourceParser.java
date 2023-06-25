@@ -17,7 +17,6 @@
 package brut.androlib.res.decoder;
 
 import static brut.androlib.Androlib.LOGGER;
-import static brut.androlib.Androlib.LOG_NAME;
 
 import com.apkide.common.AppLog;
 import com.google.common.io.LittleEndianDataInputStream;
@@ -34,7 +33,6 @@ import brut.androlib.res.data.ResID;
 import brut.androlib.res.util.TypedValue;
 import brut.androlib.res.xml.ResXmlEncoders;
 import brut.util.ExtDataInput;
-import com.apkide.common.Logger;
 
 /**
  * Binary xml files parser.

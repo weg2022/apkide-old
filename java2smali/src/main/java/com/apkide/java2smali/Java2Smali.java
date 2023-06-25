@@ -7,8 +7,8 @@ import com.android.tools.smali.baksmali.BaksmaliOptions;
 import com.android.tools.smali.dexlib2.DexFileFactory;
 import com.android.tools.smali.dexlib2.Opcodes;
 import com.android.tools.smali.dexlib2.iface.DexFile;
-import com.apkide.common.LogOutputStream;
-import com.apkide.common.Logger;
+import com.apkide.common.log.LogOutputStream;
+import com.apkide.common.log.Logger;
 
 import java.io.File;
 import java.io.IOException;

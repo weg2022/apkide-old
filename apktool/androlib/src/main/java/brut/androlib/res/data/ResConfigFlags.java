@@ -20,8 +20,6 @@ import static brut.androlib.Androlib.LOGGER;
 
 import androidx.annotation.NonNull;
 
-import com.apkide.common.Logger;
-
 
 public class ResConfigFlags {
     public final short mcc;

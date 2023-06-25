@@ -17,7 +17,6 @@
 package brut.androlib.src;
 
 import static brut.androlib.Androlib.LOGGER;
-import static brut.androlib.Androlib.LOG_NAME;
 
 import com.android.tools.smali.dexlib2.Opcodes;
 import com.android.tools.smali.dexlib2.writer.builder.DexBuilder;
@@ -34,7 +33,6 @@ import brut.androlib.err.AndrolibException;
 import brut.androlib.mod.SmaliMod;
 import brut.directory.DirectoryException;
 import brut.directory.ExtFile;
-import com.apkide.common.Logger;
 
 public class SmaliBuilder {
 	

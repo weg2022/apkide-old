@@ -1,4 +1,4 @@
-package com.apkide.common;
+package com.apkide.common.log;
 
 import java.io.IOException;
 import java.io.OutputStream;

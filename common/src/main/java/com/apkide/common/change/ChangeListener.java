@@ -1,4 +1,4 @@
-package com.apkide.common;
+package com.apkide.common.change;
 
 import androidx.annotation.NonNull;
 

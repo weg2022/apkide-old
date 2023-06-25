@@ -18,7 +18,7 @@ package brut.androlib;
 
 import com.android.tools.smali.dexlib2.iface.DexFile;
 import com.apkide.common.FileUtils;
-import com.apkide.common.Logger;
+import com.apkide.common.log.Logger;
 
 import org.xml.sax.SAXException;
 

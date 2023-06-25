@@ -1,8 +1,10 @@
-package com.apkide.common;
+package com.apkide.common.log;
 
 import android.util.ArrayMap;
 
 import androidx.annotation.NonNull;
+
+import com.apkide.common.SafeListenerList;
 
 public  class Logger {
 

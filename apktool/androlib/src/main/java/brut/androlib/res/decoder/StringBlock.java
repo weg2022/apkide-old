@@ -17,7 +17,6 @@
 package brut.androlib.res.decoder;
 
 import static brut.androlib.Androlib.LOGGER;
-import static brut.androlib.Androlib.LOG_NAME;
 
 import com.google.common.annotations.VisibleForTesting;
 
@@ -33,7 +32,6 @@ import java.util.List;
 
 import brut.androlib.res.xml.ResXmlEncoders;
 import brut.util.ExtDataInput;
-import com.apkide.common.Logger;
 
 public class StringBlock {
 

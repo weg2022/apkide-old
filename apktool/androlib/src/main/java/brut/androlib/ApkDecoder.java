@@ -17,7 +17,6 @@
 package brut.androlib;
 
 import static brut.androlib.Androlib.LOGGER;
-import static brut.androlib.Androlib.LOG_NAME;
 
 import android.text.TextUtils;
 
@@ -45,7 +44,6 @@ import brut.androlib.res.data.ResTable;
 import brut.androlib.res.xml.ResXmlPatcher;
 import brut.directory.DirectoryException;
 import brut.directory.ExtFile;
-import com.apkide.common.Logger;
 import brut.util.OS;
 
 public class ApkDecoder {

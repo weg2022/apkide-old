@@ -17,7 +17,6 @@
 package brut.androlib.res.xml;
 
 import static brut.androlib.Androlib.LOGGER;
-import static brut.androlib.Androlib.LOG_NAME;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -44,8 +43,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-
-import com.apkide.common.Logger;
 
 public final class ResXmlPatcher {
 

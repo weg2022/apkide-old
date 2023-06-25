@@ -17,7 +17,6 @@
 package brut.androlib.res.decoder;
 
 import static brut.androlib.Androlib.LOGGER;
-import static brut.androlib.Androlib.LOG_NAME;
 
 import com.apkide.common.AppLog;
 
@@ -35,7 +34,6 @@ import brut.androlib.res.data.value.ResFileValue;
 import brut.directory.DirUtil;
 import brut.directory.Directory;
 import brut.directory.DirectoryException;
-import com.apkide.common.Logger;
 
 public class ResFileDecoder {
     private final ResStreamDecoderContainer mDecoders;
