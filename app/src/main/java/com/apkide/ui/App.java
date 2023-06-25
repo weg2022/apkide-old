@@ -49,11 +49,11 @@ public final class App {
                 String targetName = FileUtils.getFileName(binaryName);
                 String arch = "";
                 if (OSDetection.isAarch64())
-                    arch = "arm64";
+                    arch = "arm";
                 else if (OSDetection.isAarch32())
                     arch = "arm-pie";
-                else if (OSDetection.isArm())
-                    arch = "arm";
+                /*else if (OSDetection.isArm())
+                    arch = "arm";*/
                 else if (OSDetection.isX86_64())
                     arch = "x86-pie";
                 else if (OSDetection.isX86())

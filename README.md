@@ -11,7 +11,7 @@ Internally use ApkTool 2.7.0
 
 - [x] Access Archive File & Class File
 - [x] Compilation & DeCompilation Apks (Apktool)
-- [x] AAPT v1/v2 Support (v1 Not working)
+- [x] AAPT v1/v2 Support
 - [x] Zip Align Support (Zipalign)
 - [x] Code Highlighting (smali,java,c,cpp,groovy,java script,json,kotlin,xml,yaml)
 - [ ] Language Service (smali?)

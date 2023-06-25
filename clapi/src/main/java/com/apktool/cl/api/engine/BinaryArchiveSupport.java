@@ -10,9 +10,9 @@ public interface BinaryArchiveSupport {
 
     boolean supportsDllArchives();
 
-    Reader getSignatureFileContent(String archivePath, String entryPath) throws IOException;
+    Reader getSignatureFileContent(String archivePath, String entryName) throws IOException;
 
-    String[] getSignatureFiles(String path) throws IOException;
+    String[] getSignatureFiles(String archivePath) throws IOException;
 
     Reader getMetadataXml(String path) throws IOException;
 }
