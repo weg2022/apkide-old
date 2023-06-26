@@ -1,5 +1,8 @@
 package com.apkide.editor;
 
+import android.text.TextUtils;
+
+import com.apkide.common.text.TextChangeListener;
 import com.apkide.common.text.TextContent;
 import com.apkide.common.undo.AbstractUndoableEdit;
 import com.apkide.common.undo.ExecutionException;
@@ -17,52 +20,83 @@ public class EditorModel {
     private final UndoManager undoManager;
     private final UndoableEditSupport undoableEditSupport;
 
+    private final Spans spans;
+
     public EditorModel() {
         content = new TextContent();
         undoManager = new UndoManager();
         undoableEditSupport = new UndoableEditSupport(this);
         undoableEditSupport.addUndoableEditListener(undoManager);
+        spans = new Spans();
+    }
+
+    public void addTextChangeListener(TextChangeListener listener) {
+        lock.writeLock().lock();
+        content.addTextChangeListener(listener);
+        lock.writeLock().unlock();
+    }
+
+    public void removeTextChangeListener(TextChangeListener listener) {
+        lock.writeLock().lock();
+        content.removeTextChangeListener(listener);
+        lock.writeLock().unlock();
     }
 
     public void setText(String text) {
-        try {
-            lock.writeLock().lock();
+        lock.writeLock().lock();
 
-            if (isCompoundEdit())
-                endCompoundEdit();
+        if (isCompoundEdit())
+            endCompoundEdit();
 
-            content.setText(text);
-            undoManager.discardAllEdits();
-        } finally {
-            lock.writeLock().unlock();
-        }
+        undoManager.discardAllEdits();
+
+        spans.reset();
+
+        content.setText(text);
+
+        lock.writeLock().unlock();
     }
 
     public void insert(int offset, String text) {
-        try {
-            lock.writeLock().lock();
+        lock.writeLock().lock();
+        if (offset >= 0 && offset <= getCharCount() && !TextUtils.isEmpty(text)) {
+
+            spans.insert(offset, text.length());
+
             content.replaceTextRange(offset, 0, text);
             UndoableEdit edit = new InsertUndo(offset, text.length());
             undoableEditSupport.postEdit(edit);
-        } finally {
-            lock.writeLock().unlock();
+
         }
+        lock.writeLock().unlock();
     }
 
     public void delete(int offset, int length) {
-        try {
-            lock.writeLock().lock();
+        lock.writeLock().lock();
+
+        if (offset + length >= getCharCount())
+            length = getCharCount() - offset;
+
+        if (length > 0 && offset >= 0 && (offset + length) <= getCharCount()) {
+
+            spans.delete(offset, length);
+
             String text = getText(offset, length);
             UndoableEdit edit = new DeleteUndo(offset, text);
-            content.replaceTextRange(offset, 0, text);
+            content.replaceTextRange(offset, length, "");
             undoableEditSupport.postEdit(edit);
-        } finally {
-            lock.writeLock().unlock();
         }
+        lock.writeLock().unlock();
     }
 
     public void replaceText(int offset, int length, String text) {
+        beginCompoundEdit();
+        if (length > 0)
+            delete(offset, length);
 
+        if (text != null)
+            insert(offset, text);
+        endCompoundEdit();
     }
 
     public String getLine(int line) {
@@ -138,12 +172,9 @@ public class EditorModel {
     }
 
     public void setUndoLimit(int limit) {
-        try {
-            lock.writeLock().lock();
-            undoManager.setLimit(limit);
-        } finally {
-            lock.writeLock().unlock();
-        }
+        lock.writeLock().lock();
+        undoManager.setLimit(limit);
+        lock.writeLock().unlock();
     }
 
     public int getUndoLimit() {
@@ -202,7 +233,7 @@ public class EditorModel {
                 string = getText(offset, length);
                 delete(offset, length);
             } catch (Exception e) {
-                throw new ExecutionException();
+                e.printStackTrace();
             }
         }
 
@@ -213,7 +244,7 @@ public class EditorModel {
                 insert(offset, string);
                 string = null;
             } catch (Exception e) {
-                throw new ExecutionException();
+                e.printStackTrace();
             }
         }
     }
@@ -236,7 +267,7 @@ public class EditorModel {
                 insert(offset, string);
                 string = null;
             } catch (Exception e) {
-                throw new ExecutionException();
+                e.printStackTrace();
             }
         }
 
@@ -247,40 +278,9 @@ public class EditorModel {
                 string = getText(offset, length);
                 delete(offset, length);
             } catch (Exception e) {
-                throw new ExecutionException();
+                e.printStackTrace();
             }
         }
     }
 
-    private class ReplaceUndo extends AbstractUndoableEdit {
-        protected int offset;
-        protected int length;
-        protected String string;
-
-        public ReplaceUndo(int offset, int length, String string) {
-            this.offset = offset;
-            this.length = length;
-            this.string = string;
-        }
-
-        @Override
-        public void undo() throws ExecutionException {
-            super.undo();
-            try {
-
-            } catch (Exception e) {
-                throw new ExecutionException();
-            }
-        }
-
-        @Override
-        public void redo() throws ExecutionException {
-            super.redo();
-            try {
-
-            } catch (Exception e) {
-                throw new ExecutionException();
-            }
-        }
-    }
 }

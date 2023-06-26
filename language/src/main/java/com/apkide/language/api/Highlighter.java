@@ -20,7 +20,7 @@ public interface Highlighter {
             lexer.setState(state);
             while (true) {
                 int token = lexer.nextToken();
-                iterator.tokenFound(token, lexer.getLine(), lexer.getColumn());
+                iterator.tokenFound(token, lexer.getLine(), lexer.getColumn(),lexer.yylength());
                 if (token == -1) break;
             }
             return lexer.getState();

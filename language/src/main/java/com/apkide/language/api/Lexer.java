@@ -36,4 +36,18 @@ public interface Lexer {
 	int getLine();
 	
 	int getColumn();
+
+	int yylength();
+
+	String yytext();
+
+	boolean yyatEOF();
+
+	void yybegin(int newState);
+
+	void yypushback(int number);
+
+	char yycharat(int position);
+
+	void yyclose()throws IOException;
 }
