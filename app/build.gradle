@@ -23,7 +23,7 @@ android {
     defaultConfig {
         applicationId 'com.apkide.ui'
         minSdk 21
-        targetSdk 33
+        targetSdk 32
         versionCode 20230315
         versionName '1.0beta1'
         multiDexEnabled true
@@ -80,11 +80,10 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs_nio:2.0.3'
-    implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'androidx.preference:preference:1.2.0'
-    implementation 'androidx.appcompat:appcompat:1.7.0-alpha02'
-    implementation 'com.google.android.material:material:1.9.0'
+    coreLibraryDesugaring libs.desugar.jdk.libs.nio
+    implementation libs.androidx.multidex
+    implementation libs.androidx.preference
+    implementation libs.material
 
     implementation project(':common')
     implementation project(':language')
@@ -94,30 +93,4 @@ dependencies {
     implementation project(':apktool:common')
     implementation project(':apktool:directory')
     implementation project(':apktool:util')
-
-
-
-    constraints {
-        implementation("androidx.arch.core:core-runtime:2.2.0-rc01")
-        implementation("androidx.lifecycle:lifecycle-common:2.6.0-beta01")
-        implementation("androidx.lifecycle:lifecycle-livedata:2.6.0-beta01")
-        implementation("androidx.lifecycle:lifecycle-livedata-core:2.6.0-beta01")
-        implementation("androidx.lifecycle:lifecycle-livedata-core-ktx:2.6.0-beta01")
-        implementation("androidx.lifecycle:lifecycle-runtime:2.6.0-beta01")
-        implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.0-beta01")
-        implementation("androidx.lifecycle:lifecycle-viewmodel:2.6.0-beta01")
-        implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0-beta01")
-        implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.0-beta01")
-        implementation("androidx.savedstate:savedstate-ktx:1.2.0")
-        implementation("androidx.transition:transition:1.4.1")
-        implementation("androidx.core:core-ktx:1.9.0")
-        implementation("androidx.activity:activity-ktx:1.6.0")
-        implementation("org.jetbrains.kotlin:kotlin-stdlib:1.8.10")
-        implementation("org.jetbrains.kotlin:kotlin-stdlib-common:1.8.10")
-        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0")
-        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0")
-        implementation("org.jetbrains.kotlinx:coroutines-android:1.6.4")
-        implementation("org.jetbrains.kotlinx:coroutines-core-jvm:1.6.4")
-        implementation("com.goole.errorprone:error_prone_annotations:2.15.0")
-    }
 }

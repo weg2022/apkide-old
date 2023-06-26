@@ -35,11 +35,9 @@ android {
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs_nio:2.0.3'
-
-    implementation 'androidx.preference:preference:1.2.0'
-    implementation 'androidx.appcompat:appcompat:1.7.0-alpha02'
-    implementation 'com.google.android.material:material:1.9.0'
+    coreLibraryDesugaring libs.desugar.jdk.libs.nio
+    implementation libs.androidx.preference
+    implementation libs.material
 
     api 'com.android.tools.smali:smali:3.0.3'
     api 'com.android.tools.smali:smali-util:3.0.3'
@@ -54,7 +52,7 @@ dependencies {
     api 'com.jakewharton.android.repackaged:dalvik-dx:11.0.0_r3'
    // api 'org.antlr:antlr4-runtime:4.13.0'
 
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    testImplementation libs.junit
+    androidTestImplementation libs.androidx.test.ext.junit
+    androidTestImplementation libs.espresso.core
 }

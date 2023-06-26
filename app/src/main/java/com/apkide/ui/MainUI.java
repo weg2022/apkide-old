@@ -24,6 +24,7 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
         App.init(this);
         super.onCreate(savedInstanceState);
         AppPreferences.getPreferences().registerOnSharedPreferenceChangeListener(this);
+        checkPermissions();
     }
 
     @Override
