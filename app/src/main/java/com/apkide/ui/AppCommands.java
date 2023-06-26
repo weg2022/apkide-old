@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import com.apkide.common.Command;
 import com.apkide.ui.commands.SettingsMenuCommand;
 import com.apkide.ui.commands.UndoMenuCommand;
+import com.apkide.ui.util.MenuCommand;
 
 public class AppCommands {
 

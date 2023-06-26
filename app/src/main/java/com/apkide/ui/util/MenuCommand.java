@@ -1,4 +1,4 @@
-package com.apkide.ui;
+package com.apkide.ui.util;
 
 import com.apkide.common.Command;
 

@@ -14,13 +14,19 @@
 
 package com.apkide.common.text;
 
+import static java.lang.System.arraycopy;
+import static java.lang.System.lineSeparator;
+
+import android.graphics.Canvas;
+import android.graphics.Paint;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class TextContent {
+public class TextContent implements TextGraphics {
     private final static char LF = '\n';
     private final static char CR = '\r';
-    private final static String LineDelimiter = System.lineSeparator();
+    private final static String LineDelimiter = lineSeparator();
 
     private final List<TextChangeListener> textListeners = new ArrayList<>(); // stores text listeners for event sending
     private char[] textStore = new char[0];    // stores the actual text
@@ -66,7 +72,7 @@ public class TextContent {
         if (lineCount == size) {
             // expand the lines by powers of 2
             int[][] newLines = new int[size + pow2(expandExp)][2];
-            System.arraycopy(lines, 0, newLines, 0, size);
+            arraycopy(lines, 0, newLines, 0, size);
             lines = newLines;
             expandExp++;
         }
@@ -92,7 +98,7 @@ public class TextContent {
         if (count == size) {
             newLines = new int[size + pow2(replaceExpandExp)][2];
             replaceExpandExp++;
-            System.arraycopy(linesArray, 0, newLines, 0, size);
+            arraycopy(linesArray, 0, newLines, 0, size);
         }
         int[] range = new int[]{start, length};
         newLines[count] = range;
@@ -276,7 +282,7 @@ public class TextContent {
             }
         }
         int[][] newLines = new int[lineCount + 1][2];
-        System.arraycopy(indexedLines, 0, newLines, 0, lineCount);
+        arraycopy(indexedLines, 0, newLines, 0, lineCount);
         int[] range = new int[]{start, i - start};
         newLines[lineCount] = range;
         return newLines;
@@ -383,8 +389,8 @@ public class TextContent {
             if (oldSize > 0) {
                 // removing the gap
                 content = new char[textStore.length - oldSize];
-                System.arraycopy(textStore, 0, content, 0, gapStart);
-                System.arraycopy(textStore, gapEnd, content, gapStart, content.length - gapStart);
+                arraycopy(textStore, 0, content, 0, gapStart);
+                arraycopy(textStore, gapEnd, content, gapStart, content.length - gapStart);
                 textStore = content;
             }
             gapStart = gapEnd = position;
@@ -394,18 +400,18 @@ public class TextContent {
         int newGapStart = position;
         int newGapEnd = newGapStart + newSize;
         if (oldSize == 0) {
-            System.arraycopy(textStore, 0, content, 0, newGapStart);
-            System.arraycopy(textStore, newGapStart, content, newGapEnd, content.length - newGapEnd);
+            arraycopy(textStore, 0, content, 0, newGapStart);
+            arraycopy(textStore, newGapStart, content, newGapEnd, content.length - newGapEnd);
         } else if (newGapStart < gapStart) {
             int delta = gapStart - newGapStart;
-            System.arraycopy(textStore, 0, content, 0, newGapStart);
-            System.arraycopy(textStore, newGapStart, content, newGapEnd, delta);
-            System.arraycopy(textStore, gapEnd, content, newGapEnd + delta, textStore.length - gapEnd);
+            arraycopy(textStore, 0, content, 0, newGapStart);
+            arraycopy(textStore, newGapStart, content, newGapEnd, delta);
+            arraycopy(textStore, gapEnd, content, newGapEnd + delta, textStore.length - gapEnd);
         } else {
             int delta = newGapStart - gapStart;
-            System.arraycopy(textStore, 0, content, 0, gapStart);
-            System.arraycopy(textStore, gapEnd, content, gapStart, delta);
-            System.arraycopy(textStore, gapEnd + delta, content, newGapEnd, content.length - newGapEnd);
+            arraycopy(textStore, 0, content, 0, gapStart);
+            arraycopy(textStore, gapEnd, content, gapStart, delta);
+            arraycopy(textStore, gapEnd + delta, content, newGapEnd, content.length - newGapEnd);
         }
         textStore = content;
         gapStart = newGapStart;
@@ -497,6 +503,32 @@ public class TextContent {
     public int getCharCount() {
         int length = gapEnd - gapStart;
         return (textStore.length - length);
+    }
+
+    public int getLineLength(int lineIndex) {
+        if ((lineIndex >= lineCount) || (lineIndex < 0))
+            throw new IllegalArgumentException("lineIndex is invalid");
+        int start = lines[lineIndex][0];
+        int length = lines[lineIndex][1];
+        int end = start + length - 1;
+        if (!gapExists() || (end < gapStart) || (start >= gapEnd)) {
+            // line is before or after the gap
+            while ((length - 1 >= 0) && isDelimiter(textStore[start + length - 1])) {
+                length--;
+            }
+            return length;
+        } else {
+            // gap is in the specified range, strip out the gap
+            StringBuilder buf = new StringBuilder();
+            int gapLength = gapEnd - gapStart;
+            buf.append(textStore, start, gapStart - start);
+            buf.append(textStore, gapEnd, length - gapLength - (gapStart - start));
+            length = buf.length();
+            while ((length - 1 >= 0) && isDelimiter(buf.charAt(length - 1))) {
+                length--;
+            }
+            return length;
+        }
     }
 
     /**
@@ -706,7 +738,7 @@ public class TextContent {
             return;
         }
         int[][] newLines = new int[size + Math.max(10, numLines)][2];
-        System.arraycopy(lines, 0, newLines, 0, size);
+        arraycopy(lines, 0, newLines, 0, size);
         lines = newLines;
     }
 
@@ -735,6 +767,8 @@ public class TextContent {
     }
 
     public char charAt(int offset) {
+        if (offset < 0 || offset >= getCharCount())
+            throw new IllegalArgumentException("Invalid offset");
         return textStore[offset < gapStart ? offset : offset + (gapEnd - gapStart)];
     }
 
@@ -763,6 +797,13 @@ public class TextContent {
         buf.append(textStore, start, gapStart - start);
         buf.append(textStore, gapEnd, end - gapStart);
         return buf.toString();
+    }
+
+    public String getText() {
+        int len = getCharCount();
+        char[] chars = new char[len];
+        getChars(0, len, chars, 0);
+        return new String(chars);
     }
 
 
@@ -801,11 +842,11 @@ public class TextContent {
      * @param replaceLength start offset of text to replace
      * @param newText       start offset of text to replace
      * @throws Exception <ul>
-     *                                       <li>ERROR_INVALID_ARGUMENT when the text change results in a multi byte
-     *                                          line delimiter being split or partially deleted.  Splitting a line
-     *                                          delimiter by inserting text between the CR and LF characters of the
-     *                                          \r\n delimiter or deleting part of this line delimiter is not supported</li>
-     *                                     </ul>
+     *                                                                                                               <li>ERROR_INVALID_ARGUMENT when the text change results in a multi byte
+     *                                                                                                                  line delimiter being split or partially deleted.  Splitting a line
+     *                                                                                                                  delimiter by inserting text between the CR and LF characters of the
+     *                                                                                                                  \r\n delimiter or deleting part of this line delimiter is not supported</li>
+     *                                                                                                             </ul>
      */
     public void replaceTextRange(int start, int replaceLength, String newText) {
         // check for invalid replace operations
@@ -919,5 +960,76 @@ public class TextContent {
         }
         lineCount -= numOldLines;
         gapLine = getLineAtPhysicalOffset(gapStart);
+    }
+
+    @Override
+    public void nativeDrawText(Canvas canvas, int offset, int length, float x, float y, Paint paint) {
+        int end = offset + length;
+        int gapLength = gapEnd - gapStart;
+        if (end <= gapStart) {
+            canvas.drawText(textStore, offset, length, x, y, paint);
+        } else if (offset >= gapStart) {
+            canvas.drawText(textStore, offset + gapLength, length, x, y, paint);
+        } else {
+            char[] chars = CharBuffer.obtain(length);
+            arraycopy(textStore, offset, chars, 0, gapStart - offset);
+            arraycopy(textStore, gapStart + gapLength, chars, gapStart - offset,
+                    end - gapStart);
+            canvas.drawText(chars, 0, length, x, y, paint);
+            CharBuffer.recycle(chars);
+        }
+    }
+
+    @Override
+    public int nativeGetTextWidths(int offset, int length, float[] widths, Paint paint) {
+        int end = offset + length;
+        int gapLength = gapEnd - gapStart;
+        if (end <= gapStart) {
+            return paint.getTextWidths(textStore, offset, length, widths);
+        } else if (offset >= gapStart) {
+            return paint.getTextWidths(textStore, offset + gapLength, length, widths);
+        } else {
+            char[] chars = CharBuffer.obtain(length);
+            arraycopy(textStore, offset, chars, 0, gapStart - offset);
+            arraycopy(textStore, gapStart + gapLength, chars, gapStart - offset,
+                    end - gapStart);
+            int w = paint.getTextWidths(chars, 0, length, widths);
+            CharBuffer.recycle(chars);
+            return w;
+        }
+    }
+
+    @Override
+    public float nativeMeasureText(int offset, int length, Paint paint) {
+        int end = offset + length;
+        int gapLength = gapEnd - gapStart;
+        if (end <= gapStart) {
+            return paint.measureText(textStore, offset, length);
+        } else if (offset >= gapStart) {
+            return paint.measureText(textStore, offset + gapLength, length);
+        } else {
+            char[] chars = CharBuffer.obtain(length);
+            arraycopy(textStore, offset, chars, 0, gapStart - offset);
+            arraycopy(textStore, gapStart + gapLength, chars, gapStart - offset,
+                    end - gapStart);
+            float w = paint.measureText(chars, 0, length);
+            CharBuffer.recycle(chars);
+            return w;
+        }
+    }
+
+    public void getChars(int offset, int length, char[] dest, int destoff) {
+        int end = offset + length;
+        int gapLength = gapEnd - gapStart;
+        if (end <= gapStart) {
+            arraycopy(textStore, offset, dest, destoff, length);
+        } else if (offset >= gapStart) {
+            arraycopy(textStore, offset + gapLength, dest, destoff, length);
+        } else {
+            arraycopy(textStore, offset, dest, destoff, gapStart - offset);
+            arraycopy(textStore, gapStart + gapLength,
+                    dest, destoff + (gapStart - offset),
+                    end - gapStart);
+        }
     }
 }

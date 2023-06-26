@@ -3,8 +3,8 @@ package com.apkide.ui.commands;
 import androidx.annotation.NonNull;
 
 import com.apkide.ui.App;
-import com.apkide.ui.MenuCommand;
 import com.apkide.ui.R;
+import com.apkide.ui.util.MenuCommand;
 
 public class SettingsMenuCommand implements MenuCommand {
     @Override

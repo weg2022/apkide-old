@@ -8,7 +8,7 @@ public class AbstractUndoableEdit implements UndoableEdit {
     @Override
     public void undo() throws ExecutionException {
         if (!canUndo()) {
-            throw new ExecutionException();
+            throw new ExecutionException("Can't undo");
         } else {
             hasBeenDone = false;
         }
@@ -22,7 +22,7 @@ public class AbstractUndoableEdit implements UndoableEdit {
     @Override
     public void redo() throws ExecutionException {
         if (!canRedo()) {
-            throw new ExecutionException();
+            throw new ExecutionException("Can't redo");
         } else {
             hasBeenDone = true;
         }
