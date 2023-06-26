@@ -47,6 +47,11 @@
             android:name=".activities.AboutUI"
             android:label="About"
             android:theme="@style/Theme.UI" />
+
+        <activity
+            android:name=".preferences.PreferencesUI"
+            android:label="Preferences"
+            android:theme="@style/Theme.UI.Preferences" />
     </application>
 
 </manifest>

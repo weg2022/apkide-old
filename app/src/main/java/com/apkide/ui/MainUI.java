@@ -11,26 +11,82 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.view.GravityCompat;
+
+import com.apkide.ui.databinding.UiMainBinding;
 
 public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+    private UiMainBinding mainBinding;
+    private ActionBarDrawerToggle mainDrawerToggle;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         App.init(this);
         super.onCreate(savedInstanceState);
         AppPreferences.getPreferences().registerOnSharedPreferenceChangeListener(this);
+        mainBinding = UiMainBinding.inflate(getLayoutInflater());
+        setContentView(mainBinding.getRoot());
+
+        setSupportActionBar(mainBinding.mainContentToolbar);
+
+        if (getSupportActionBar()!=null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mainDrawerToggle=new ActionBarDrawerToggle(this,mainBinding.mainDrawerLayout,
+                android.R.string.ok, android.R.string.cancel);
+
+        mainBinding.mainDrawerLayout.addDrawerListener(mainDrawerToggle);
+
+        mainDrawerToggle.syncState();
+
+        mainBinding.mainContentToolbar.setNavigationOnClickListener(v -> {
+            if (mainBinding.mainDrawerLayout.isDrawerOpen(GravityCompat.START)){
+                mainBinding.mainDrawerLayout.closeDrawer(GravityCompat.START);
+            }else{
+                mainBinding.mainDrawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
+
         checkPermissions();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_context,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        AppCommands.menuCommandPreExec(menu);
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        boolean commandExec=AppCommands.menuCommandExec(item);
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         AppPreferences.getPreferences().unregisterOnSharedPreferenceChangeListener(this);
+        if (mainBinding != null)
+            mainBinding = null;
     }
 
     @Override

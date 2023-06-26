@@ -5,23 +5,23 @@
     android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/aboutToolbar"
+        android:id="@+id/preferencesToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimaryVariant"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
-        app:layout_constraintBottom_toTopOf="@+id/webView"
+        app:layout_constraintBottom_toTopOf="@+id/preferencesFrame"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <WebView
-        android:id="@+id/webView"
+    <FrameLayout
+        android:id="@+id/preferencesFrame"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/aboutToolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/preferencesToolbar" />
 </androidx.constraintlayout.widget.ConstraintLayout>

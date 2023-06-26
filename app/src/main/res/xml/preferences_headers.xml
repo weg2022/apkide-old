@@ -10,8 +10,8 @@
 		android:title="Editor" />
 	<Preference
 		android:fragment="com.apkide.ui.preferences.CompilerPreferencesFragment"
-		android:summary="Configure Build and Execution settings."
-		android:title="Build &amp; Execution" />
+		android:summary="Configure Build and Decode settings."
+		android:title="Build &amp; Decode" />
 	<Preference
 		android:fragment="com.apkide.ui.preferences.SourceControlPreferencesFragment"
 		android:summary="Configure Git source control settings."

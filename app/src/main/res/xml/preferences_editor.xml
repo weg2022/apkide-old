@@ -4,39 +4,22 @@
 
 	<PreferenceCategory android:title="Appearance">
 
-		<SwitchPreference
-			android:defaultValue="true"
-			android:key="caretBlinks"
-			android:title="Caret Blinks" />
-		<SwitchPreference
-			android:defaultValue="true"
-			android:key="highlightCaretLine"
-			android:title="Highlight Caret Line" />
-		<SwitchPreference
-			android:defaultValue="true"
-			android:key="lineNumberShow"
-			android:title="LineNumbers Show" />
-		<SwitchPreference
-			android:defaultValue="true"
-			android:key="scrollbarShow"
-			android:title="Scrollbar Show" />
 	</PreferenceCategory>
 
 
 	<PreferenceCategory android:title="Font">
 
-		<SwitchPreference
-			android:key="ligatureEnabled"
-			android:defaultValue="true"
-			android:summary="When Ligature is enabled, the readability of the code will be improved."
-			android:title="Ligature" />
+
 	</PreferenceCategory>
 
 	<PreferenceCategory android:title="Tabs &amp; Spaces">
 		<ListPreference
+			android:entries="@array/PefEditorTabSize"
+			android:entryValues="@array/PefEditorTabSize"
 			android:defaultValue="4"
 			android:key="tabSize"
 			android:title="Tab Size" />
+
 		<SwitchPreference
 			android:defaultValue="false"
 			android:key="useSpaces"

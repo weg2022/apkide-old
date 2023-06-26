@@ -6,6 +6,7 @@ import static java.io.File.separator;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -14,6 +15,7 @@ import com.apkide.common.AppLog;
 import com.apkide.common.AssetsProvider;
 import com.apkide.common.FileUtils;
 import com.apkide.common.SafeRunner;
+import com.apkide.ui.preferences.PreferencesUI;
 import com.apkide.ui.services.file.FileSystem;
 
 import java.io.File;
@@ -36,6 +38,7 @@ public final class App {
 
     public static void initApp(Context context) {
         App.context = context;
+        AppPreferences.init(context);
         AssetsProvider.set(new AssetsProvider() {
 
             @Override
@@ -150,5 +153,14 @@ public final class App {
         return app != null;
     }
 
+    public static void gotoSettings(){
+        if (mainUI!=null){
+            mainUI.startActivity(new Intent(mainUI, PreferencesUI.class));
+        }
+    }
+
+    public static void exitApp(){
+
+    }
 
 }

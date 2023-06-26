@@ -7,6 +7,5 @@ public class IDEApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         App.initApp(getApplicationContext());
-        AppPreferences.init(getApplicationContext());
     }
 }
