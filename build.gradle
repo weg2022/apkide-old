@@ -3,6 +3,10 @@ buildscript {
 		google()
 		mavenCentral()
 		gradlePluginPortal()
+		maven { url 'https://repo1.maven.org/maven2/' }
+		maven { url 'https://oss.sonatype.org/content/repositories/releases/' }
+		maven { url 'https://jcenter.bintray.com/' }
+		maven { url 'https://repository.jboss.org/nexus/content/repositories/releases/' }
 		maven { url 'https://plugins.gradle.org/m2/' }
 		maven { url 'https://maven.quiltmc.org/repository/release/' }
 		maven { url 'https://repository.liferay.com/nexus/content/repositories/public/' }
@@ -11,12 +15,10 @@ buildscript {
 		maven { url 'https://maven.aliyun.com/nexus/content/repositories/jcenter' }
 		maven { url 'https://jitpack.io' }
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-		maven { url 'https://repo1.maven.org/maven2/' }
-		maven { url 'https://plugins.gradle.org/m2/' }
 		maven { url 'https://oss.sonatype.org/service/local/repositories/releases/content/' }
 	}
 	dependencies {
-		classpath 'com.android.tools.build:gradle:8.2.0-alpha08'
+		classpath libs.gradle
 	}
 }
 
@@ -25,6 +27,10 @@ allprojects {
 		google()
 		mavenCentral()
 		gradlePluginPortal()
+		maven { url 'https://repo1.maven.org/maven2/' }
+		maven { url 'https://oss.sonatype.org/content/repositories/releases/' }
+		maven { url 'https://jcenter.bintray.com/' }
+		maven { url 'https://repository.jboss.org/nexus/content/repositories/releases/' }
 		maven { url 'https://plugins.gradle.org/m2/' }
 		maven { url 'https://maven.quiltmc.org/repository/release/' }
 		maven { url 'https://repository.liferay.com/nexus/content/repositories/public/' }
@@ -33,15 +39,13 @@ allprojects {
 		maven { url 'https://maven.aliyun.com/nexus/content/repositories/jcenter' }
 		maven { url 'https://jitpack.io' }
 		maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-		maven { url 'https://repo1.maven.org/maven2/' }
-		maven { url 'https://plugins.gradle.org/m2/' }
 		maven { url 'https://oss.sonatype.org/service/local/repositories/releases/content/' }
 	}
 
 	gradle.projectsEvaluated {
 		tasks.withType(JavaCompile).tap {
 			configureEach {
-				options.compilerArgs << '-Xdoclint:none'
+				//options.compilerArgs << '-Xdoclint:none'
 				options.compilerArgs << '-Xlint:-deprecation'
 			}
 		}
