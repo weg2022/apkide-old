@@ -9,13 +9,19 @@ Internally use ApkTool 2.7.0
 
 ## Features
 
-- [x] Access Archive File & Class File
-- [x] Compilation & DeCompilation Apks (Apktool)
-- [x] AAPT v1/v2 Support
-- [x] Zip Align Support (Zipalign)
-- [x] Code Highlighting (smali,java,c,cpp,groovy,java script,json,kotlin,xml,yaml)
-- [ ] Language Service (smali?)
-- [ ] Java to Smali and Smali to Java (java2Smali & smali2Java)
+- [x] Access archive files and class files
+- [x] Decompile and generate APKs
+- [x] Aapt (port for apktool. v1/v2) and Zipalign... (arm64-v8a,armeabi-v7a,x86,x86_64)
+- [ ] Custom APK signature
+- [ ] Customize ApkTool framework
+- [ ] Dex file editing with (Dex to smali & smali to dex)
+- [ ] APK file analysis and editing
+- [ ] Image file viewing
+- [ ] Git integration
+- [ ] Java code is converted to and from Smali code
+- [ ] Quickly edit large text files
+- [x] Code highlighting (smali,java,c,cpp,groovy,java script,json,kotlin,xml,yaml)
+- [ ] Complete language services (only smali?)
 
 ### Libraries used
 
@@ -31,6 +37,9 @@ Internally use ApkTool 2.7.0
 * [snakeyaml](https://bitbucket.org/snakeyaml/snakeyaml)
 * [xmlpull-xpp3](https://github.com/codelibs/xpp3)
 * [xmlunit](https://github.com/xmlunit/xmlunit)
+* [treeview](https://github.com/AmrDeveloper/TreeView)
+* [r8](https://r8.googlesource.com/r8)
+* [dx](https://github.com/JakeWharton/dalvik-dx)
 
 ## License
 
