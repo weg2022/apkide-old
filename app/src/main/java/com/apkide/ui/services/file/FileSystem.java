@@ -5,7 +5,7 @@ import android.os.Environment;
 import com.apkide.common.AppLog;
 import com.apkide.common.FileUtils;
 import com.apkide.common.IOUtils;
-import com.apkide.language.impl.classfile.ClassFilePreProcessor;
+import com.apkide.ui.services.file.classfile.ClassFilePreProcessor;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;

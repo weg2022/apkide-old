@@ -1,4 +1,4 @@
-package com.apkide.editor;
+package com.apkide.ui.views.editor;
 
 import android.content.Context;
 import android.util.AttributeSet;

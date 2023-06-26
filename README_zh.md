@@ -16,7 +16,7 @@ APK-IDE是一款用于反编译，编译和修改APK的安卓软件。
 - [ ] Git 集成
 - [ ] Java 代码 与 Smali 代码相互转换
 - [ ] 快速编辑大文本文件
-- [x] 代码高亮 (smali,java,c,cpp,groovy,java script,json,kotlin,xml,yaml)
+- [ ] 代码高亮 
 - [ ] 完善的语言服务 (only smali?)
 
 ### Libraries used
@@ -36,7 +36,6 @@ APK-IDE是一款用于反编译，编译和修改APK的安卓软件。
 * [treeview](https://github.com/AmrDeveloper/TreeView)
 * [r8](https://r8.googlesource.com/r8)
 * [dx](https://github.com/JakeWharton/dalvik-dx)
-*
 
 ## License
 

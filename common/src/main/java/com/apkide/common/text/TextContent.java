@@ -510,7 +510,8 @@ public class TextContent {
      *                                  </ul>
      */
     public String getLine(int index) {
-        if ((index >= lineCount) || (index < 0)) throw new IllegalArgumentException("lineIndex is invalid");
+        if ((index >= lineCount) || (index < 0))
+            throw new IllegalArgumentException("lineIndex is invalid");
         int start = lines[index][0];
         int length = lines[index][1];
         int end = start + length - 1;
@@ -604,7 +605,7 @@ public class TextContent {
 
     public int getLineAtOffset(int charPosition) {
         if ((charPosition > getCharCount()) || (charPosition < 0))
-           throw new IllegalArgumentException("charPosition is invalid");
+            throw new IllegalArgumentException("charPosition is invalid");
         int position;
         if (charPosition < gapStart) {
             // position is before the gap
@@ -683,7 +684,8 @@ public class TextContent {
 
     public int getOffsetAtLine(int lineIndex) {
         if (lineIndex == 0) return 0;
-        if ((lineIndex >= lineCount) || (lineIndex < 0)) throw new IllegalArgumentException("lineIndex is invalid");
+        if ((lineIndex >= lineCount) || (lineIndex < 0))
+            throw new IllegalArgumentException("lineIndex is invalid");
         int start = lines[lineIndex][0];
         if (start > gapEnd) {
             return start - (gapEnd - gapStart);
@@ -709,7 +711,6 @@ public class TextContent {
     }
 
 
-
     /**
      * Returns whether or not a gap exists in the text store.
      * <p>
@@ -731,6 +732,10 @@ public class TextContent {
      */
     String getPhysicalText(int start, int length) {
         return new String(textStore, start, length);
+    }
+
+    public char charAt(int offset) {
+        return textStore[offset < gapStart ? offset : offset + (gapEnd - gapStart)];
     }
 
     /**
@@ -796,11 +801,11 @@ public class TextContent {
      * @param replaceLength start offset of text to replace
      * @param newText       start offset of text to replace
      * @throws Exception <ul>
-     *                     <li>ERROR_INVALID_ARGUMENT when the text change results in a multi byte
-     *                        line delimiter being split or partially deleted.  Splitting a line
-     *                        delimiter by inserting text between the CR and LF characters of the
-     *                        \r\n delimiter or deleting part of this line delimiter is not supported</li>
-     *                   </ul>
+     *                                       <li>ERROR_INVALID_ARGUMENT when the text change results in a multi byte
+     *                                          line delimiter being split or partially deleted.  Splitting a line
+     *                                          delimiter by inserting text between the CR and LF characters of the
+     *                                          \r\n delimiter or deleting part of this line delimiter is not supported</li>
+     *                                     </ul>
      */
     public void replaceTextRange(int start, int replaceLength, String newText) {
         // check for invalid replace operations

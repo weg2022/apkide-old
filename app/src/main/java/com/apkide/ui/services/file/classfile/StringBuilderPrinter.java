@@ -1,4 +1,4 @@
-package com.apkide.language.impl.classfile;
+package com.apkide.ui.services.file.classfile;
 
 
 import androidx.annotation.NonNull;

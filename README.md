@@ -20,7 +20,7 @@ Internally use ApkTool 2.7.0
 - [ ] Git integration
 - [ ] Java code is converted to and from Smali code
 - [ ] Quickly edit large text files
-- [x] Code highlighting (smali,java,c,cpp,groovy,java script,json,kotlin,xml,yaml)
+- [ ] Code highlighting
 - [ ] Complete language services (only smali?)
 
 ### Libraries used

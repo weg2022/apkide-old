@@ -1,8 +1,9 @@
-package com.apkide.language.impl.classfile;
+package com.apkide.ui.services.file.classfile;
 
 import static java.io.File.separator;
 
 import com.apkide.common.AppLog;
+import com.apkide.common.AssetsProvider;
 import com.apkide.common.IOUtils;
 
 import org.jd.core.v1.ClassFileToJavaSourceDecompiler;
@@ -20,8 +21,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import com.apkide.common.AssetsProvider;
 
 public class ClassFilePreProcessor {
 	private ZipFile androidJarFile;

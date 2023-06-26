@@ -48,6 +48,7 @@ android {
 
     buildFeatures {
         viewBinding true
+        aidl true
     }
 
     packagingOptions {
@@ -86,8 +87,6 @@ dependencies {
     implementation libs.material
 
     implementation project(':common')
-    implementation project(':language')
-    implementation project(':editor')
 
     implementation project(':apktool:androlib')
     implementation project(':apktool:common')
