@@ -20,15 +20,14 @@ import static java.lang.System.lineSeparator;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.apkide.common.SafeListenerList;
 
 public class TextContent implements TextGraphics {
     private final static char LF = '\n';
     private final static char CR = '\r';
     private final static String LineDelimiter = lineSeparator();
 
-    private final List<TextChangeListener> textListeners = new ArrayList<>(); // stores text listeners for event sending
+    private final SafeListenerList<TextChangeListener> textListeners = new SafeListenerList<>(); // stores text listeners for event sending
     private char[] textStore = new char[0];    // stores the actual text
     private int gapStart = -1;    // the character position start of the gap
     private int gapEnd = -1;    // the character position after the end of the gap

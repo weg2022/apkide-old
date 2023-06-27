@@ -267,6 +267,7 @@ public class Model implements TextGraphics {
         public DeleteEdit(int start, String text) {
             this.start = start;
             this.text = text;
+            this.length = text.length();
         }
 
         @Override

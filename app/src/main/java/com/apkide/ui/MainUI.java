@@ -57,8 +57,6 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
             }
         });
 
-
-        checkPermissions();
     }
 
     @Override
