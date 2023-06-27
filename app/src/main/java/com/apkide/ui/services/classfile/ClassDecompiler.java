@@ -1,4 +1,4 @@
-package com.apkide.ui.filesystem.classfile;
+package com.apkide.ui.services.classfile;
 
 import static com.apkide.common.IOUtils.readBytes;
 

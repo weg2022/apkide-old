@@ -1,11 +1,11 @@
-package com.apkide.ui.filesystem;
+package com.apkide.ui.services;
 
 import android.os.Environment;
 
 import com.apkide.common.AppLog;
 import com.apkide.common.FileUtils;
 import com.apkide.common.IOUtils;
-import com.apkide.ui.filesystem.classfile.ClassFileArchiveReader;
+import com.apkide.ui.services.classfile.ClassFileArchiveReader;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -426,5 +426,21 @@ public class FileSystem {
                 fileOut.close();
             }
         }
+    }
+
+    public static interface FileArchiveReader {
+
+
+
+        Reader getArchiveEntryReader(String archivePath, String entryName, String encoding) throws IOException;
+
+        List<String> getArchiveDirectoryEntries(String archivePath, String entryName) throws IOException;
+
+        boolean isArchiveFileEntry(String filePath);
+
+        long getArchiveVersion(String archivePath);
+
+        void closeArchive() throws IOException;
+
     }
 }

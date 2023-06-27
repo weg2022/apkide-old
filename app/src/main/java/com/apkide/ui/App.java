@@ -6,7 +6,6 @@ import static java.io.File.separator;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -15,8 +14,9 @@ import com.apkide.common.AppLog;
 import com.apkide.common.AssetsProvider;
 import com.apkide.common.FileUtils;
 import com.apkide.common.SafeRunner;
-import com.apkide.ui.filesystem.FileSystem;
-import com.apkide.ui.preferences.PreferencesUI;
+import com.apkide.ui.services.FileSystem;
+import com.apkide.ui.services.navigate.NavigateService;
+import com.apkide.ui.services.openfile.OpenFileService;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -33,7 +33,13 @@ public final class App {
     private static Handler handler;
     private static MainUI mainUI;
 
+
+    private final OpenFileService openFileService;
+    private final NavigateService navigateService;
+
     private App() {
+        openFileService = new OpenFileService();
+        navigateService = new NavigateService();
     }
 
     public static void initApp(Context context) {
@@ -97,7 +103,7 @@ public final class App {
 
                 AppLog.s(String.format("Extract file %s to %s from assets.", fileName, targetFile.getAbsolutePath()));
                 SafeRunner.run(() -> {
-                   // FileSystem.createFile(targetFile.getAbsolutePath());
+                    // FileSystem.createFile(targetFile.getAbsolutePath());
                     InputStream inputStream = context.getAssets().open(fileName);
                     FileOutputStream outputStream = new FileOutputStream(targetFile);
                     copyBytes(inputStream, outputStream);
@@ -153,14 +159,13 @@ public final class App {
         return app != null;
     }
 
-    public static void gotoSettings(){
-        if (mainUI!=null){
-            mainUI.startActivity(new Intent(mainUI, PreferencesUI.class));
-        }
+    public static OpenFileService getOpenFileService() {
+        return app.openFileService;
     }
 
-    public static void exitApp(){
-
+    public static NavigateService getNavigateService() {
+        return app.navigateService;
     }
+
 
 }

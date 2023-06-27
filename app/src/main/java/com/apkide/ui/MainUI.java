@@ -3,6 +3,12 @@ package com.apkide.ui;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION;
+import static com.apkide.ui.browsers.BrowserPager.BUILD_BROWSER;
+import static com.apkide.ui.browsers.BrowserPager.FILE_BROWSER;
+import static com.apkide.ui.browsers.BrowserPager.FIND_BROWSER;
+import static com.apkide.ui.browsers.BrowserPager.GIT_BROWSER;
+import static com.apkide.ui.browsers.BrowserPager.PROBLEM_BROWSER;
+import static com.apkide.ui.browsers.BrowserPager.PROJECT_BROWSER;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,13 +27,18 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
 
+import com.apkide.ui.browsers.BrowserPager;
 import com.apkide.ui.databinding.UiMainBinding;
+import com.apkide.ui.services.FileSystem;
+import com.apkide.ui.services.navigate.FileSpan;
 
 public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private UiMainBinding mainBinding;
 
     private ActionBarDrawerToggle mainDrawerToggle;
+
+    private SharedPreferences browserPreferences;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,6 +68,93 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
             }
         });
 
+        initializeBrowser();
+    }
+
+
+    private void initializeBrowser() {
+        browserPreferences = getSharedPreferences("browser_view", MODE_PRIVATE);
+        int current = browserPreferences.getInt("current", -1);
+        if (current >= 0)
+            toggleBrowser(current, true);
+    }
+
+
+    public void toggleFileBrowser() {
+
+        toggleBrowser(FILE_BROWSER, false);
+    }
+
+    public void toggleProjectBrowser() {
+
+        toggleBrowser(PROJECT_BROWSER, false);
+    }
+
+    public void toggleProblemBrowser() {
+
+        toggleBrowser(PROBLEM_BROWSER, false);
+    }
+
+    public void toggleBuildBrowser() {
+
+        toggleBrowser(BUILD_BROWSER, false);
+    }
+
+    public void toggleFindBrowser() {
+
+        toggleBrowser(FIND_BROWSER, false);
+    }
+
+    public void toggleGitBrowser() {
+
+        toggleBrowser(GIT_BROWSER, false);
+    }
+
+    public void toggleBrowser(int index, boolean refresh) {
+        //TODO: 加入是否需要自动打开选项
+        if (mainBinding.mainDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            getBrowserPager().toggle(index, refresh);
+
+        }
+    }
+
+    public void saveCurrentBrowser(int index) {
+        browserPreferences.edit().putInt("current", index).apply();
+    }
+
+
+    public BrowserPager getBrowserPager() {
+        return mainBinding.mainBrowserPager;
+    }
+
+
+    public void gotoForward() {
+        FileSpan span = App.getNavigateService().forward();
+        if (span != null) {
+            App.getNavigateService().setEnabled(false);
+            navigateTo(span);
+        }
+    }
+
+    public boolean gotoBackward() {
+        FileSpan span = App.getNavigateService().backward();
+        if (span != null) {
+            App.getNavigateService().setEnabled(false);
+            navigateTo(span);
+            return true;
+        }
+        return false;
+    }
+
+    public void navigateTo(FileSpan span) {
+        navigateTo(span, true);
+    }
+
+    public void navigateTo(FileSpan span, boolean focus) {
+        if (span==null || !FileSystem.exists(span.filePath)){
+            return;
+        }
+        App.getNavigateService().setEnabled(true);
     }
 
     @Override

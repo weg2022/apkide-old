@@ -1,4 +1,4 @@
-package com.apkide.ui.filesystem;
+package com.apkide.ui.util;
 
 
 import java.io.IOException;

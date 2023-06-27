@@ -1,12 +1,12 @@
-package com.apkide.ui.filesystem.classfile;
+package com.apkide.ui.services.classfile;
 
-import static com.apkide.ui.filesystem.classfile.ClassDecompiler.decompileFromArchive;
-import static com.apkide.ui.filesystem.classfile.ClassDecompiler.decompileFromDir;
+import static com.apkide.ui.services.classfile.ClassDecompiler.decompileFromArchive;
+import static com.apkide.ui.services.classfile.ClassDecompiler.decompileFromDir;
 import static java.io.File.separator;
 
 import com.apkide.common.AppLog;
-import com.apkide.ui.filesystem.FileArchiveReader;
-import com.apkide.ui.filesystem.InputStreamWrapper;
+import com.apkide.ui.services.FileSystem;
+import com.apkide.ui.util.InputStreamWrapper;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-public class ClassFileArchiveReader implements FileArchiveReader {
+public class ClassFileArchiveReader implements FileSystem.FileArchiveReader {
     private ZipFile archiveFile;
 
     @Override

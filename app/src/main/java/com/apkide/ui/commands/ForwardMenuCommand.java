@@ -2,23 +2,22 @@ package com.apkide.ui.commands;
 
 import androidx.annotation.NonNull;
 
-import com.apkide.ui.R;
 import com.apkide.ui.util.MenuCommand;
 
-public class ExitMenuCommand implements MenuCommand {
+public class ForwardMenuCommand implements MenuCommand {
     @Override
     public int getId() {
-        return R.id.mainActionExit;
+        return 0;
     }
 
     @NonNull
     @Override
     public String getName() {
-        return "Exit";
+        return "Forward";
     }
 
     @Override
     public boolean commandPerformed() {
-        return true;
+        return false;
     }
 }
