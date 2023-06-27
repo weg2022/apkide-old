@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import com.apkide.ui.R;
 import com.apkide.ui.util.MenuCommand;
 
-public class MakeMenuCommand implements MenuCommand {
+public class MakeProject implements MenuCommand {
     @Override
     public int getId() {
         return R.id.mainActionRun;

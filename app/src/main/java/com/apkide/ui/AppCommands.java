@@ -5,9 +5,21 @@ import static java.lang.System.arraycopy;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.apkide.common.AppLog;
 import com.apkide.common.Command;
-import com.apkide.ui.commands.SettingsMenuCommand;
-import com.apkide.ui.commands.UndoMenuCommand;
+import com.apkide.ui.commands.ExitApp;
+import com.apkide.ui.commands.GotoSettings;
+import com.apkide.ui.commands.MakeProject;
+import com.apkide.ui.commands.Redo;
+import com.apkide.ui.commands.Undo;
+import com.apkide.ui.commands.navigate.Backward;
+import com.apkide.ui.commands.navigate.Forward;
+import com.apkide.ui.commands.view.ViewBuild;
+import com.apkide.ui.commands.view.ViewFiles;
+import com.apkide.ui.commands.view.ViewFind;
+import com.apkide.ui.commands.view.ViewGit;
+import com.apkide.ui.commands.view.ViewProblem;
+import com.apkide.ui.commands.view.ViewProject;
 import com.apkide.ui.util.MenuCommand;
 
 public class AppCommands {
@@ -18,9 +30,24 @@ public class AppCommands {
 
     static {
         menuCommands = new MenuCommand[]{
-                new UndoMenuCommand(),
+                new Undo(),
+                new Redo(),
+                new MakeProject(),
+                new GotoSettings(),
+                new ExitApp(),
 
-                new SettingsMenuCommand()
+                //View
+                new ViewFiles(),
+                new ViewProject(),
+                new ViewProblem(),
+                new ViewBuild(),
+                new ViewFind(),
+                new ViewGit(),
+
+                //Navigation
+                new Backward(),
+                new Forward(),
+
         };
 
         commands = new Command[menuCommands.length];
@@ -29,6 +56,7 @@ public class AppCommands {
 
 
     public static boolean menuCommandPreExec(Menu menu) {
+        long startTime=System.currentTimeMillis();
         boolean apply = false;
         for (Command command : commands) {
             if (command instanceof MenuCommand) {
@@ -40,6 +68,8 @@ public class AppCommands {
                 }
             }
         }
+        long endTime=System.currentTimeMillis();
+        AppLog.s("menuCommandPreExec:"+(endTime-startTime));
         return apply;
     }
 
@@ -47,9 +77,8 @@ public class AppCommands {
         for (Command command : commands) {
             if (command instanceof MenuCommand) {
                 if (item.getItemId() == ((MenuCommand) command).getId()) {
-                    if (command.isEnabled()) {
-                        return command.commandPerformed();
-                    }
+                    AppLog.s("menuCommandExec:"+item.getTitle());
+                    return command.commandPerformed();
                 }
             }
         }

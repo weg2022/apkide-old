@@ -1,24 +1,26 @@
-package com.apkide.ui.commands;
+package com.apkide.ui.commands.view;
 
 import androidx.annotation.NonNull;
 
+import com.apkide.ui.App;
 import com.apkide.ui.R;
 import com.apkide.ui.util.MenuCommand;
 
-public class ExitMenuCommand implements MenuCommand {
+public class ViewProject implements MenuCommand {
     @Override
     public int getId() {
-        return R.id.mainActionExit;
+        return R.id.mainActionViewProject;
     }
 
     @NonNull
     @Override
     public String getName() {
-        return "Exit";
+        return "Project";
     }
 
     @Override
     public boolean commandPerformed() {
+        App.getUI().toggleProjectBrowser();
         return true;
     }
 }

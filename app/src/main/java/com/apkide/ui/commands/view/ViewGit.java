@@ -1,24 +1,26 @@
-package com.apkide.ui.commands;
+package com.apkide.ui.commands.view;
 
 import androidx.annotation.NonNull;
 
+import com.apkide.ui.App;
 import com.apkide.ui.R;
 import com.apkide.ui.util.MenuCommand;
 
-public class UndoMenuCommand implements MenuCommand {
+public class ViewGit implements MenuCommand {
     @Override
     public int getId() {
-        return R.id.mainActionUndo;
+        return R.id.mainActionViewGit;
     }
 
     @NonNull
     @Override
     public String getName() {
-        return "Undo";
+        return "Git";
     }
 
     @Override
     public boolean commandPerformed() {
-        return false;
+        App.getUI().toggleGitBrowser();
+        return true;
     }
 }

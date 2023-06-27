@@ -1,0 +1,32 @@
+<resources>
+	<string name="app_name">APK-IDE</string>
+    <string name="mainMenuUndo">撤销</string>
+    <string name="mainMenuRedo">重做</string>
+    <string name="mainMenuMake">构建</string>
+    <string name="mainMenuFile">文件</string>
+    <string name="mainMenuFileSave">保存</string>
+    <string name="mainMenuFileReload">重新加载</string>
+    <string name="mainMenuEdit">编辑</string>
+    <string name="mainMenuView">视图</string>
+    <string name="mainMenuViewFiles">文件</string>
+    <string name="mainMenuViewProject">项目</string>
+    <string name="mainMenuViewProblems">问题</string>
+    <string name="mainMenuViewBuild">构建</string>
+    <string name="mainMenuViewFind">查找</string>
+    <string name="mainMenuViewGit">Git</string>
+    <string name="mainMenuNavigate">导航</string>
+    <string name="mainMenuNavigateBackward">后退</string>
+    <string name="mainMenuNavigateForward">前进</string>
+    <string name="mainMenuCode">代码</string>
+    <string name="mainMenuRefactor">重构</string>
+    <string name="mainMenuBuild">构建</string>
+    <string name="mainMenuBuildClean">清除构建</string>
+    <string name="mainMenuRebuild">重新构建</string>
+    <string name="mainMenuGit">Git</string>
+    <string name="mainMenuGitCommit">Commit</string>
+    <string name="mainMenuGitPush">Push</string>
+    <string name="mainMenuGitPull">Pull</string>
+    <string name="mainMenuCloseProject">关闭项目</string>
+    <string name="mainMenuPreferences">偏好配置选项</string>
+    <string name="mainMenuExit">退出应用</string>
+</resources>

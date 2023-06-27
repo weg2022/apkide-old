@@ -1,3 +1,32 @@
 <resources>
 	<string name="app_name">APK-IDE</string>
+    <string name="mainMenuUndo">Undo</string>
+    <string name="mainMenuRedo">Redo</string>
+    <string name="mainMenuMake">Make</string>
+    <string name="mainMenuFile">File</string>
+    <string name="mainMenuFileSave">Save</string>
+    <string name="mainMenuFileReload">Reload</string>
+    <string name="mainMenuEdit">Edit</string>
+    <string name="mainMenuView">View</string>
+    <string name="mainMenuViewFiles">Files</string>
+    <string name="mainMenuViewProject">Project</string>
+    <string name="mainMenuViewProblems">Problems</string>
+    <string name="mainMenuViewBuild">Build</string>
+    <string name="mainMenuViewFind">Find</string>
+    <string name="mainMenuViewGit">Git</string>
+    <string name="mainMenuNavigate">Navigate</string>
+    <string name="mainMenuNavigateBackward">Back</string>
+    <string name="mainMenuNavigateForward">Forward</string>
+    <string name="mainMenuCode">Code</string>
+    <string name="mainMenuRefactor">Refactor</string>
+    <string name="mainMenuBuild">Build</string>
+    <string name="mainMenuBuildClean">Clean Project</string>
+    <string name="mainMenuRebuild">Rebuild Project</string>
+    <string name="mainMenuGit">Git</string>
+    <string name="mainMenuGitCommit">Commit</string>
+    <string name="mainMenuGitPush">Push</string>
+    <string name="mainMenuGitPull">Pull</string>
+    <string name="mainMenuCloseProject">Close Project</string>
+    <string name="mainMenuPreferences">Preferences</string>
+    <string name="mainMenuExit">Exit</string>
 </resources>

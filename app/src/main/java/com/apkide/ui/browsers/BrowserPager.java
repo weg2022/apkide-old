@@ -53,10 +53,11 @@ public class BrowserPager extends ViewPager {
         browsers.add(new BuildBrowser(getContext()));
         browsers.add(new FindBrowser(getContext()));
         browsers.add(new GitBrowser(getContext()));
+
         try {
             Field declaredField = requireNonNull(getClass().getSuperclass()).getDeclaredField("mTouchSlop");
             declaredField.setAccessible(true);
-            declaredField.setInt(this, 10);
+            declaredField.setInt(this, 5);
         } catch (Exception ignored) {
 
         }

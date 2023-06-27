@@ -9,7 +9,9 @@ import static com.apkide.ui.browsers.BrowserPager.FIND_BROWSER;
 import static com.apkide.ui.browsers.BrowserPager.GIT_BROWSER;
 import static com.apkide.ui.browsers.BrowserPager.PROBLEM_BROWSER;
 import static com.apkide.ui.browsers.BrowserPager.PROJECT_BROWSER;
+import static java.lang.System.currentTimeMillis;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,13 +21,18 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.viewpager.widget.ViewPager;
 
 import com.apkide.ui.browsers.BrowserPager;
 import com.apkide.ui.databinding.UiMainBinding;
@@ -39,7 +46,9 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
     private ActionBarDrawerToggle mainDrawerToggle;
 
     private SharedPreferences browserPreferences;
+    private long lastBackPressedTimeMillis;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         App.init(this);
@@ -55,22 +64,94 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
 
         mainDrawerToggle = new ActionBarDrawerToggle(this, mainBinding.mainDrawerLayout,
                 android.R.string.ok, android.R.string.cancel);
-
         mainBinding.mainDrawerLayout.addDrawerListener(mainDrawerToggle);
-
         mainDrawerToggle.syncState();
 
         mainBinding.mainContentToolbar.setNavigationOnClickListener(v -> {
-            if (mainBinding.mainDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-                mainBinding.mainDrawerLayout.closeDrawer(GravityCompat.START);
-            } else {
-                mainBinding.mainDrawerLayout.openDrawer(GravityCompat.START);
+            if (isDrawerOpened())
+                closeDrawer();
+            else
+                openDrawer();
+        });
+        mainBinding.mainDrawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                lockDrawer();
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                unlockDrawer();
             }
         });
 
+        mainBinding.mainDrawerLayout.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN)
+                closeDrawer();
+            return false;
+        });
+        mainBinding.mainBrowserPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                if (position == GIT_BROWSER) {
+                    unlockDrawer();
+                } else {
+                    if (!isLockDrawer())
+                        lockDrawer();
+                }
+            }
+        });
+        getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                while (gotoBackward()) {
+
+                }
+
+                if (isDrawerOpened()) {
+                    closeDrawer();
+                    return;
+                }
+
+                if (currentTimeMillis() - lastBackPressedTimeMillis < 2000)
+                    exitApp();
+                else {
+                    lastBackPressedTimeMillis = currentTimeMillis();
+                    Toast.makeText(MainUI.this, "Press Exit again...", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         initializeBrowser();
     }
 
+    public void exitApp() {
+        App.shutdown();
+        finish();
+    }
+
+    public boolean isDrawerOpened() {
+        return mainBinding.mainDrawerLayout.isOpen();
+    }
+
+    public void closeDrawer() {
+        mainBinding.mainDrawerLayout.closeDrawers();
+    }
+
+    public void openDrawer() {
+        mainBinding.mainDrawerLayout.openDrawer(GravityCompat.START);
+    }
+
+    public void lockDrawer() {
+        mainBinding.mainDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
+    }
+
+    public void unlockDrawer() {
+        mainBinding.mainDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+    }
+
+    public boolean isLockDrawer() {
+        return mainBinding.mainDrawerLayout.getDrawerLockMode(GravityCompat.START) == DrawerLayout.LOCK_MODE_LOCKED_OPEN;
+    }
 
     private void initializeBrowser() {
         browserPreferences = getSharedPreferences("browser_view", MODE_PRIVATE);
@@ -112,10 +193,10 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
 
     public void toggleBrowser(int index, boolean refresh) {
         //TODO: 加入是否需要自动打开选项
-        if (mainBinding.mainDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            getBrowserPager().toggle(index, refresh);
-
+        if (!isDrawerOpened()) {
+            openDrawer();
         }
+        getBrowserPager().toggle(index, refresh);
     }
 
     public void saveCurrentBrowser(int index) {
@@ -151,7 +232,7 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
     }
 
     public void navigateTo(FileSpan span, boolean focus) {
-        if (span==null || !FileSystem.exists(span.filePath)){
+        if (span == null || !FileSystem.exists(span.filePath)) {
             return;
         }
         App.getNavigateService().setEnabled(true);
@@ -166,7 +247,9 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
 
-        AppCommands.menuCommandPreExec(menu);
+        if (AppCommands.menuCommandPreExec(menu)) {
+
+        }
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -212,13 +295,13 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (!Environment.isExternalStorageManager()) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("缺少访问文件权限");
-                builder.setMessage("接下来需要您去授权访问文件权限");
-                builder.setPositiveButton("好的", (dialog, which) -> {
+                builder.setTitle("Lack of access to file");
+                builder.setMessage("Next, you need to grant access to the file...");
+                builder.setPositiveButton("yes", (dialog, which) -> {
                     dialog.dismiss();
                     startActivity(new Intent(ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION));
                 });
-                builder.setNegativeButton("拒绝", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("refuse", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -245,7 +328,7 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
 
                         return;
                     } else {
-                        Toast.makeText(this, "获取访问外部存储权限失败...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Failed to get access to external storage...", Toast.LENGTH_SHORT).show();
                     }
                 }
 

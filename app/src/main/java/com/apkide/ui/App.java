@@ -159,6 +159,11 @@ public final class App {
         return app != null;
     }
 
+
+    public static MainUI getUI(){
+        return mainUI;
+    }
+
     public static OpenFileService getOpenFileService() {
         return app.openFileService;
     }

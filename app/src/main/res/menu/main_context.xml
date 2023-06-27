@@ -1,102 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <item
         android:id="@+id/mainActionUndo"
         android:icon="@mipmap/ic_l_undo"
+        android:title="@string/mainMenuUndo"
         app:showAsAction="always"
-        android:title="Undo"
         tools:ignore="AlwaysShowAction" />
 
     <item
         android:id="@+id/mainActionRedo"
         android:icon="@mipmap/ic_l_redo"
-        app:showAsAction="always"
-        android:title="Redo" />
+        android:title="@string/mainMenuRedo"
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/mainActionRun"
         android:icon="@mipmap/ic_l_play"
-        app:showAsAction="always"
-        android:title="Make" />
+        android:title="@string/mainMenuMake"
+        app:showAsAction="always" />
 
-    <item android:title="Edit">
+    <item
+        android:id="@+id/mainActionFile"
+        android:title="@string/mainMenuFile">
+
+        <menu>
+
+            <item
+                android:id="@+id/mainActionFileSave"
+                android:title="@string/mainMenuFileSave" />
+
+            <item
+                android:id="@+id/mainActionFileReload"
+                android:title="@string/mainMenuFileReload" />
+
+        </menu>
+    </item>
+
+    <item android:title="@string/mainMenuEdit">
+        <menu>
+            <item
+                android:id="@+id/mainActionEditFind"
+                android:title="Find">
+                <menu>
+                  <item
+                      android:id="@+id/mainActionEditFindText"
+                      android:title="Find Text"/>
+                </menu>
+            </item>
+        </menu>
+    </item>
+
+    <item android:title="@string/mainMenuView">
+        <menu>
+            <item
+                android:id="@+id/mainActionViewFiles"
+                android:title="@string/mainMenuViewFiles"
+                app:showAsAction="always" />
+            <item
+                android:id="@+id/mainActionViewProject"
+                android:title="@string/mainMenuViewProject"
+                app:showAsAction="always" />
+            <item
+                android:id="@+id/mainActionViewProblems"
+                android:title="@string/mainMenuViewProblems"
+                app:showAsAction="always" />
+            <item
+                android:id="@+id/mainActionViewBuild"
+                android:title="@string/mainMenuViewBuild"
+                app:showAsAction="always" />
+            <item
+                android:id="@+id/mainActionViewFind"
+                android:title="@string/mainMenuViewFind"
+                app:showAsAction="always" />
+            <item
+                android:id="@+id/mainActionViewGit"
+                android:title="@string/mainMenuViewGit"
+                app:showAsAction="always" />
+        </menu>
+    </item>
+
+    <item android:title="@string/mainMenuNavigate">
+        <menu>
+            <item
+                android:id="@+id/mainActionBackward"
+                android:title="@string/mainMenuNavigateBackward"
+                app:showAsAction="always" />
+            <item
+                android:id="@+id/mainActionForward"
+                android:title="@string/mainMenuNavigateForward"
+                app:showAsAction="always" />
+        </menu>
+    </item>
+
+    <item android:title="@string/mainMenuCode">
         <menu>
 
         </menu>
     </item>
 
-    <item android:title="View">
+    <item android:title="@string/mainMenuRefactor">
         <menu>
 
         </menu>
     </item>
 
-    <item android:title="Navigate">
-        <menu>
-
-        </menu>
-    </item>
-
-    <item android:title="Code">
-        <menu>
-
-        </menu>
-    </item>
-
-    <item android:title="Refactor">
-        <menu>
-
-        </menu>
-    </item>
-
-    <item android:title="Build">
+    <item android:title="@string/mainMenuBuild">
         <menu>
             <item
                 android:id="@+id/mainActionBuildClean"
-                android:title="Clean Project"/>
+                android:title="@string/mainMenuBuildClean" />
             <item
                 android:id="@+id/mainActionRebuild"
-                android:title="Rebuild Project"/>
+                android:title="@string/mainMenuRebuild" />
         </menu>
     </item>
 
-    <item android:title="Git">
+    <item android:title="@string/mainMenuGit">
         <menu>
             <item
                 android:id="@+id/mainActionGitCommit"
-                android:title="Commit"/>
+                android:title="@string/mainMenuGitCommit" />
             <item
                 android:id="@+id/mainActionGitPush"
-                android:title="Push"/>
+                android:title="@string/mainMenuGitPush" />
             <item
                 android:id="@+id/mainActionGitPull"
-                android:title="Pull"/>
+                android:title="@string/mainMenuGitPull" />
         </menu>
     </item>
 
     <item
-        android:id="@+id/mainActionMore"
-        android:title="More" >
-
-        <menu>
-
-
-
-        </menu>
-    </item>
-
-    <item
-        android:id="@+id/mainActionSaveAll"
-        android:title="Save All"/>
+        android:id="@+id/mainActionCloseProject"
+        android:title="@string/mainMenuCloseProject" />
 
     <item
         android:id="@+id/mainActionSettings"
-        android:title="Preferences"/>
+        android:title="@string/mainMenuPreferences" />
 
     <item
         android:id="@+id/mainActionExit"
-        android:title="Exit"/>
+        android:title="@string/mainMenuExit" />
 </menu>

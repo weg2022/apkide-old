@@ -2,18 +2,19 @@ package com.apkide.ui.commands;
 
 import androidx.annotation.NonNull;
 
+import com.apkide.ui.R;
 import com.apkide.ui.util.MenuCommand;
 
-public class BackwardMenuCommand implements MenuCommand {
+public class Redo implements MenuCommand {
     @Override
     public int getId() {
-        return 0;
+        return R.id.mainActionRedo;
     }
 
     @NonNull
     @Override
     public String getName() {
-        return "Backward";
+        return "Redo";
     }
 
     @Override
