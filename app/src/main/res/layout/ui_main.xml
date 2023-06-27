@@ -14,8 +14,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/mainContentLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="match_parent">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/mainContentToolbar"
@@ -24,43 +23,40 @@
                 android:background="?attr/colorPrimaryVariant"
                 android:minHeight="?attr/actionBarSize"
                 android:theme="?attr/actionBarTheme"
-                app:layout_constraintBottom_toTopOf="@+id/mainContentFrame"
+                app:layout_constraintBottom_toTopOf="@+id/mainEditorPager"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <FrameLayout
-                android:id="@+id/mainContentFrame"
+            <com.apkide.ui.EditorPager
+                android:id="@+id/mainEditorPager"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/mainContentToolbar">
+                app:layout_constraintTop_toBottomOf="@+id/mainContentToolbar" />
 
-            </FrameLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/mainBrowserLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_gravity="start"
             android:background="@color/colorBackground"
             android:clickable="true"
-            android:layout_gravity="start"
             android:focusable="true">
 
-            <FrameLayout
-                android:id="@+id/mainBrowserFrame"
+            <com.apkide.ui.browsers.BrowserPager
+                android:id="@+id/mainBrowserPager"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-            </FrameLayout>
-
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

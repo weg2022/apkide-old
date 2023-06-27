@@ -15,8 +15,8 @@ import com.apkide.common.AppLog;
 import com.apkide.common.AssetsProvider;
 import com.apkide.common.FileUtils;
 import com.apkide.common.SafeRunner;
+import com.apkide.ui.filesystem.FileSystem;
 import com.apkide.ui.preferences.PreferencesUI;
-import com.apkide.ui.services.file.FileSystem;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -97,7 +97,7 @@ public final class App {
 
                 AppLog.s(String.format("Extract file %s to %s from assets.", fileName, targetFile.getAbsolutePath()));
                 SafeRunner.run(() -> {
-                    FileSystem.createFile(targetFile.getAbsolutePath());
+                   // FileSystem.createFile(targetFile.getAbsolutePath());
                     InputStream inputStream = context.getAssets().open(fileName);
                     FileOutputStream outputStream = new FileOutputStream(targetFile);
                     copyBytes(inputStream, outputStream);

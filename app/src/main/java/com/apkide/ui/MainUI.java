@@ -26,6 +26,7 @@ import com.apkide.ui.databinding.UiMainBinding;
 public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private UiMainBinding mainBinding;
+
     private ActionBarDrawerToggle mainDrawerToggle;
 
     @Override
@@ -38,10 +39,10 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
 
         setSupportActionBar(mainBinding.mainContentToolbar);
 
-        if (getSupportActionBar()!=null)
+        if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mainDrawerToggle=new ActionBarDrawerToggle(this,mainBinding.mainDrawerLayout,
+        mainDrawerToggle = new ActionBarDrawerToggle(this, mainBinding.mainDrawerLayout,
                 android.R.string.ok, android.R.string.cancel);
 
         mainBinding.mainDrawerLayout.addDrawerListener(mainDrawerToggle);
@@ -49,19 +50,20 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
         mainDrawerToggle.syncState();
 
         mainBinding.mainContentToolbar.setNavigationOnClickListener(v -> {
-            if (mainBinding.mainDrawerLayout.isDrawerOpen(GravityCompat.START)){
+            if (mainBinding.mainDrawerLayout.isDrawerOpen(GravityCompat.START)) {
                 mainBinding.mainDrawerLayout.closeDrawer(GravityCompat.START);
-            }else{
+            } else {
                 mainBinding.mainDrawerLayout.openDrawer(GravityCompat.START);
             }
         });
+
 
         checkPermissions();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_context,menu);
+        getMenuInflater().inflate(R.menu.main_context, menu);
         return true;
     }
 
@@ -76,7 +78,7 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        boolean commandExec=AppCommands.menuCommandExec(item);
+        boolean commandExec = AppCommands.menuCommandExec(item);
 
         return super.onOptionsItemSelected(item);
     }

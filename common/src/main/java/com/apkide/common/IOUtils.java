@@ -16,7 +16,47 @@ import java.security.NoSuchAlgorithmException;
 
 public final class IOUtils {
 	private static final int BUFFER_SIZE = 4096;
-	
+	public static boolean equals(InputStream stream1, InputStream stream2) throws IOException {
+		try (stream1; stream2) {
+			byte[] buf1 = new byte[8192];
+			byte[] buf2 = new byte[8192];
+			while (true) {
+				int i1 = readMax(stream1, buf1);
+				int i2 = readMax(stream2, buf2);
+				if (i1 != i2) {
+					return false;
+				}
+				if (i1 == -1) {
+					return true;
+				}
+				for (int i = 0; i < i1; i++) {
+					if (buf1[i] != buf2[i]) {
+						return false;
+					}
+				}
+			}
+		}
+	}
+
+	public static int readMax(InputStream inStream, byte[] arr) throws IOException {
+		return readMax(inStream, arr, 0, arr.length);
+	}
+
+	public static int readMax(InputStream inStream, byte[] arr, int off, int len) throws IOException {
+		int count = 0;
+		while (count < len) {
+			int currCount = inStream.read(arr, off + count, len - count);
+			if (currCount == -1) {
+				if (count > 0) {
+					return count;
+				}
+				return -1;
+			}
+			count += currCount;
+		}
+		return count;
+	}
+
 	@NonNull
 	public static byte[] readBytes(@NonNull InputStream in) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
