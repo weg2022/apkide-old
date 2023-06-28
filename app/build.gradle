@@ -23,7 +23,7 @@ android {
     defaultConfig {
         applicationId 'com.apkide.ui'
         minSdk 21
-        targetSdk 32
+        targetSdk 28
         versionCode 20230315
         versionName '1.0beta1'
         multiDexEnabled true

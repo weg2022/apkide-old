@@ -119,7 +119,7 @@ public class FileSystem {
         }
     }
 
-    private static boolean isJar(String path) {
+    public static boolean isJar(String path) {
         return new File(path).isFile() && (path.endsWith(".jar") || path.endsWith(".zip"));
     }
 
@@ -214,11 +214,16 @@ public class FileSystem {
         return (isNormalFile(path) || isJarFileEntry(path)) && !isJar(path);
     }
 
-    public static List<String> getChildEntries(String dirPath) throws IOException {
+    public static List<String> getChildEntries(String dirPath) {
         if (isJarEntry(dirPath)) {
             String jarFilepath = getEnclosingJar(dirPath);
             String entryPath = getJarFileEntryRelativePath(dirPath);
-            List<String> entries = classFileArchiveReader.getArchiveDirectoryEntries(jarFilepath, entryPath);
+            List<String> entries = null;
+            try {
+                entries = classFileArchiveReader.getArchiveDirectoryEntries(jarFilepath, entryPath);
+            } catch (IOException ignored) {
+
+            }
             if (entries == null)
                 return new ArrayList<>();
             return entries;
@@ -390,14 +395,11 @@ public class FileSystem {
         if (isNormalDirectory(path)) {
             int count = 0;
             List<String> entries;
-            try {
-                entries = getChildEntries(path);
-                for (String childPath : entries) {
-                    count += getContainedFileCount(childPath, maxCount, suffixes);
-                    if (count >= maxCount)
-                        return count;
-                }
-            } catch (IOException ignored) {
+            entries = getChildEntries(path);
+            for (String childPath : entries) {
+                count += getContainedFileCount(childPath, maxCount, suffixes);
+                if (count >= maxCount)
+                    return count;
             }
             return count;
         } else if (isNormalFile(path)) {

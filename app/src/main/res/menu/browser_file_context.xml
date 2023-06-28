@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/fileBrowserNew"
+        android:title="New" >
+        <menu>
+            <item
+                android:id="@+id/fileBrowserNewFile"
+                android:title="New File" />
+            <item
+                android:id="@+id/fileBrowserNewDirectory"
+                android:title="New Directory" />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/fileBrowserOpenProject"
+        android:title="Open Project"/>
+
+    <item
+        android:id="@+id/fileBrowserCopyPath"
+        android:title="Copy Path"/>
+
+    <item
+        android:id="@+id/fileBrowserDelete"
+        android:title="Delete"/>
+
+    <item
+        android:id="@+id/fileBrowserReload"
+        android:title="Reload"/>
+
+</menu>

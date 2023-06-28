@@ -15,6 +15,7 @@
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <application
+        android:requestLegacyExternalStorage="true"
         android:name=".IDEApplication"
         android:allowBackup="true"
         android:banner="@mipmap/ic_banner"

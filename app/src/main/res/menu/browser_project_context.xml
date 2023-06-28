@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/projectBrowserNew"
+        android:title="New" >
+        <menu>
+            <item
+                android:id="@+id/projectBrowserNewSmaliFile"
+                android:title="New Smali File" />
+            <item
+                android:id="@+id/projectBrowserNewFile"
+                android:title="New File" />
+            <item
+                android:id="@+id/projectBrowserNewDirectory"
+                android:title="New Directory" />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/projectBrowserCopyPath"
+        android:title="Copy Path"/>
+
+    <item
+        android:id="@+id/projectBrowserDelete"
+        android:title="Delete"/>
+
+    <item
+        android:id="@+id/projectBrowserReload"
+        android:title="Reload"/>
+</menu>

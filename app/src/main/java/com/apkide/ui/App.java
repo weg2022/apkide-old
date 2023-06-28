@@ -95,7 +95,7 @@ public final class App {
             @Override
             public File foundFile(String fileName) {
                 String targetName = FileUtils.getFileName(fileName);
-                File targetFile = new File(context.getExternalFilesDir(null), targetName);
+                File targetFile = new File(context.getFilesDir(), targetName);
                 if (targetFile.exists()) {
                     AppLog.s(String.format("%s file found.", targetFile.getAbsolutePath()));
                     return targetFile;

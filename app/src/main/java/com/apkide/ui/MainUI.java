@@ -2,7 +2,6 @@ package com.apkide.ui;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-import static android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION;
 import static com.apkide.ui.browsers.BrowserPager.BUILD_BROWSER;
 import static com.apkide.ui.browsers.BrowserPager.FILE_BROWSER;
 import static com.apkide.ui.browsers.BrowserPager.FIND_BROWSER;
@@ -12,13 +11,10 @@ import static com.apkide.ui.browsers.BrowserPager.PROJECT_BROWSER;
 import static java.lang.System.currentTimeMillis;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -29,7 +25,6 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
@@ -121,6 +116,8 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
                 }
             }
         });
+        checkPermissions();
+
         initializeBrowser();
     }
 
@@ -292,7 +289,7 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
     private static final int REQUEST_PERMISSION_CODE = 10014;
 
     private void checkPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+       /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (!Environment.isExternalStorageManager()) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("Lack of access to file");
@@ -309,12 +306,12 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
                 });
                 builder.create().show();
             }
-        } else {
+        } else {*/
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (checkSelfPermission(WRITE_EXTERNAL_STORAGE) != PERMISSION_GRANTED)
                     requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_CODE);
             }
-        }
+        //}
     }
 
     @Override

@@ -57,16 +57,16 @@ public class BrowserPager extends ViewPager {
         try {
             Field declaredField = requireNonNull(getClass().getSuperclass()).getDeclaredField("mTouchSlop");
             declaredField.setAccessible(true);
-            declaredField.setInt(this, 5);
+            declaredField.setInt(this, 15);
         } catch (Exception ignored) {
 
         }
 
-        setPageMargin(1);
+        setPageMargin((int) getContext().getResources().getDisplayMetrics().density);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            setPageMarginDrawable(new ColorDrawable(getContext().getColor(R.color.colorPrimary)));
+            setPageMarginDrawable(new ColorDrawable(getContext().getColor(R.color.colorOnSecondary)));
         } else {
-            setPageMarginDrawable(new ColorDrawable(getContext().getResources().getColor(R.color.colorPrimary)));
+            setPageMarginDrawable(new ColorDrawable(getContext().getResources().getColor(R.color.colorOnSecondary)));
         }
         setAdapter(new PagerAdapter() {
             private int index = -1;

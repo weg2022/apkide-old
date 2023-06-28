@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:minHeight="?attr/actionBarSize"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/browserHeaderIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="3dp"
+            android:gravity="center"
+            android:importantForAccessibility="no"
+            android:paddingRight="5dp"
+            android:scaleType="centerInside"
+            tools:srcCompat="@mipmap/file_type_unknown" />
+
+        <TextView
+            android:id="@+id/browserHeaderLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="start"
+            android:singleLine="true"
+            android:text="/"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/moreMenuButton"
+            android:layout_width="?attr/actionBarSize"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_marginLeft="5dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:focusable="true"
+            android:importantForAccessibility="no"
+            android:scaleType="centerInside"
+            android:src="@mipmap/ic_l_more" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
