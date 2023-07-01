@@ -26,9 +26,8 @@ public enum FileTypes {
     public static int getIcon(String fileName) {
         for (FileTypes types : values()) {
             for (String extension : types.extensions) {
-                if (fileName.endsWith(extension)) {
+                if (fileName.endsWith(extension))
                     return types.icon;
-                }
             }
         }
         return R.mipmap.file_type_unknown;

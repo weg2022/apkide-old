@@ -19,9 +19,7 @@ import com.apkide.ui.R;
 import com.apkide.ui.browsers.build.BuildBrowser;
 import com.apkide.ui.browsers.file.FileBrowser;
 import com.apkide.ui.browsers.find.FindBrowser;
-import com.apkide.ui.browsers.git.GitBrowser;
 import com.apkide.ui.browsers.problem.ProblemBrowser;
-import com.apkide.ui.browsers.project.ProjectBrowser;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -39,20 +37,16 @@ public class BrowserPager extends ViewPager {
     }
 
     public static final int FILE_BROWSER = 0;
-    public static final int PROJECT_BROWSER = 1;
-    public static final int PROBLEM_BROWSER = 2;
+    public static final int PROBLEM_BROWSER = 1;
+    public static final int FIND_BROWSER = 2;
     public static final int BUILD_BROWSER = 3;
-    public static final int FIND_BROWSER = 4;
-    public static final int GIT_BROWSER = 5;
     private final List<View> browsers = new ArrayList<>();
 
     private void initView() {
         browsers.add(new FileBrowser(getContext()));
-        browsers.add(new ProjectBrowser(getContext()));
         browsers.add(new ProblemBrowser(getContext()));
         browsers.add(new BuildBrowser(getContext()));
         browsers.add(new FindBrowser(getContext()));
-        browsers.add(new GitBrowser(getContext()));
 
         try {
             Field declaredField = requireNonNull(getClass().getSuperclass()).getDeclaredField("mTouchSlop");
@@ -85,7 +79,7 @@ public class BrowserPager extends ViewPager {
             @Override
             public Object instantiateItem(@NonNull ViewGroup container, int position) {
                 View view = browsers.get(position);
-                container.addView(view, 0);
+                container.addView(view);
                 return view;
             }
 
@@ -101,7 +95,7 @@ public class BrowserPager extends ViewPager {
                     index = position;
                     postDelayed(() -> {
                         Browser browser = (Browser) browsers.get(index);
-                        browser.apply();
+                        browser.reload();
                         getUI().saveCurrentBrowser(index);
                     }, 100L);
                 }
@@ -109,16 +103,15 @@ public class BrowserPager extends ViewPager {
         });
     }
 
+    public int getBrowserCount(){
+        return browsers.size();
+    }
     public MainUI getUI() {
         return (MainUI) getContext();
     }
 
     public FileBrowser getFileBrowser() {
         return (FileBrowser) browserAt(FILE_BROWSER);
-    }
-
-    public ProjectBrowser getProjectBrowser() {
-        return (ProjectBrowser) browserAt(PROJECT_BROWSER);
     }
 
     public ProblemBrowser getProblemBrowser() {
@@ -133,10 +126,6 @@ public class BrowserPager extends ViewPager {
         return (FindBrowser) browserAt(FIND_BROWSER);
     }
 
-    public GitBrowser getGitBrowser() {
-        return (GitBrowser) browserAt(GIT_BROWSER);
-    }
-
 
     public int getCurrentBrowser() {
         return getCurrentItem();
@@ -146,8 +135,8 @@ public class BrowserPager extends ViewPager {
         return browsers.get(index);
     }
 
-    public void refresh(){
-        toggle(getCurrentBrowser(),true);
+    public void refresh() {
+        toggle(getCurrentBrowser(), true);
     }
 
     public void toggle(int index, boolean refresh) {

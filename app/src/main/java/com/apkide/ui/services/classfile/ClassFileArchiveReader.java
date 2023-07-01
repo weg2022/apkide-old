@@ -5,8 +5,8 @@ import static com.apkide.ui.services.classfile.ClassDecompiler.decompileFromDir;
 import static java.io.File.separator;
 
 import com.apkide.common.AppLog;
+import com.apkide.common.InputStreamWrapper;
 import com.apkide.ui.services.FileSystem;
-import com.apkide.ui.util.InputStreamWrapper;
 
 import java.io.File;
 import java.io.FileInputStream;

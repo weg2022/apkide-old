@@ -1,19 +1,14 @@
 package com.apkide.ui;
 
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static com.apkide.ui.browsers.BrowserPager.BUILD_BROWSER;
 import static com.apkide.ui.browsers.BrowserPager.FILE_BROWSER;
 import static com.apkide.ui.browsers.BrowserPager.FIND_BROWSER;
-import static com.apkide.ui.browsers.BrowserPager.GIT_BROWSER;
 import static com.apkide.ui.browsers.BrowserPager.PROBLEM_BROWSER;
-import static com.apkide.ui.browsers.BrowserPager.PROJECT_BROWSER;
 import static java.lang.System.currentTimeMillis;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,7 +29,7 @@ import com.apkide.ui.databinding.UiMainBinding;
 import com.apkide.ui.services.FileSystem;
 import com.apkide.ui.services.navigate.FileSpan;
 
-public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class MainUI extends StyledUI implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private UiMainBinding mainBinding;
 
@@ -46,7 +41,7 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        App.init(this);
+        App.initialize(this);
         super.onCreate(savedInstanceState);
         AppPreferences.getPreferences().registerOnSharedPreferenceChangeListener(this);
         mainBinding = UiMainBinding.inflate(getLayoutInflater());
@@ -88,7 +83,7 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
         mainBinding.mainBrowserPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                if (position == GIT_BROWSER) {
+                if (position == getBrowserPager().getBrowserCount() - 1) {
                     unlockDrawer();
                 } else {
                     if (!isLockDrawer())
@@ -116,7 +111,6 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
                 }
             }
         });
-        checkPermissions();
 
         initializeBrowser();
     }
@@ -163,11 +157,6 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
         toggleBrowser(FILE_BROWSER, false);
     }
 
-    public void toggleProjectBrowser() {
-
-        toggleBrowser(PROJECT_BROWSER, false);
-    }
-
     public void toggleProblemBrowser() {
 
         toggleBrowser(PROBLEM_BROWSER, false);
@@ -183,13 +172,8 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
         toggleBrowser(FIND_BROWSER, false);
     }
 
-    public void toggleGitBrowser() {
-
-        toggleBrowser(GIT_BROWSER, false);
-    }
 
     public void toggleBrowser(int index, boolean refresh) {
-        //TODO: 加入是否需要自动打开选项
         if (!isDrawerOpened()) {
             openDrawer();
         }
@@ -244,8 +228,10 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
 
-        if (AppCommands.menuCommandPreExec(menu)) {
-
+        if (!App.isShutdown()) {
+            if (AppCommands.menuCommandPreExec(menu)) {
+                return true;
+            }
         }
 
         return super.onPrepareOptionsMenu(menu);
@@ -254,7 +240,10 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        boolean commandExec = AppCommands.menuCommandExec(item);
+        if (!App.isShutdown()) {
+            if (AppCommands.menuCommandExec(item))
+                return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -270,14 +259,6 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-            changeTheme(newConfig.isNightModeActive());
-        else
-            changeTheme(isNightModeActive(newConfig.uiMode));
-    }
-
-    private void changeTheme(boolean dark) {
-
     }
 
 
@@ -286,51 +267,4 @@ public class MainUI extends ThemeUI implements SharedPreferences.OnSharedPrefere
 
     }
 
-    private static final int REQUEST_PERMISSION_CODE = 10014;
-
-    private void checkPermissions() {
-       /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (!Environment.isExternalStorageManager()) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("Lack of access to file");
-                builder.setMessage("Next, you need to grant access to the file...");
-                builder.setPositiveButton("yes", (dialog, which) -> {
-                    dialog.dismiss();
-                    startActivity(new Intent(ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION));
-                });
-                builder.setNegativeButton("refuse", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                builder.create().show();
-            }
-        } else {*/
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (checkSelfPermission(WRITE_EXTERNAL_STORAGE) != PERMISSION_GRANTED)
-                    requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_CODE);
-            }
-        //}
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_PERMISSION_CODE) {
-
-            for (int i = 0; i < permissions.length; i++) {
-                if (permissions[i].equals(WRITE_EXTERNAL_STORAGE)) {
-                    if (grantResults[i] == PERMISSION_GRANTED) {
-
-                        return;
-                    } else {
-                        Toast.makeText(this, "Failed to get access to external storage...", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-            }
-
-        }
-    }
 }

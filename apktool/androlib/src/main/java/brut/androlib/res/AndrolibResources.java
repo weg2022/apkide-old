@@ -20,7 +20,7 @@ import static brut.androlib.Androlib.LOGGER;
 
 import android.text.TextUtils;
 
-import com.apkide.common.AssetsProvider;
+import com.apkide.common.ApplicationProvider;
 import com.apkide.common.IOUtils;
 
 import org.xmlpull.v1.XmlSerializer;
@@ -995,7 +995,7 @@ final public class AndrolibResources {
 		if (!TextUtils.isEmpty(BuildOptions.get().getFrameworkFolderLocation())) {
 			path = BuildOptions.get().getFrameworkFolderLocation();
 		} else {
-			File parentPath = AssetsProvider.get().getTempDirectory();
+			File parentPath = ApplicationProvider.get().getTempDirectory();
 
 			String xdgDataFolder = System.getenv("XDG_DATA_HOME");
 			if (xdgDataFolder != null) {
@@ -1059,7 +1059,7 @@ final public class AndrolibResources {
 	public InputStream getAndroidFrameworkResourcesAsStream() {
 		// return SyncAssets.get().open("android-framework.jar");
 		try {
-			return Files.newInputStream(AssetsProvider.get().foundAndroidFrameworkFile().toPath());
+			return Files.newInputStream(ApplicationProvider.get().foundAndroidFrameworkFile().toPath());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

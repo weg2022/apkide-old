@@ -18,7 +18,7 @@ package brut.util;
 
 import android.text.TextUtils;
 
-import com.apkide.common.AssetsProvider;
+import com.apkide.common.ApplicationProvider;
 
 import java.io.File;
 
@@ -37,7 +37,7 @@ public class AaptManager {
 	private static File getAapt(Integer version) throws BrutException {
 		File aaptBinary;
 		String aaptVersion = getAaptBinaryName(version);
-		aaptBinary = AssetsProvider.get().foundBinary(aaptVersion);
+		aaptBinary = ApplicationProvider.get().foundBinary(aaptVersion);
 
 		if (!aaptBinary.exists())
 			throw new BrutException("Can't found aapt binary");

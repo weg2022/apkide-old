@@ -2,14 +2,15 @@
 agp = "8.2.0-alpha08"
 android-r8 = "8.0.40"
 androidx-annotation = "1.6.0"
+antlr4-runtime = "4.13.0"
 com-android-tools-smali-smali = "3.0.3"
 com-android-tools-smali-smali-util = "3.0.3"
 com-android-tools-smali-smali-baksmali = "3.0.3"
 com-google-guava-guava = "31.1-jre"
+dialogx = "0.0.48"
 eclipse-org-eclipse-lsp4j = "0.21.0"
-google-material = "1.9.0"
-androidx-preference = "1.2.0"
-gradle = "8.2.0-alpha08"
+editor = "0.21.1"
+gradle = "8.2.0-alpha10"
 desugar_jdk_libs_nio = "2.0.3"
 jakewharton-dalvik-dx = "11.0.0_r3"
 junit = "4.13.2"
@@ -21,17 +22,20 @@ org-apache-commons-commons-text = "1.10.0"
 preference = "1.1.0"
 material = "1.5.0"
 xmlunit-xmlunit = "1.6"
+appcompat = "1.6.1"
 
 [libraries]
 androidx-annotation-1_6_0 = { module = "androidx.annotation:annotation", version.ref = "androidx-annotation" }
 androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "multidex" }
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
 androidx-preference = { module = "androidx.preference:preference", version.ref = "preference" }
-androidx-preference-1_2_0 = { module = "androidx.preference:preference", version.ref = "androidx-preference" }
+antlr4-runtime = { module = "org.antlr:antlr4-runtime", version.ref = "antlr4-runtime" }
 com-android-tools-smali-smali = { module = "com.android.tools.smali:smali", version.ref = "com-android-tools-smali-smali" }
 com-android-tools-smali-smali-util = { module = "com.android.tools.smali:smali-util", version.ref = "com-android-tools-smali-smali-util" }
 com-android-tools-smali-smali-baksmali = { module = "com.android.tools.smali:smali-baksmali", version.ref = "com-android-tools-smali-smali-baksmali" }
 com-google-guava-guava = { module = "com.google.guava:guava", version.ref = "com-google-guava-guava" }
+dialogx = { module = "com.kongzue.dialogx:DialogX", version.ref = "dialogx" }
+editor = { module = "io.github.Rosemoe.sora-editor:editor", version.ref = "editor" }
 lsp4j-org-eclipse-lsp4j = { module = "org.eclipse.lsp4j:org.eclipse.lsp4j", version.ref = "eclipse-org-eclipse-lsp4j" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
 gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
@@ -39,11 +43,11 @@ desugar_jdk_libs_nio = { module = "com.android.tools:desugar_jdk_libs_nio", vers
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
-material-1_9_0 = { module = "com.google.android.material:material", version.ref = "google-material" }
 org-apache-commons-commons-text = { module = "org.apache.commons:commons-text", version.ref = "org-apache-commons-commons-text" }
 xmlunit-xmlunit = { module = "xmlunit:xmlunit", version.ref = "xmlunit-xmlunit" }
 tools-r8 = { module = "com.android.tools:r8", version.ref = "android-r8" }
 repackaged-dalvik-dx = { module = "com.jakewharton.android.repackaged:dalvik-dx", version.ref = "jakewharton-dalvik-dx" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

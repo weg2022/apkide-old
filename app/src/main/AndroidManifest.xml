@@ -15,7 +15,6 @@
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <application
-        android:requestLegacyExternalStorage="true"
         android:name=".IDEApplication"
         android:allowBackup="true"
         android:banner="@mipmap/ic_banner"
@@ -44,6 +43,7 @@
             </intent-filter>
         </activity>
 
+
         <activity
             android:name=".activities.AboutUI"
             android:label="About"
@@ -53,6 +53,11 @@
             android:name=".preferences.PreferencesUI"
             android:label="Preferences"
             android:theme="@style/Theme.UI.Preferences" />
+
+        <provider
+            android:authorities="com.apkide.ui.initializer"
+            android:name=".IDEInitializer"
+            android:exported="false"/>
     </application>
 
 </manifest>

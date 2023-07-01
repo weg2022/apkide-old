@@ -28,7 +28,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.apkide.ui.EditorPager
+            <com.apkide.ui.IDEEditorPager
                 android:id="@+id/mainEditorPager"
                 android:layout_width="0dp"
                 android:layout_height="0dp"

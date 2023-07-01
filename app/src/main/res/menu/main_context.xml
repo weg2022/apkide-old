@@ -60,24 +60,16 @@
                 android:title="@string/mainMenuViewFiles"
                 app:showAsAction="always" />
             <item
-                android:id="@+id/mainActionViewProject"
-                android:title="@string/mainMenuViewProject"
-                app:showAsAction="always" />
-            <item
                 android:id="@+id/mainActionViewProblems"
                 android:title="@string/mainMenuViewProblems"
-                app:showAsAction="always" />
-            <item
-                android:id="@+id/mainActionViewBuild"
-                android:title="@string/mainMenuViewBuild"
                 app:showAsAction="always" />
             <item
                 android:id="@+id/mainActionViewFind"
                 android:title="@string/mainMenuViewFind"
                 app:showAsAction="always" />
             <item
-                android:id="@+id/mainActionViewGit"
-                android:title="@string/mainMenuViewGit"
+                android:id="@+id/mainActionViewBuild"
+                android:title="@string/mainMenuViewBuild"
                 app:showAsAction="always" />
         </menu>
     </item>

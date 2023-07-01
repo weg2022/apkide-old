@@ -1,176 +1,99 @@
 package com.apkide.ui;
 
-import static com.apkide.common.IOUtils.copyBytes;
-import static com.apkide.common.IOUtils.safeClose;
-import static java.io.File.separator;
+import static java.util.Objects.requireNonNull;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Build;
 import android.os.Handler;
-import android.text.TextUtils;
+import android.os.Looper;
 
-import com.apkide.common.AppLog;
-import com.apkide.common.AssetsProvider;
-import com.apkide.common.FileUtils;
-import com.apkide.common.SafeRunner;
-import com.apkide.ui.services.FileSystem;
+import androidx.annotation.NonNull;
+
+import com.apkide.common.ApplicationProvider;
 import com.apkide.ui.services.navigate.NavigateService;
-import com.apkide.ui.services.openfile.OpenFileService;
+import com.kongzue.dialogx.dialogs.TipDialog;
+import com.kongzue.dialogx.dialogs.WaitDialog;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
-import brut.util.OSDetection;
 
-@SuppressLint("StaticFieldLeak")
 public final class App {
 
-    private static Context context;
-    private static App app;
-    private static Handler handler;
-    private static MainUI mainUI;
+    private static final List<StyledUI> sActivities = new ArrayList<>();
+    private static App sApp;
+    private static Handler sHandler;
+    private static MainUI sMainUI;
 
-
-    private final OpenFileService openFileService;
-    private final NavigateService navigateService;
+    private final NavigateService navigateService = new NavigateService();
 
     private App() {
-        openFileService = new OpenFileService();
-        navigateService = new NavigateService();
-    }
-
-    public static void initApp(Context context) {
-        App.context = context;
-        AppPreferences.init(context);
-        AssetsProvider.set(new AssetsProvider() {
-
-            @Override
-            public File foundBinary(String binaryName) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    String binaryPath = context.getApplicationInfo().nativeLibraryDir
-                            + separator + "lib" + binaryName + ".so";
-                    AppLog.s(String.format("%s binary file found.", binaryPath));
-                    return new File(binaryPath);
-                }
-                String targetName = FileUtils.getFileName(binaryName);
-                String arch = "";
-                if (OSDetection.isAarch64())
-                    arch = "arm64";
-                else if (OSDetection.isAarch32())
-                    arch = "arm";
-                else if (OSDetection.isX86_64())
-                    arch = "x86_64";
-                else if (OSDetection.isX86())
-                    arch = "x86";
-
-                File targetFile = new File(context.getFilesDir(), targetName);
-                if (TextUtils.isEmpty(arch)) {
-                    AppLog.e(String.format("Unsupported processor architecture %s.", Arrays.toString(OSDetection.getArchitectures())));
-                    return null;
-                }
-
-                if (targetFile.exists()) {
-                    AppLog.s(String.format("%s binary file found.", targetFile.getAbsolutePath()));
-                    return FileUtils.setExecutable(targetFile);
-                }
-
-                String fullFileName = "bin" + separator + arch + separator + binaryName;
-
-                AppLog.s(String.format("Extract binary file %s to %s from assets.", fullFileName, targetFile.getAbsolutePath()));
-                SafeRunner.run(() -> {
-                    FileSystem.createFile(targetFile.getAbsolutePath());
-                    InputStream inputStream = context.getAssets().open(fullFileName);
-                    FileOutputStream outputStream = new FileOutputStream(targetFile);
-                    copyBytes(inputStream, outputStream);
-                    safeClose(inputStream, outputStream);
-                });
-
-                AppLog.s(String.format("%s binary found.", targetFile.getAbsolutePath()));
-                return FileUtils.setExecutable(targetFile);
-            }
-
-            @Override
-            public File foundFile(String fileName) {
-                String targetName = FileUtils.getFileName(fileName);
-                File targetFile = new File(context.getFilesDir(), targetName);
-                if (targetFile.exists()) {
-                    AppLog.s(String.format("%s file found.", targetFile.getAbsolutePath()));
-                    return targetFile;
-                }
-
-                AppLog.s(String.format("Extract file %s to %s from assets.", fileName, targetFile.getAbsolutePath()));
-                SafeRunner.run(() -> {
-                    // FileSystem.createFile(targetFile.getAbsolutePath());
-                    InputStream inputStream = context.getAssets().open(fileName);
-                    FileOutputStream outputStream = new FileOutputStream(targetFile);
-                    copyBytes(inputStream, outputStream);
-                    safeClose(inputStream, outputStream);
-                });
-
-                return targetFile;
-            }
-
-            @Override
-            public File foundAndroidFrameworkFile() {
-                return foundFile("android.jar");
-            }
-
-            @Override
-            public File getTempDirectory() {
-                return context.getExternalFilesDir(".temp");
-            }
-
-            @Override
-            public String getString(int resId) {
-                return context.getString(resId);
-            }
-        });
-    }
-
-    public static Context getContext() {
-        return context;
-    }
-
-    public static void init(MainUI mainUI) {
-        AppLog.s("App.init");
-        app = new App();
-        App.mainUI = mainUI;
-        App.handler = new Handler();
-        initServices();
-    }
-
-    private static void initServices() {
 
     }
+
+    public static void initialize(MainUI mainUI) {
+        sApp = new App();
+        sHandler = new Handler(requireNonNull(Looper.myLooper()));
+        sMainUI = mainUI;
+    }
+
 
     public static void shutdown() {
-        if (app != null) {
-            AppLog.s("App.shutdown");
+        if (sApp != null) {
 
-            app = null;
+            sApp = null;
         }
     }
 
-
     public static boolean isShutdown() {
-        return app != null;
+        return sApp == null;
     }
 
-
-    public static MainUI getUI(){
-        return mainUI;
-    }
-
-    public static OpenFileService getOpenFileService() {
-        return app.openFileService;
-    }
 
     public static NavigateService getNavigateService() {
-        return app.navigateService;
+        return sApp.navigateService;
     }
 
+    public static boolean postExec(@NonNull Runnable runnable) {
+        return sHandler.post(() -> {
+            if (isShutdown())
+                return;
+            runnable.run();
+        });
+    }
 
+    public static MainUI getMainUI() {
+        return sMainUI;
+    }
+
+    public static StyledUI getUI() {
+        return sActivities.isEmpty() ? sMainUI : sActivities.get(sActivities.size() - 1);
+    }
+
+    public static void putUI(StyledUI ui) {
+        int index = sActivities.indexOf(ui);
+        if (index != -1) {
+            sActivities.remove(index);
+        }
+        sActivities.add(ui);
+    }
+
+    public static void removeUI(StyledUI ui) {
+        sActivities.remove(ui);
+    }
+
+    public static void runOnBackgroundThread(@NonNull String label, @NonNull Runnable runTask, Runnable doneTask) {
+        TipDialog.show(label, WaitDialog.TYPE.WARNING).setCancelable(false);
+        new Thread(() -> {
+            runTask.run();
+            postExec(() -> {
+                TipDialog.dismiss();
+                if (doneTask != null)
+                    doneTask.run();
+            });
+        }).start();
+    }
+
+    public static Context getContext() {
+        return ApplicationProvider.get().getContext();
+    }
 }

@@ -17,10 +17,7 @@ import com.apkide.ui.commands.navigate.Forward;
 import com.apkide.ui.commands.view.ViewBuild;
 import com.apkide.ui.commands.view.ViewFiles;
 import com.apkide.ui.commands.view.ViewFind;
-import com.apkide.ui.commands.view.ViewGit;
 import com.apkide.ui.commands.view.ViewProblem;
-import com.apkide.ui.commands.view.ViewProject;
-import com.apkide.ui.util.MenuCommand;
 
 public class AppCommands {
 
@@ -38,11 +35,9 @@ public class AppCommands {
 
                 //View
                 new ViewFiles(),
-                new ViewProject(),
                 new ViewProblem(),
                 new ViewBuild(),
                 new ViewFind(),
-                new ViewGit(),
 
                 //Navigation
                 new Backward(),

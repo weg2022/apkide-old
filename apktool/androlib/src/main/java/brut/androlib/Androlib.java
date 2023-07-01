@@ -65,7 +65,7 @@ import brut.util.BrutIO;
 import brut.util.OS;
 
 public class Androlib {
-    public static Logger LOGGER = Logger.get("APKTool");
+    public static Logger LOGGER = Logger.get("ApkTool");
     public static final String LOG_NAME = "ApkTool";
     public static final String VERSION = "2.7.0";
     private final AndrolibResources mAndRes = new AndrolibResources();

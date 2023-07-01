@@ -11,7 +11,7 @@ public class ProblemBrowser extends LinearLayout implements Browser {
     }
 
     @Override
-    public void apply() {
+    public void reload() {
 
     }
 }

@@ -4,10 +4,10 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
-import com.apkide.ui.ThemeUI;
+import com.apkide.ui.StyledUI;
 import com.apkide.ui.databinding.UiAboutBinding;
 
-public class AboutUI extends ThemeUI {
+public class AboutUI extends StyledUI {
 
     private UiAboutBinding binding;
 

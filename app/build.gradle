@@ -5,7 +5,7 @@ plugins {
 android {
     applicationVariants.configureEach { variant ->
         variant.outputs.configureEach { output ->
-            def appFileName = "apkide-" + variant.versionName + ".apk"
+            def appFileName = "APK-IDE-" + variant.versionName + ".apk"
             outputFileName = appFileName
         }
     }
@@ -23,7 +23,7 @@ android {
     defaultConfig {
         applicationId 'com.apkide.ui'
         minSdk 21
-        targetSdk 28
+        targetSdk 33
         versionCode 20230315
         versionName '1.0beta1'
         multiDexEnabled true
@@ -85,9 +85,8 @@ dependencies {
     implementation libs.androidx.multidex
     implementation libs.androidx.preference
     implementation libs.material
-
+    implementation libs.editor
     implementation project(':common')
-
     implementation project(':apktool:androlib')
     implementation project(':apktool:common')
     implementation project(':apktool:directory')

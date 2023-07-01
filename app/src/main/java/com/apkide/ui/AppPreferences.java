@@ -1,11 +1,12 @@
 package com.apkide.ui;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
+
+import com.apkide.common.ApplicationProvider;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -14,12 +15,10 @@ import brut.androlib.options.BuildOptions;
 
 public class AppPreferences {
 
-    @SuppressLint("StaticFieldLeak")
-    private static Context context;
+
     private static SharedPreferences preferences;
 
     public static void init(Context context) {
-        AppPreferences.context = context;
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
         PreferenceManager.setDefaultValues(context, R.xml.preferences_application, false);
         PreferenceManager.setDefaultValues(context, R.xml.preferences_editor, false);
@@ -137,7 +136,7 @@ public class AppPreferences {
     @NonNull
     public static SharedPreferences getPreferences() {
         if (preferences == null)
-            preferences = PreferenceManager.getDefaultSharedPreferences(context);
+            preferences = PreferenceManager.getDefaultSharedPreferences(ApplicationProvider.get().getContext());
         return preferences;
     }
 
@@ -274,5 +273,17 @@ public class AppPreferences {
 
     public static String getAaptPath() {
         return getPreferences().getString("aaptPath", "");
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Editor Preferences
+    ///////////////////////////////////////////////////////////////////////////
+
+    public static boolean isUseTab() {
+        return getPreferences().getBoolean("editor.useTab", true);
+    }
+
+    public static int getTabSize() {
+        return getPreferences().getInt("editor.tabSize", 4);
     }
 }

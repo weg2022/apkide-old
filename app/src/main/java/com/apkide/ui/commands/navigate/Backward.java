@@ -3,8 +3,8 @@ package com.apkide.ui.commands.navigate;
 import androidx.annotation.NonNull;
 
 import com.apkide.ui.App;
+import com.apkide.ui.MenuCommand;
 import com.apkide.ui.R;
-import com.apkide.ui.util.MenuCommand;
 
 public class Backward implements MenuCommand {
     @Override
@@ -25,7 +25,7 @@ public class Backward implements MenuCommand {
 
     @Override
     public boolean commandPerformed() {
-        App.getUI().gotoBackward();
+        App.getMainUI().gotoBackward();
         return false;
     }
 }
