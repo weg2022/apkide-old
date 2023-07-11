@@ -12,12 +12,11 @@ import com.apkide.ui.commands.GotoSettings;
 import com.apkide.ui.commands.MakeProject;
 import com.apkide.ui.commands.Redo;
 import com.apkide.ui.commands.Undo;
-import com.apkide.ui.commands.navigate.Backward;
-import com.apkide.ui.commands.navigate.Forward;
 import com.apkide.ui.commands.view.ViewBuild;
 import com.apkide.ui.commands.view.ViewFiles;
 import com.apkide.ui.commands.view.ViewFind;
 import com.apkide.ui.commands.view.ViewProblem;
+import com.apkide.ui.util.MenuCommand;
 
 public class AppCommands {
 
@@ -38,10 +37,6 @@ public class AppCommands {
                 new ViewProblem(),
                 new ViewBuild(),
                 new ViewFind(),
-
-                //Navigation
-                new Backward(),
-                new Forward(),
 
         };
 

@@ -1,5 +1,5 @@
 <resources>
-	<string name="app_name">APK-IDE</string>
+	<string name="app_name">Dev-A</string>
     <string name="mainMenuUndo">Undo</string>
     <string name="mainMenuRedo">Redo</string>
     <string name="mainMenuMake">Make</string>

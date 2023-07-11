@@ -11,7 +11,7 @@ public class FindBrowser extends LinearLayout implements Browser {
     }
 
     @Override
-    public void reload() {
+    public void onSyncing() {
 
     }
 }

@@ -21,7 +21,6 @@ import com.apkide.common.AppLog;
 import com.apkide.common.ApplicationProvider;
 import com.apkide.common.FileUtils;
 import com.apkide.common.SafeRunner;
-import com.apkide.ui.services.FileSystem;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -59,9 +58,7 @@ public class IDEInitializer extends ContentProvider {
                     arch = "arm64";
                 else if (OSDetection.isAarch32())
                     arch = "arm";
-                else if (OSDetection.isX86_64())
-                    arch = "x86_64";
-                else if (OSDetection.isX86())
+                else if (OSDetection.isX86_64() || OSDetection.isX86())
                     arch = "x86";
 
                 File targetFile = new File(sContext.getFilesDir(), targetName);
@@ -101,7 +98,6 @@ public class IDEInitializer extends ContentProvider {
 
                 AppLog.s(String.format("Extract file %s to %s from assets.", fileName, targetFile.getAbsolutePath()));
                 SafeRunner.run(() -> {
-                    // FileSystem.createFile(targetFile.getAbsolutePath());
                     InputStream inputStream = sContext.getAssets().open(fileName);
                     FileOutputStream outputStream = new FileOutputStream(targetFile);
                     copyBytes(inputStream, outputStream);

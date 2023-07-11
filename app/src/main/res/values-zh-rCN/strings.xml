@@ -1,5 +1,5 @@
 <resources>
-	<string name="app_name">APK-IDE</string>
+	<string name="app_name">Dev-A</string>
     <string name="mainMenuUndo">撤销</string>
     <string name="mainMenuRedo">重做</string>
     <string name="mainMenuMake">构建</string>

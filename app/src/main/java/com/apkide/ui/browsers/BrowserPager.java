@@ -3,8 +3,8 @@ package com.apkide.ui.browsers;
 import static java.util.Objects.requireNonNull;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +36,8 @@ public class BrowserPager extends ViewPager {
         initView();
     }
 
+    private static final String PREF_NAME = "browserPager";
+    private SharedPreferences preferences;
     public static final int FILE_BROWSER = 0;
     public static final int PROBLEM_BROWSER = 1;
     public static final int FIND_BROWSER = 2;
@@ -57,11 +59,7 @@ public class BrowserPager extends ViewPager {
         }
 
         setPageMargin((int) getContext().getResources().getDisplayMetrics().density);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            setPageMarginDrawable(new ColorDrawable(getContext().getColor(R.color.colorOnSecondary)));
-        } else {
-            setPageMarginDrawable(new ColorDrawable(getContext().getResources().getColor(R.color.colorOnSecondary)));
-        }
+        setPageMarginDrawable(new ColorDrawable(getContext().getColor(R.color.colorOnSecondary)));
         setAdapter(new PagerAdapter() {
             private int index = -1;
 
@@ -95,17 +93,18 @@ public class BrowserPager extends ViewPager {
                     index = position;
                     postDelayed(() -> {
                         Browser browser = (Browser) browsers.get(index);
-                        browser.reload();
-                        getUI().saveCurrentBrowser(index);
+                        browser.onSyncing();
+                        getPreferences().edit().putInt("currentIndex", index).apply();
                     }, 100L);
                 }
             }
         });
     }
 
-    public int getBrowserCount(){
+    public int getBrowserCount() {
         return browsers.size();
     }
+
     public MainUI getUI() {
         return (MainUI) getContext();
     }
@@ -147,4 +146,17 @@ public class BrowserPager extends ViewPager {
             setCurrentItem(index);
         }
     }
+
+    @NonNull
+    public SharedPreferences getPreferences() {
+        if (preferences == null)
+            preferences = getContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        return preferences;
+    }
+
+    public int getLastBrowser() {
+        return getPreferences().getInt("currentIndex", -1);
+    }
+
+
 }

@@ -1,5 +1,6 @@
 package com.apkide.ui;
 
+import static android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import static com.apkide.ui.browsers.BrowserPager.BUILD_BROWSER;
 import static com.apkide.ui.browsers.BrowserPager.FILE_BROWSER;
 import static com.apkide.ui.browsers.BrowserPager.FIND_BROWSER;
@@ -26,33 +27,31 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.apkide.ui.browsers.BrowserPager;
 import com.apkide.ui.databinding.UiMainBinding;
-import com.apkide.ui.services.FileSystem;
-import com.apkide.ui.services.navigate.FileSpan;
 
-public class MainUI extends StyledUI implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class MainUI extends StyledUI implements
+        OnSharedPreferenceChangeListener,
+        View.OnClickListener,
+        DrawerLayout.DrawerListener,
+        ViewPager.OnPageChangeListener {
 
     private UiMainBinding mainBinding;
 
-    private ActionBarDrawerToggle mainDrawerToggle;
-
-    private SharedPreferences browserPreferences;
     private long lastBackPressedTimeMillis;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         App.initialize(this);
+        AppPreferences.registerListener(this);
         super.onCreate(savedInstanceState);
-        AppPreferences.getPreferences().registerOnSharedPreferenceChangeListener(this);
         mainBinding = UiMainBinding.inflate(getLayoutInflater());
         setContentView(mainBinding.getRoot());
-
         setSupportActionBar(mainBinding.mainContentToolbar);
 
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mainDrawerToggle = new ActionBarDrawerToggle(this, mainBinding.mainDrawerLayout,
+        ActionBarDrawerToggle mainDrawerToggle = new ActionBarDrawerToggle(this, mainBinding.mainDrawerLayout,
                 android.R.string.ok, android.R.string.cancel);
         mainBinding.mainDrawerLayout.addDrawerListener(mainDrawerToggle);
         mainDrawerToggle.syncState();
@@ -63,40 +62,16 @@ public class MainUI extends StyledUI implements SharedPreferences.OnSharedPrefer
             else
                 openDrawer();
         });
-        mainBinding.mainDrawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                lockDrawer();
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                unlockDrawer();
-            }
-        });
-
+        mainBinding.mainDrawerLayout.addDrawerListener(this);
         mainBinding.mainDrawerLayout.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_DOWN)
                 closeDrawer();
             return false;
         });
-        mainBinding.mainBrowserPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                if (position == getBrowserPager().getBrowserCount() - 1) {
-                    unlockDrawer();
-                } else {
-                    if (!isLockDrawer())
-                        lockDrawer();
-                }
-            }
-        });
+        mainBinding.mainBrowserPager.addOnPageChangeListener(this);
         getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                while (gotoBackward()) {
-
-                }
 
                 if (isDrawerOpened()) {
                     closeDrawer();
@@ -112,7 +87,7 @@ public class MainUI extends StyledUI implements SharedPreferences.OnSharedPrefer
             }
         });
 
-        initializeBrowser();
+        restoreBrowser();
     }
 
     public void exitApp() {
@@ -144,9 +119,8 @@ public class MainUI extends StyledUI implements SharedPreferences.OnSharedPrefer
         return mainBinding.mainDrawerLayout.getDrawerLockMode(GravityCompat.START) == DrawerLayout.LOCK_MODE_LOCKED_OPEN;
     }
 
-    private void initializeBrowser() {
-        browserPreferences = getSharedPreferences("browser_view", MODE_PRIVATE);
-        int current = browserPreferences.getInt("current", -1);
+    private void restoreBrowser() {
+        int current = mainBinding.mainBrowserPager.getLastBrowser();
         if (current >= 0)
             toggleBrowser(current, true);
     }
@@ -180,48 +154,14 @@ public class MainUI extends StyledUI implements SharedPreferences.OnSharedPrefer
         getBrowserPager().toggle(index, refresh);
     }
 
-    public void saveCurrentBrowser(int index) {
-        browserPreferences.edit().putInt("current", index).apply();
-    }
-
-
     public BrowserPager getBrowserPager() {
         return mainBinding.mainBrowserPager;
     }
 
 
-    public void gotoForward() {
-        FileSpan span = App.getNavigateService().forward();
-        if (span != null) {
-            App.getNavigateService().setEnabled(false);
-            navigateTo(span);
-        }
-    }
-
-    public boolean gotoBackward() {
-        FileSpan span = App.getNavigateService().backward();
-        if (span != null) {
-            App.getNavigateService().setEnabled(false);
-            navigateTo(span);
-            return true;
-        }
-        return false;
-    }
-
-    public void navigateTo(FileSpan span) {
-        navigateTo(span, true);
-    }
-
-    public void navigateTo(FileSpan span, boolean focus) {
-        if (span == null || !FileSystem.exists(span.filePath)) {
-            return;
-        }
-        App.getNavigateService().setEnabled(true);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_context, menu);
+        getMenuInflater().inflate(R.menu.main_options, menu);
         return true;
     }
 
@@ -251,7 +191,7 @@ public class MainUI extends StyledUI implements SharedPreferences.OnSharedPrefer
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        AppPreferences.getPreferences().unregisterOnSharedPreferenceChangeListener(this);
+        AppPreferences.unregisterListener(this);
         if (mainBinding != null)
             mainBinding = null;
     }
@@ -267,4 +207,48 @@ public class MainUI extends StyledUI implements SharedPreferences.OnSharedPrefer
 
     }
 
+    @Override
+    public void onClick(View v) {
+
+    }
+
+    @Override
+    public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+
+    }
+
+    @Override
+    public void onDrawerOpened(@NonNull View drawerView) {
+        lockDrawer();
+    }
+
+    @Override
+    public void onDrawerClosed(@NonNull View drawerView) {
+        unlockDrawer();
+    }
+
+    @Override
+    public void onDrawerStateChanged(int newState) {
+
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        if (position == getBrowserPager().getBrowserCount() - 1) {
+            unlockDrawer();
+        } else {
+            if (!isLockDrawer())
+                lockDrawer();
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
 }

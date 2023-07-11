@@ -49,12 +49,12 @@ public class PreferencesUI extends StyledUI {
     @Override
     protected void onStart() {
         super.onStart();
-        App.putUI(this);
+        App.startUI(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        App.removeUI(this);
+        App.stopUI(this);
     }
 }

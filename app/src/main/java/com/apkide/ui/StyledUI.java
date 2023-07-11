@@ -6,6 +6,7 @@ import static android.content.res.Configuration.UI_MODE_NIGHT_MASK;
 import static android.content.res.Configuration.UI_MODE_NIGHT_YES;
 import static android.os.Build.VERSION.SDK_INT;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build.VERSION_CODES;
@@ -13,7 +14,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
 
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -21,9 +21,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
+import com.apkide.ui.util.RunCallback;
 import com.kongzue.dialogx.dialogs.MessageDialog;
-import com.kongzue.dialogx.dialogs.TipDialog;
-import com.kongzue.dialogx.dialogs.WaitDialog;
+
 
 public class StyledUI extends AppCompatActivity {
 
@@ -39,11 +39,7 @@ public class StyledUI extends AppCompatActivity {
     }
 
     private void applyTheme() {
-        boolean darkMode;
-        if (SDK_INT >= VERSION_CODES.R)
-            darkMode = getResources().getConfiguration().isNightModeActive();
-        else
-            darkMode = isNightModeActive(getResources().getConfiguration().uiMode);
+        boolean darkMode = isNightMode();
         WindowInsetsControllerCompat compat =
                 new WindowInsetsControllerCompat(getWindow(), getWindow().getDecorView());
         compat.setAppearanceLightStatusBars(!darkMode);
@@ -63,66 +59,94 @@ public class StyledUI extends AppCompatActivity {
 
     private static final int REQUEST_PERMISSION_CODE = 1234;
 
-    public void requestInitializeData() {
+    private RunCallback callback;
+
+    public void runOnStorageOperation(RunCallback callback) {
+        if (callback == null)
+            throw new IllegalArgumentException("callback is null.");
+
+        if (this.callback != null)
+            this.callback.cancel();
+
+        this.callback = callback;
         if (SDK_INT >= VERSION_CODES.R) {
-            if (!Environment.isExternalStorageManager())
+            if (!Environment.isExternalStorageManager()) {
                 requestManageStoragePermission();
-        } else if (SDK_INT >= VERSION_CODES.M) {
+                return;
+            }
+        } else {
             if (ActivityCompat.checkSelfPermission(this,
                     WRITE_EXTERNAL_STORAGE) != PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this,
                         new String[]{WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_CODE);
+                return;
             }
-        } else
-            onInitializeData();
+        }
+        this.callback.done();
+        this.callback = null;
     }
+
 
     @RequiresApi(api = VERSION_CODES.R)
     private void requestManageStoragePermission() {
-        MessageDialog.show("Request permission", "iEditor needs to get permission to access files and media, do you agree?", "Yes", "No")
-                .setCancelable(false)
-                .setOkButtonClickListener((dialog, v) -> {
-                    dialog.dismiss();
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                    intent.setData(Uri.parse("package:" + getPackageName()));
-                    registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-                        if (SDK_INT >= VERSION_CODES.R) {
-                            if (!Environment.isExternalStorageManager()) {
-                                TipDialog.show("Failed to get storage permissions!", WaitDialog.TYPE.ERROR);
-                            } else {
-                                onInitializeData();
-                            }
+        MessageDialog.show("缺少必要权限",
+                        getString(R.string.app_name) + ": 需要获得访问文件和媒体的权限")
+                .setOkButton("同意", (dialog, v) -> {
+                    try {
+                        Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                        intent.setData(Uri.parse("package:" + getPackageName()));
+                        startActivity(intent);
+                        ActivityCompat.startActivityForResult(StyledUI.this, intent, REQUEST_PERMISSION_CODE, null);
+                    } catch (ActivityNotFoundException e) {
+                        if (callback != null) {
+                            callback.fail(e);
+                            callback = null;
                         }
-                    });
+                    }
                     return true;
                 })
-                .setCancelButtonClickListener((dialog, v) -> {
+                .setCancelButton("", (dialog, v) -> {
                     dialog.dismiss();
-                    TipDialog.show("Failed to get storage permissions!", WaitDialog.TYPE.ERROR);
+                    if (callback != null) {
+                        callback.cancel();
+                        callback = null;
+                    }
                     return true;
                 });
     }
 
-    protected void onInitializeData() {
-
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (SDK_INT >= VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()) {
+                if (callback != null) {
+                    callback.fail(new Exception("获取存储权限失败!"));
+                    callback = null;
+                }
+            } else {
+                if (callback != null) {
+                    callback.done();
+                    callback = null;
+                }
+            }
+        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_PERMISSION_CODE) {
-            for (int i = 0; i < permissions.length; i++) {
-                String permission = permissions[i];
-                if (permission.equals(WRITE_EXTERNAL_STORAGE)) {
-                    if (grantResults[i] != PERMISSION_GRANTED)
-                        TipDialog.show("Failed to get storage permissions!", WaitDialog.TYPE.ERROR);
-                     else
-                        onInitializeData();
+            if (ActivityCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) != PERMISSION_GRANTED) {
+                if (callback != null) {
+                    callback.fail(new Exception("获取存储权限失败!"));
+                    callback = null;
+                }
+            } else {
+                if (callback != null) {
+                    callback.done();
+                    callback = null;
                 }
             }
         }
