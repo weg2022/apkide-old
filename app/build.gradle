@@ -5,8 +5,10 @@ plugins {
 android {
     applicationVariants.configureEach { variant ->
         variant.outputs.configureEach { output ->
-            def appFileName = "Dev-A-" + variant.versionName + ".apk"
-            outputFileName = appFileName
+            if (variant.buildType.name.equalsIgnoreCase("release")) {
+                def appFileName = "Dev-A-" + variant.versionName + ".apk"
+                outputFileName = appFileName
+            }
         }
     }
     signingConfigs {
