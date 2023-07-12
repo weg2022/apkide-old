@@ -5,19 +5,18 @@ APK-IDE是一款用于反编译，编译和修改APK的安卓软件。
 
 ## 功能
 
-- [x] 访问存档文件中的类文件
-- [x] 反编译和生成APK 
-- [x] Aapt (port for apktool. v1/v2) and Zipalign... (arm64-v8a,armeabi-v7a,x86,x86_64)
-- [ ] 自定义 APK 签名
-- [ ] 自定义 ApkTool 框架
-- [ ] Dex 文件编辑与(Dex to smali & smali to dex)
-- [ ] APK 文件分析与编辑
-- [ ] 图像文件查看
-- [ ] Git 集成
-- [ ] Java 代码 与 Smali 代码相互转换
+- [x] 访问存档文件中的 class 文件
+- [x] 反编译和编译 apk 文件
+- [x] aapt (专门为apktool使用. v1/v2)
+- [ ] apk 签名
+- [ ] apk 对齐优化
+- [ ] git 集成
+- [ ] 反编译与构建 日志输出
+- [ ] 可配置的 ApkTool(Framework...) 选项
 - [ ] 快速编辑大文本文件
-- [ ] 代码高亮 
-- [ ] 完善的语言服务 (only smali?)
+- [ ] 语法高亮 (smali, java, c/c++, xml)
+- [ ] 代码补全 (仅 smali?)
+- [ ] 代码分析与重构 (仅 smali?)
 
 ### Libraries used
 
@@ -25,7 +24,6 @@ APK-IDE是一款用于反编译，编译和修改APK的安卓软件。
 * [material-components-android](https://github.com/material-components/material-components-android)
 * [apktool](https://github.com/iBotPeaches/Apktool)
 * [fernflower](https://github.com/fesh0r/fernflower)
-* [lsp4j](https://github.com/eclipse-lsp4j/lsp4j)
 * [cascadia-code](https://github.com/microsoft/cascadia-code)
 * [smali](https://github.com/google/smali)
 * [commons-text](https://github.com/apache/commons-text)
@@ -33,9 +31,7 @@ APK-IDE是一款用于反编译，编译和修改APK的安卓软件。
 * [snakeyaml](https://bitbucket.org/snakeyaml/snakeyaml)
 * [xmlpull-xpp3](https://github.com/codelibs/xpp3)
 * [xmlunit](https://github.com/xmlunit/xmlunit)
-* [treeview](https://github.com/AmrDeveloper/TreeView)
 * [r8](https://r8.googlesource.com/r8)
-* [dx](https://github.com/JakeWharton/dalvik-dx)
 
 ## License
 

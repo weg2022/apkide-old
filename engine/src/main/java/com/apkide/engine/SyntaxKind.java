@@ -20,10 +20,10 @@ public enum SyntaxKind {
     ;
 
 
-    public byte toByte(){
-        return (byte) ordinal();
+    public int intValue(){
+        return  ordinal();
     }
-    public static SyntaxKind of(byte kind) {
+    public static SyntaxKind of(int kind) {
         return values()[kind];
     }
 }

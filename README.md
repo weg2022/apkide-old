@@ -9,19 +9,18 @@ Internally use ApkTool 2.7.0
 
 ## Features
 
-- [x] Access archive files and class files
-- [x] Decompile and generate APKs
-- [x] Aapt (port for apktool. v1/v2) and Zipalign... (arm64-v8a,armeabi-v7a,x86,x86_64)
-- [ ] Custom APK signature
-- [ ] Customize ApkTool framework
-- [ ] Dex file editing with (Dex to smali & smali to dex)
-- [ ] APK file analysis and editing
-- [ ] Image file viewing
+- [x] Access the class file in the archive file
+- [x] Decompile and compile the apk file
+- [x] aapt (Ported for apktool. v1/v2)
+- [ ] APK signing
+- [ ] APK align optimize
 - [ ] Git integration
-- [ ] Java code is converted to and from Smali code
+- [ ] Decompile and build Log output
+- [ ] Configurable ApkTool(Framework...) options
 - [ ] Quickly edit large text files
-- [ ] Code highlighting
-- [ ] Complete language services (only smali?)
+- [ ] Syntax highlighting (Smali, Java, C/C++, Xml)
+- [ ] Code completion (smali only?)
+- [ ] Code Analysis and Refactoring (Smali only?)
 
 ### Libraries used
 
@@ -29,7 +28,6 @@ Internally use ApkTool 2.7.0
 * [material-components-android](https://github.com/material-components/material-components-android)
 * [apktool](https://github.com/iBotPeaches/Apktool)
 * [fernflower](https://github.com/fesh0r/fernflower)
-* [lsp4j](https://github.com/eclipse-lsp4j/lsp4j)
 * [cascadia-code](https://github.com/microsoft/cascadia-code)
 * [smali](https://github.com/google/smali)
 * [commons-text](https://github.com/apache/commons-text)
@@ -37,9 +35,7 @@ Internally use ApkTool 2.7.0
 * [snakeyaml](https://bitbucket.org/snakeyaml/snakeyaml)
 * [xmlpull-xpp3](https://github.com/codelibs/xpp3)
 * [xmlunit](https://github.com/xmlunit/xmlunit)
-* [treeview](https://github.com/AmrDeveloper/TreeView)
 * [r8](https://r8.googlesource.com/r8)
-* [dx](https://github.com/JakeWharton/dalvik-dx)
 
 ## License
 
