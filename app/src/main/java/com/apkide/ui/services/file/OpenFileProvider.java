@@ -2,11 +2,7 @@ package com.apkide.ui.services.file;
 
 public interface OpenFileProvider {
 
-    OpenFileModel getFileModel(String filePath);
+    OpenFileModel openFile(String filePath);
 
-    String getFilePath();
-
-    void openFile(String filePath);
-
-    void closeFile(String filePath);
+    OpenFileModel closeFile(String filePath);
 }

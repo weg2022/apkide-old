@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="Android SDK">
-
-    </PreferenceCategory>
-
-
     <PreferenceCategory android:title="Framework">
 
 
@@ -18,70 +13,28 @@
 
     <PreferenceCategory android:title="Build">
 
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="verbose"
-            android:summary="Build-time output details."
-            android:title="Verbose" />
 
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="forceBuildAll"
-            android:summary="Force all builds."
-            android:title="Overridden Output" />
-
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="forceDeleteFramework"
-            android:summary="Force delete the framework."
-            android:title="Delete Framework" />
-
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="debugMode"
-            android:summary="Set to debuggable when building the Apk."
-            android:title="Debug Mode" />
-
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="copyOriginalFiles"
-            android:summary="Copy original AndroidManifest.xml and META-INF folder."
-            android:title="Keep Original Files" />
-
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="useAapt2"
-            android:summary="Use AAPT2 (Upgrades apktool to use experimental aapt2 binary.)"
-            android:title="Use AAPT2" />
-
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="zipalignAfterBuild"
-            android:title="Zipalign after build" />
-
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="signAfterBuild"
-            android:title="Sign after build/zipalign" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Signing">
-
+    <PreferenceCategory android:title="Apk signing">
+        <Preference
+            android:key="keystore.create"
+            android:title="Create keystore"/>
 
         <SwitchPreference
-            android:key="useKeyStore"
+            android:key="keystore.use"
             android:title="Use keystore" />
 
         <EditTextPreference
-            android:key="userKeyStoreFile"
-            android:title="Keystore/jks file:" />
+            android:key="keystore.path"
+            android:title="Keystore/jks file" />
 
         <EditTextPreference
-            android:key="keyStoreAlias"
+            android:key="keystore.alias"
             android:title="Alias" />
 
         <EditTextPreference
-            android:key="keyStorePassword"
+            android:key="keystore.password"
             android:title="Password" />
 
         <SwitchPreference android:title="Scheme v1" />
@@ -94,7 +47,7 @@
     </PreferenceCategory>
 
 
-    <PreferenceCategory android:title="Java Decompile">
+    <PreferenceCategory android:title="Class reader">
         <SwitchPreference
             android:defaultValue="true"
             android:key="rbr"

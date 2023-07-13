@@ -16,7 +16,7 @@
  */
 package brut.androlib.res.data;
 
-import static brut.androlib.Androlib.LOGGER;
+import static brut.androlib.ApkBuilder.LOGGER;
 
 import androidx.annotation.NonNull;
 

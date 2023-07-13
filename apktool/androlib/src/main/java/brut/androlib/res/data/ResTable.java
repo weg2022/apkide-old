@@ -16,6 +16,10 @@
  */
 package brut.androlib.res.data;
 
+import com.google.common.base.Strings;
+
+import java.io.File;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -24,10 +28,13 @@ import java.util.Set;
 
 import brut.androlib.err.AndrolibException;
 import brut.androlib.err.UndefinedResObjectException;
+import brut.androlib.meta.MetaInfo;
+import brut.androlib.meta.PackageInfo;
+import brut.androlib.meta.UsesFramework;
 import brut.androlib.meta.VersionInfo;
-import brut.androlib.options.BuildOptions;
 import brut.androlib.res.AndrolibResources;
 import brut.androlib.res.data.value.ResValue;
+import brut.androlib.res.xml.ResXmlPatcher;
 
 public class ResTable {
     private final AndrolibResources mAndRes;
@@ -84,7 +91,7 @@ public class ResTable {
             return pkg;
         }
         if (mAndRes != null) {
-            return mAndRes.loadFrameworkPkg(this, id, BuildOptions.get().getFrameworkTag());
+            return mAndRes.loadFrameworkPkg(this, id);
         }
         throw new UndefinedResObjectException(String.format("package: id=%d", id));
     }
@@ -216,5 +223,100 @@ public class ResTable {
 
     public boolean getSparseResources() {
         return mSparseResources;
+    }
+
+    public boolean isFrameworkApk() {
+        for (ResPackage pkg : listMainPackages()) {
+            if (pkg.getId() > 0 && pkg.getId() < 64) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void initMetaInfo(MetaInfo meta, File outDir) throws AndrolibException {
+        meta.isFrameworkApk = isFrameworkApk();
+        if (!listFramePackages().isEmpty()) {
+            meta.usesFramework = getUsesFramework();
+        }
+        if (!getSdkInfo().isEmpty()) {
+            initSdkInfo(outDir);
+            meta.sdkInfo = getSdkInfo();
+        }
+        meta.packageInfo = getPackageInfo();
+        meta.versionInfo = getVersionInfoWithName(outDir);
+        meta.sharedLibrary = getSharedLibrary();
+        meta.sparseResources = getSparseResources();
+    }
+
+    private UsesFramework getUsesFramework() {
+        Set<ResPackage> pkgs = listFramePackages();
+
+        Integer[] ids = new Integer[pkgs.size()];
+        int i = 0;
+        for (ResPackage pkg : pkgs) {
+            ids[i++] = pkg.getId();
+        }
+        Arrays.sort(ids);
+
+        UsesFramework info = new UsesFramework();
+        info.ids = Arrays.asList(ids);
+
+        return info;
+    }
+
+    private void initSdkInfo(File outDir) {
+        Map<String, String> info = mSdkInfo;
+        String refValue;
+        if (info.get("minSdkVersion") != null) {
+            refValue = ResXmlPatcher.pullValueFromIntegers(outDir, info.get("minSdkVersion"));
+            if (refValue != null) {
+                info.put("minSdkVersion", refValue);
+            }
+        }
+        if (info.get("targetSdkVersion") != null) {
+            refValue = ResXmlPatcher.pullValueFromIntegers(outDir, info.get("targetSdkVersion"));
+            if (refValue != null) {
+                info.put("targetSdkVersion", refValue);
+            }
+        }
+        if (info.get("maxSdkVersion") != null) {
+            refValue = ResXmlPatcher.pullValueFromIntegers(outDir, info.get("maxSdkVersion"));
+            if (refValue != null) {
+                info.put("maxSdkVersion", refValue);
+            }
+        }
+    }
+
+    private PackageInfo getPackageInfo() throws AndrolibException {
+        String renamed = getPackageRenamed();
+        String original = getPackageOriginal();
+
+        int id = getPackageId();
+        try {
+            id = getPackage(renamed).getId();
+        } catch (UndefinedResObjectException ignored) {}
+
+        if (Strings.isNullOrEmpty(original)) {
+            return null;
+        }
+
+        PackageInfo info  = new PackageInfo();
+
+        // only put rename-manifest-package into apktool.yml, if the change will be required
+        if (!renamed.equalsIgnoreCase(original)) {
+            info.renameManifestPackage = renamed;
+        }
+        info.forcedPackageId = String.valueOf(id);
+        return info;
+    }
+
+    private VersionInfo getVersionInfoWithName(File outDir) {
+        VersionInfo info = getVersionInfo();
+        String refValue = ResXmlPatcher.pullValueFromStrings(outDir, info.versionName);
+        if (refValue != null) {
+            info.versionName = refValue;
+        }
+        return info;
     }
 }

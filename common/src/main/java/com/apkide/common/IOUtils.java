@@ -137,7 +137,7 @@ public final class IOUtils {
 		return new LineIterator(reader);
 	}
 	
-	public static void safeClose(Closeable closeable) {
+	private static void internalClose(Closeable closeable) {
 		if (closeable==null)return;
 		try {
 			closeable.close();
@@ -149,7 +149,7 @@ public final class IOUtils {
 	public static void safeClose(Closeable... closeable) {
 		if (closeable==null)return;
 		for (Closeable c : closeable) {
-			safeClose(c);
+			internalClose(c);
 		}
 	}
 	

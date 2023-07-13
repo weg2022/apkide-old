@@ -16,7 +16,7 @@
  */
 package brut.androlib.res.decoder;
 
-import static brut.androlib.Androlib.LOGGER;
+import static brut.androlib.ApkBuilder.LOGGER;
 
 import android.annotation.SuppressLint;
 

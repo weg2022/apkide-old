@@ -16,7 +16,7 @@
  */
 package brut.androlib.res.xml;
 
-import static brut.androlib.Androlib.LOGGER;
+import static brut.androlib.ApkBuilder.LOGGER;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;

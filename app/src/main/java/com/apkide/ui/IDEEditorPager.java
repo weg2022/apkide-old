@@ -44,23 +44,16 @@ public class IDEEditorPager extends ViewPager implements OpenFileProvider {
     }
 
 
+
     @Override
-    public OpenFileModel getFileModel(String filePath) {
+    public OpenFileModel openFile(String filePath) {
+
         return null;
     }
 
     @Override
-    public String getFilePath() {
+    public OpenFileModel closeFile(String filePath) {
+
         return null;
-    }
-
-    @Override
-    public void openFile(String filePath) {
-
-    }
-
-    @Override
-    public void closeFile(String filePath) {
-
     }
 }

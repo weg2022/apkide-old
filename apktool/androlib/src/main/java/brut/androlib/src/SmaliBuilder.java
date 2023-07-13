@@ -16,7 +16,7 @@
  */
 package brut.androlib.src;
 
-import static brut.androlib.Androlib.LOGGER;
+import static brut.androlib.ApkBuilder.LOGGER;
 
 import com.android.tools.smali.dexlib2.Opcodes;
 import com.android.tools.smali.dexlib2.writer.builder.DexBuilder;

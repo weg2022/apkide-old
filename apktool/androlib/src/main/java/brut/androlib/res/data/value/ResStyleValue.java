@@ -16,7 +16,7 @@
  */
 package brut.androlib.res.data.value;
 
-import static brut.androlib.Androlib.LOGGER;
+import static brut.androlib.ApkBuilder.LOGGER;
 
 import org.xmlpull.v1.XmlSerializer;
 

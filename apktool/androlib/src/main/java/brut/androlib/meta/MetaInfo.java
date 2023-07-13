@@ -32,12 +32,16 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Map;
 
+import brut.androlib.err.AndrolibException;
+import brut.directory.DirectoryException;
+import brut.directory.ExtFile;
+
 public class MetaInfo {
     public String version;
     public String apkFileName;
     public boolean isFrameworkApk;
     public UsesFramework usesFramework;
-    public  Map<String, String> sdkInfo;
+    public Map<String, String> sdkInfo;
     public PackageInfo packageInfo;
     public VersionInfo versionInfo;
     public boolean compressionType;
@@ -45,6 +49,7 @@ public class MetaInfo {
     public boolean sparseResources;
     public Map<String, String> unknownFiles;
     public Collection<String> doNotCompress;
+
 
     private static Yaml getYaml() {
         DumperOptions options = new DumperOptions();
@@ -67,7 +72,7 @@ public class MetaInfo {
     }
 
     public void save(File file) throws IOException {
-        try(
+        try (
                 FileOutputStream fos = new FileOutputStream(file);
                 OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
                 Writer writer = new BufferedWriter(outputStreamWriter)
@@ -78,5 +83,15 @@ public class MetaInfo {
 
     public static MetaInfo load(InputStream is) {
         return getYaml().loadAs(is, MetaInfo.class);
+    }
+
+
+    public static MetaInfo readMetaFile(ExtFile appDir)
+            throws AndrolibException {
+        try (InputStream in = appDir.getDirectory().getFileInput("apktool.yml")) {
+            return MetaInfo.load(in);
+        } catch (DirectoryException | IOException ex) {
+            throw new AndrolibException(ex);
+        }
     }
 }
