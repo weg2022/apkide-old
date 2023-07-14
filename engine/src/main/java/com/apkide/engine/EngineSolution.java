@@ -12,12 +12,12 @@ public class EngineSolution {
 
     private List<Project> projects;
     private String encoding;
-    private TreeMap<String, List<String>> filePatternMap;
+    private TreeMap<String, List<String>> codeModels;
 
-    public EngineSolution(List<Project> projects, String encoding, TreeMap<String, List<String>> filePatternMap) {
+    public EngineSolution(List<Project> projects, String encoding, TreeMap<String, List<String>> codeModels) {
         this.projects = projects;
         this.encoding = encoding;
-        this.filePatternMap = filePatternMap;
+        this.codeModels = codeModels;
     }
 
     public void setModel(Model model) {

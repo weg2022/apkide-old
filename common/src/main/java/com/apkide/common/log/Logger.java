@@ -49,8 +49,7 @@ public  class Logger {
         synchronized (lock) {
             Logger logger = loggers.get(name);
             if (logger == null) {
-                logger = new Logger(name) {
-                };
+                logger = new Logger(name);
                 loggers.put(name, logger);
             }
             return logger;

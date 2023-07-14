@@ -2,7 +2,10 @@ package com.apkide.ui.views.editor;
 
 import static java.lang.Integer.compare;
 
+import androidx.annotation.NonNull;
+
 import com.apkide.common.StoreInputStream;
+import com.apkide.common.StoreOutputStream;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -130,11 +133,22 @@ public class SpanStore {
 
     }
 
-    public void load(StoreInputStream in) throws IOException {
-
+    public void load(@NonNull StoreInputStream in) throws IOException {
+        int size = in.readInt();
+        size = Math.max(10000, size);
+        int count = in.readInt();
+        mySpans = new int[size][3];
+        myCount = count;
+        for (int i = 0; i < myCount; i++) {
+            in.readIntArray(mySpans[i]);
+        }
     }
 
-    public void store(StoreInputStream out) throws IOException {
-
+    public void store(@NonNull StoreOutputStream out) throws IOException {
+        out.writeInt(mySpans.length);
+        out.writeInt(myCount);
+        for (int i = 0; i < myCount; i++) {
+            out.writeIntArray(mySpans[i]);
+        }
     }
 }
