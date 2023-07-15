@@ -18,11 +18,14 @@ public class Model implements CharSequence, GetChars, TextGraphics {
     private int myGapStart;
     private int myGapLength;
     private final LineManger myLineManger;
-    private final SpanStore mySpanStore;
+    private final SpanStore myHighlights;
 
     public Model() {
+        myChars=new char[1000];
+        myGapStart=0;
+        myGapLength=myChars.length;
         myLineManger = new LineManger();
-        mySpanStore = new SpanStore();
+        myHighlights = new SpanStore();
     }
 
     public void addModelListener(@NonNull ModelListener listener) {
@@ -35,9 +38,17 @@ public class Model implements CharSequence, GetChars, TextGraphics {
     }
 
     public void setText(@NonNull CharSequence text) {
-        moveGap(0, text.length());
-        myGapStart = text.length();
-        myGapLength = myChars.length - text.length();
+        int len=text.length();
+        moveGap(0,len);
+        if (text instanceof GetChars)
+            ((GetChars) text).getChars(0, len, myChars, myGapStart);
+        else {
+            for (int i = 0; i < len; i++) {
+                myChars[myGapStart + i] = text.charAt(i);
+            }
+        }
+        myGapStart = len;
+        myGapLength = myChars.length - len;
         myLineManger.set(text);
         textSet();
     }
@@ -86,7 +97,7 @@ public class Model implements CharSequence, GetChars, TextGraphics {
 
 
     protected void textSet() {
-        mySpanStore.reset();
+        myHighlights.reset();
         for (ModelListener listener : myListeners) {
             listener.textSet(this);
         }
@@ -94,7 +105,7 @@ public class Model implements CharSequence, GetChars, TextGraphics {
 
 
     protected void textPreInsert(int startLine, int startColumn, int endLine, int endColumn, @NonNull CharSequence text) {
-        mySpanStore.adjustSpanOnInserted(startLine, startColumn, endLine, endColumn);
+        myHighlights.adjustSpanOnInserted(startLine, startColumn, endLine, endColumn);
         for (ModelListener listener : myListeners) {
             listener.textPreInsert(this, startLine, startColumn, endLine, endColumn, text);
         }
@@ -107,7 +118,7 @@ public class Model implements CharSequence, GetChars, TextGraphics {
     }
 
     protected void textPreRemove(int startLine, int startColumn, int endLine, int endColumn) {
-        mySpanStore.adjustSpanOnRemoved(startLine, startColumn, endLine, endColumn);
+        myHighlights.adjustSpanOnRemoved(startLine, startColumn, endLine, endColumn);
         for (ModelListener listener : myListeners) {
             listener.textPreRemove(this, startLine, startColumn, endLine, endColumn);
         }
@@ -318,6 +329,27 @@ public class Model implements CharSequence, GetChars, TextGraphics {
         }
 
     }
+
+    public int getHighlightCount(){
+        return myHighlights.getCount();
+    }
+
+    public boolean hasHighlights(){
+        return !myHighlights.isEmpty();
+    }
+
+    public int[] highlightAt(int index){
+        return myHighlights.spanAt(index);
+    }
+
+    public int findHighlightIndex(int formIndex,int toIndex,int line,int column){
+        return myHighlights.findSpanIndex(formIndex,toIndex,line,column);
+    }
+
+    public SpanStore getHighlights(){
+        return myHighlights;
+    }
+
 
     private static char[] sTemp = null;
     private static final Object sLock = new Object();

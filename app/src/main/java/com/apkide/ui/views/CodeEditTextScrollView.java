@@ -6,14 +6,13 @@ import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.ScrollView;
 
 import androidx.annotation.NonNull;
 
-public class CodeEditTextScrollView extends ScrollView implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener, ScaleGestureDetector.OnScaleGestureListener {
+public class CodeEditTextScrollView extends ScrollView implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener{
     public CodeEditTextScrollView(Context context) {
         super(context);
         initView();
@@ -30,12 +29,10 @@ public class CodeEditTextScrollView extends ScrollView implements GestureDetecto
     }
 
     private GestureDetector myGestureDetector;
-    private ScaleGestureDetector myScaleGestureDetector;
-
+    private boolean myIsZooming;
     private void initView() {
         myGestureDetector = new GestureDetector(getContext(), this);
         myGestureDetector.setOnDoubleTapListener(this);
-        myScaleGestureDetector = new ScaleGestureDetector(getContext(), this);
     }
 
     private HorizontalScrollView getHorizontalScrollView() {
@@ -65,7 +62,7 @@ public class CodeEditTextScrollView extends ScrollView implements GestureDetecto
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        boolean handle = myGestureDetector.onTouchEvent(ev) || myScaleGestureDetector.onTouchEvent(ev);
+        boolean handle = myGestureDetector.onTouchEvent(ev);
         if (handle) {
             return true;
         }
@@ -75,7 +72,7 @@ public class CodeEditTextScrollView extends ScrollView implements GestureDetecto
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        boolean handle = myGestureDetector.onTouchEvent(ev) || myScaleGestureDetector.onTouchEvent(ev);
+        boolean handle = myGestureDetector.onTouchEvent(ev);
         if (handle) {
             return true;
         }
@@ -140,18 +137,4 @@ public class CodeEditTextScrollView extends ScrollView implements GestureDetecto
         return false;
     }
 
-    @Override
-    public boolean onScale(@NonNull ScaleGestureDetector detector) {
-        return false;
-    }
-
-    @Override
-    public boolean onScaleBegin(@NonNull ScaleGestureDetector detector) {
-        return false;
-    }
-
-    @Override
-    public void onScaleEnd(@NonNull ScaleGestureDetector detector) {
-
-    }
 }

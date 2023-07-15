@@ -11,6 +11,7 @@ import static com.apkide.engine.SyntaxKind.NamespaceIdentifier;
 import static com.apkide.engine.SyntaxKind.NumberLiteral;
 import static com.apkide.engine.SyntaxKind.Operator;
 import static com.apkide.engine.SyntaxKind.ParameterIdentifier;
+import static com.apkide.engine.SyntaxKind.Plain;
 import static com.apkide.engine.SyntaxKind.Separator;
 import static com.apkide.engine.SyntaxKind.StringLiteral;
 import static com.apkide.engine.SyntaxKind.TypeIdentifier;
@@ -394,13 +395,17 @@ public class Editor extends View implements ModelListener {
         return myAttributes[kind.intValue()];
     }
 
+    public void setText(@NonNull CharSequence text) {
+        myModel.setText(text);
+    }
+
     public void setModel(Model model) {
         if (myModel != null)
             myModel.removeModelListener(this);
 
         myModel = model;
         myModel.addModelListener(this);
-        invalidate();
+        redraw();
     }
 
     @NonNull
@@ -410,6 +415,11 @@ public class Editor extends View implements ModelListener {
 
     public char getChar(int position) {
         return myModel.charAt(position);
+    }
+
+    @NonNull
+    public String getText() {
+        return myModel.getText();
     }
 
     public int getLineCount() {
@@ -521,7 +531,7 @@ public class Editor extends View implements ModelListener {
     public void textSet(@NonNull Model model) {
 
         computeLayout();
-        invalidate();
+        redraw();
     }
 
     @Override
@@ -532,7 +542,7 @@ public class Editor extends View implements ModelListener {
     @Override
     public void textInserted(@NonNull Model model, int startLine, int startColumn, int endLine, int endColumn, @NonNull CharSequence text) {
         computeLayout();
-        invalidate();
+        redraw();
     }
 
     @Override
@@ -544,7 +554,7 @@ public class Editor extends View implements ModelListener {
     public void textRemoved(@NonNull Model model, int startLine, int startColumn, int endLine, int endColumn) {
 
         computeLayout();
-        invalidate();
+        redraw();
     }
 
 
@@ -563,6 +573,7 @@ public class Editor extends View implements ModelListener {
     }
 
     protected void restoreDefaultFontStyle(@NonNull Paint paint) {
+        paint.setColor(myFontColor.value());
         paint.setFakeBoldText(false);
         paint.setTextSkewX(0);
     }
@@ -571,6 +582,8 @@ public class Editor extends View implements ModelListener {
     public float getLineBaseline(int line) {
         return (line + 1) * getFontHeight();
     }
+
+    private int myLastHighlightIndex;
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -582,10 +595,13 @@ public class Editor extends View implements ModelListener {
         int startLine = (int) (myRect.top / getFontHeight());
         int endLine = (int) (myRect.bottom / getFontHeight());
         endLine += 1;
-        startLine = Math.max(0, startLine);
-        endLine = Math.min(endLine, getLineCount());
+        startLine = max(0, startLine);
+        endLine = min(endLine, getLineCount());
         float x = getSidebarWidth();
         float y = getLineBaseline(startLine);
+
+        myLastHighlightIndex = 0;
+
         for (int i = startLine; i < endLine; i++) {
             drawLine(canvas, i, x, y);
             y += getFontHeight();
@@ -593,11 +609,99 @@ public class Editor extends View implements ModelListener {
         canvas.restore();
     }
 
-    protected void drawLine(Canvas canvas, int line, float x, float y) {
 
+    protected void drawLine(Canvas canvas, int line, float x, float y) {
+        int lineStart = getLineStart(line);
+        int lineLength = getLineLength(line);
+        int lineEnd = lineStart + lineLength;
+
+        if (myLineNumberColor.alpha() != 0) {
+            myPaint.setColor(myLineNumberColor.value());
+            canvas.drawText(Integer.toString(line + 1), 0, y, myPaint);
+        }
+
+        int commit = lineStart;
+        if (myModel.hasHighlights()) {
+            int highlightCount = myModel.getHighlightCount();
+            int findIndex = -1;
+            for (int i = 0; i < lineLength; i++) {
+                if ((findIndex = myModel.findHighlightIndex(
+                        myLastHighlightIndex, highlightCount, line, i)) >= 0) {
+                    break;
+                }
+            }
+
+            if (findIndex >= 0) {
+                SpanStore highlights = myModel.getHighlights();
+
+                for (int i = findIndex; i < highlightCount; i++) {
+                    int[] span = myModel.highlightAt(i);
+                    int startLine = highlights.getStartLine(span);
+                    int endLine = highlights.getEndLine(span);
+                    int startColumn = highlights.getStartColumn(span);
+                    int endColumn = highlights.getEndColumn(span);
+                    if (startLine > line) break;
+                    int spanStart = lineStart + startColumn;
+                    int spanEnd = endLine == startLine ? lineStart + endColumn : lineEnd;
+
+                    spanStart= max(lineStart,spanStart);
+                    spanStart= min(spanStart,lineEnd);
+                    spanEnd = min(spanEnd,lineEnd);
+                    spanEnd= max(spanEnd,spanStart);
+
+                    if (commit < spanStart) {
+                        restoreDefaultFontStyle(myPaint);
+                        x += internalDrawText(canvas, commit, spanStart, x, y);
+                    }
+
+                    SyntaxKind kind = SyntaxKind.of(highlights.getKind(span));
+                    if (kind != Plain) {
+                        TextAttribute attribute = getTextAttribute(kind);
+                        applyFontStyle(attribute, myPaint);
+                        if (attribute.hasBackground()) {
+                            float w = internalMeasureText(spanStart, spanEnd);
+                            myPaint.setColor(attribute.getBackgroundColor().value());
+                            canvas.drawRect(x, y + myFontTop, x + w, y + myFontBottom, myPaint);
+                        }
+                        if (attribute.getFontColor().value() != 0) {
+                            myPaint.setColor(attribute.getFontColor().value());
+                        }
+                    } else {
+                        restoreDefaultFontStyle(myPaint);
+                    }
+
+                    x += internalDrawText(canvas, spanStart, spanEnd, x, y);
+                    commit = spanEnd;
+                    myLastHighlightIndex=i;
+                }
+                restoreDefaultFontStyle(myPaint);
+            }
+        }
+
+        if (commit < lineEnd) {
+            restoreDefaultFontStyle(myPaint);
+            x += internalDrawText(canvas, commit, lineEnd, x, y);
+        }
     }
 
-    protected float measureText(int start, int end) {
+    private float internalDrawText(Canvas canvas, int start, int end, float x, float y) {
+        float advance = x;
+        int begin = start;
+        for (int i = start; i < end; i++) {
+            if (getChar(i) == '\t') {
+                myModel.nativeDrawText(canvas, begin, i, x, y, myPaint);
+                x += internalMeasureText(begin, i + 1);
+                begin = i + 1;
+            }
+        }
+        if (begin < end) {
+            myModel.nativeDrawText(canvas, begin, end, x, y, myPaint);
+            x += internalMeasureText(begin, end);
+        }
+        return x - advance;
+    }
+
+    private float internalMeasureText(int start, int end) {
         float rect = myModel.nativeMeasureText(start, end, myPaint);
         float oTab = myPaint.measureText("\t");
         float tab = getTabCharWidth();
@@ -610,4 +714,5 @@ public class Editor extends View implements ModelListener {
         }
         return rect;
     }
+
 }

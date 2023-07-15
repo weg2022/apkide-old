@@ -55,14 +55,22 @@ public class AppPreferences implements IFernflowerPreferences {
     // Editor Preferences
     ///////////////////////////////////////////////////////////////////////////
 
-    public static boolean isUseTab() {
-        return getPreferences().getBoolean("editor.useTab", true);
+    public static boolean isEditorUseTabs() {
+        return getPreferences().getBoolean("editor.useTabs", true);
     }
 
-    public static int getTabSize() {
+    public static int getEditorTabSize() {
         return getPreferences().getInt("editor.tabSize", 4);
     }
 
+    public static int getEditorFontSize() {
+        String value = getPreferences().getString("editor.fontSize", "16");
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return 16;
+        }
+    }
 
     private static String getOption(String key) {
         boolean enabled = getPreferences().getBoolean(key, false);

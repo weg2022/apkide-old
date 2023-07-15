@@ -2,9 +2,11 @@ package com.apkide.ui;
 
 import static java.util.Objects.requireNonNull;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -108,9 +110,23 @@ public class IDEEditorPager extends ViewPager implements OpenFileProvider {
         return editors;
     }
 
+    public void syncConfigure() {
+        for (int i = 0; i < myViews.size(); i++) {
+            getEditor(i).syncConfigure();
+            getEditor(i).getEditorView().redraw();
+        }
+    }
+
+    @SuppressLint("InflateParams")
     @Override
     public OpenFileModel openFile(String filePath) {
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.editor, null);
+        IDEEditor editor = view.findViewById(R.id.editorComponent);
 
+
+        myViews.add(view);
+        requireNonNull(getAdapter()).notifyDataSetChanged();
+        requestLayout();
         return null;
     }
 

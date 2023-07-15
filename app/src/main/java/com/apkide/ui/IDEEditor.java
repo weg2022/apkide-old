@@ -1,6 +1,7 @@
 package com.apkide.ui;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 
 import com.apkide.ui.views.CodeEditText;
@@ -22,6 +23,15 @@ public class IDEEditor extends CodeEditText {
     }
 
     private void initView() {
-        
+        setFont(Typeface.createFromAsset(getContext().getAssets(), "fonts/CascadiaMono-Regular.ttf"));
+        syncConfigure();
+    }
+
+
+    @Override
+    public void syncConfigure() {
+        setTabSize(AppPreferences.getEditorTabSize());
+        setFontSize(AppPreferences.getEditorFontSize());
+        super.syncConfigure();
     }
 }

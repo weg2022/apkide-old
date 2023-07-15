@@ -16,14 +16,16 @@ public enum SyntaxKind {
     FunctionIdentifier,
     ParameterIdentifier,
     Comment,
-    DocumentationComment
-    ;
+    DocumentationComment;
 
 
-    public int intValue(){
-        return  ordinal();
+    public int intValue() {
+        return ordinal();
     }
+
     public static SyntaxKind of(int kind) {
+        if (kind < 0 || kind > DocumentationComment.intValue())
+            return Plain;
         return values()[kind];
     }
 }

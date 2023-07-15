@@ -204,7 +204,9 @@ public class MainUI extends StyledUI implements
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
+        if (key.startsWith("editor")){
+            mainBinding.mainEditorPager.syncConfigure();
+        }
     }
 
     @Override
