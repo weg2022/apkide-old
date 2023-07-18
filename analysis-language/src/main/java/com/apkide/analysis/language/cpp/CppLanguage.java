@@ -80,13 +80,13 @@ public class CppLanguage implements Language {
 
     @Nullable
     @Override
-    public CodeRenderer getCodeRenderer() {
+    public CodeRenderer getRenderer() {
         return null;
     }
 
     @Nullable
     @Override
-    public CodeAnalyzer getCodeAnalyzer() {
+    public CodeAnalyzer getAnalyzer() {
         return null;
     }
 }

@@ -30,8 +30,8 @@ public interface Language {
     TypeSystem getTypeSystem();
 
     @Nullable
-    CodeRenderer getCodeRenderer();
+    CodeRenderer getRenderer();
 
     @Nullable
-    CodeAnalyzer getCodeAnalyzer();
+    CodeAnalyzer getAnalyzer();
 }

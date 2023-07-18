@@ -43,7 +43,7 @@ public class CppCodeModel implements CodeModel {
     }
 
     @Override
-    public boolean isArchiveReader() {
+    public boolean isSupportsFileArchives() {
         return false;
     }
 

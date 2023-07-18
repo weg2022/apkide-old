@@ -663,9 +663,9 @@ public class Editor extends View implements ModelListener {
                             myPaint.setColor(attribute.getBackgroundColor().value());
                             canvas.drawRect(x, y + myFontTop, x + w, y + myFontBottom, myPaint);
                         }
-                        if (attribute.getFontColor().value() != 0) {
+                        if (attribute.getFontColor().value() != 0)
                             myPaint.setColor(attribute.getFontColor().value());
-                        }
+
                     } else {
                         restoreDefaultFontStyle(myPaint);
                     }
