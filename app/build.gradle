@@ -94,6 +94,7 @@ dependencies {
     implementation libs.androidx.preference
     implementation libs.material
     implementation project(':common')
+    implementation project(':openapi')
     implementation project(':engine')
     implementation project(':apktool:androlib')
     implementation project(':apktool:common')

@@ -48,5 +48,7 @@ dependencies {
     api libs.tools.r8
     api libs.dialogx
 
+    api 'com.thoughtworks.xstream:xstream:1.4.20'
+
     testImplementation libs.junit
 }

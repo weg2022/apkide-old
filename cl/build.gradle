@@ -3,11 +3,13 @@ plugins {
 }
 
 android {
-    namespace 'com.apkide.engine'
+    namespace 'com.apkide.analysis'
     compileSdk 33
 
     defaultConfig {
         minSdk 26
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
 
@@ -16,9 +18,6 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-    }
-    buildFeatures {
-        aidl true
     }
     compileOptions {
         coreLibraryDesugaringEnabled = true
@@ -31,6 +30,5 @@ dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     coreLibraryDesugaring libs.desugar.jdk.libs.nio
     implementation project(':common')
-    implementation project(':openapi')
     testImplementation libs.junit
 }
