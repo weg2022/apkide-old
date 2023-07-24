@@ -112,8 +112,7 @@ public class IDEEditorPager extends ViewPager implements OpenFileProvider {
 
     public void syncConfigure() {
         for (int i = 0; i < myViews.size(); i++) {
-            getEditor(i).syncConfigure();
-            getEditor(i).getEditorView().redraw();
+
         }
     }
 
