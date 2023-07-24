@@ -8,7 +8,5 @@ import org.antlr.v4.runtime.tree.SyntaxTree;
 
 public interface Analyzer {
 
-
-
     void analyzeErrors(@NonNull FileEntry file, @NonNull SyntaxTree ast);
 }

@@ -4,6 +4,8 @@ import static java.security.MessageDigest.getInstance;
 
 import androidx.annotation.NonNull;
 
+import com.apkide.common.collections.LineIterator;
+
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;

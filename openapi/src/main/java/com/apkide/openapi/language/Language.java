@@ -6,6 +6,8 @@ import androidx.annotation.Nullable;
 import com.apkide.openapi.language.api.FileEntry;
 import com.apkide.openapi.language.api.Highlights;
 
+import org.antlr.v4.runtime.Lexer;
+import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.tree.SyntaxTree;
 
 import java.io.IOException;
@@ -23,9 +25,6 @@ public interface Language {
     Formatter getFormatter();
 
     @Nullable
-    Syntax getSyntax();
-
-    @Nullable
     Lexer getLexer();
 
     @Nullable
@@ -35,21 +34,26 @@ public interface Language {
     Analyzer getAnalyzer();
 
     @Nullable
-    Renderer getRenderer();
+    Tools getTools();
 
     boolean isArchiveFileSupported();
 
     @Nullable
     String[] getArchiveEntries(@NonNull String filePath) throws IOException;
 
-    @NonNull
+    @Nullable
     Reader getArchiveEntryReader(@NonNull String filePath, @NonNull String entryPath, @NonNull String encoding) throws IOException;
 
     long getArchiveVersion(@NonNull String filePath);
 
     void closeArchiveFile();
 
-    void fileHighlighting(@NonNull FileEntry file, @NonNull Reader reader, @NonNull Highlights highlights);
+    void processVersion(@NonNull FileEntry file);
 
-    void createSyntaxTree(@NonNull FileEntry file, @NonNull Reader reader, @NonNull SyntaxTree[] syntaxTrees, boolean checkErrors);
+    void fileHighlighting(@NonNull FileEntry file, @NonNull Reader reader, @NonNull ResultCallback<Highlights> callback) throws IOException;
+
+    void semanticHighlighting(@NonNull FileEntry file,@NonNull Language language,@Nullable SyntaxTree ast)throws IOException;
+
+    void createSyntaxTree(@NonNull Reader reader, @NonNull FileEntry file, long syntaxVersion, @NonNull ResultCallback<SyntaxTree> callback, boolean errors, boolean parseCode, boolean parseComments) throws IOException;
+
 }

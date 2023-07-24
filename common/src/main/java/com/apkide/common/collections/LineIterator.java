@@ -1,4 +1,6 @@
-package com.apkide.common;
+package com.apkide.common.collections;
+
+import com.apkide.common.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.Closeable;

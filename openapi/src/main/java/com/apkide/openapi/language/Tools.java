@@ -9,8 +9,6 @@ import org.antlr.v4.runtime.tree.SyntaxTree;
 
 public interface Tools {
 
-    boolean isHighlighted();
-
     void requestCompletionList(@NonNull FileEntry file, int line, int column);
 
     void requestClassesCompletionList(@NonNull FileEntry file);

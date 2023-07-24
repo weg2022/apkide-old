@@ -4,7 +4,6 @@ package com.apkide.ui.util;
 import static java.io.File.separator;
 
 import com.apkide.common.IOUtils;
-import com.apkide.ui.FileSystem;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -20,10 +19,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 
-public class JarArchiveReader implements FileSystem.FileArchiveReader {
+public class JarArchiveReader  {
     private ZipFile archiveFile;
 
-    @Override
     public Reader getArchiveEntryReader(String archivePath, String entryName, String encoding) throws IOException {
 
         if (new File(archivePath).isDirectory()) {
@@ -52,7 +50,6 @@ public class JarArchiveReader implements FileSystem.FileArchiveReader {
         return encoding == null ? new InputStreamReader(new ByteArrayInputStream(bytes)) : new InputStreamReader(new ByteArrayInputStream(bytes), encoding);
     }
 
-    @Override
     public List<String> getArchiveDirectoryEntries(String archivePath, String entryName) throws IOException {
         ArrayList<String> entities = new ArrayList<>();
         Enumeration<? extends ZipEntry> entries;
@@ -85,18 +82,16 @@ public class JarArchiveReader implements FileSystem.FileArchiveReader {
         return entities;
     }
 
-    @Override
     public boolean isArchiveFileEntry(String filePath) {
         return filePath.endsWith(".class") ||
                 filePath.endsWith(".java");
     }
 
-    @Override
     public long getArchiveVersion(String archivePath) {
         return 0;
     }
 
-    @Override
+
     public void closeArchive() throws IOException {
         if (archiveFile != null) {
             archiveFile.close();
