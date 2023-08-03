@@ -11,11 +11,6 @@ public interface MenuCommand extends Command {
         return true;
     }
 
-    @Override
-    default void setEnabled(boolean enabled) {
-
-    }
-
     default boolean isVisible() {
         return true;
     }

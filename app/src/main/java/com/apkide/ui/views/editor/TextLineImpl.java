@@ -1,115 +1,118 @@
 package com.apkide.ui.views.editor;
 
-import static java.lang.System.arraycopy;
-
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
-public class TextLineImpl implements TextLine, TextLineExtension {
+public class TextLineImpl implements TextLine {
 
-    private char[] myChars = new char[10];
-    private int myLength = 0;
+    private static final char[] EMPTY = new char[0];
+    private char[] myChars = EMPTY;
 
-    private int offset = -1;
-    private String delimiter = "";
+    public TextLineImpl() {
+
+    }
+
+
+    public TextLineImpl(char[] chars) {
+        myChars = chars;
+    }
+
+    public TextLineImpl(CharSequence text) {
+        myChars = new char[text.length()];
+        TextUtils.getChars(text, 0, text.length(), myChars, 0);
+    }
+
 
     @Override
     public void set(@NonNull char[] chars) {
-        myChars = new char[chars.length * 5 / 4];
-
-        if (chars.length != 0)
-            arraycopy(chars, 0, myChars, 0, chars.length);
-
-        myLength = chars.length;
+        myChars = chars;
     }
 
-    private void resize(int minLength) {
-        if (myChars.length <= (myLength + minLength)) {
-            char[] temp = new char[(myLength + minLength) * 5 / 4];
-            arraycopy(myChars, 0, temp, 0, myChars.length);
-            myChars = temp;
-        }
+    @Override
+    public void set(@NonNull CharSequence text) {
+        myChars = new char[text.length()];
+        TextUtils.getChars(text, 0, text.length(), myChars, 0);
+    }
+
+    @Override
+    public void append(@NonNull CharSequence text) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void append(@NonNull char[] chars) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void insert(int index, @NonNull CharSequence text) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void insert(int index, @NonNull char[] chars) {
-        resize(chars.length);
-        arraycopy(chars, 0, myChars, index, chars.length);
-        myLength += chars.length;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void delete(int start, int end) {
-        arraycopy(myChars, end + 1, myChars, start, myLength - (end + 1));
-        myLength -= end - start;
-    }
-
-    @Override
-    public char get(int index) {
-        return myChars[index];
-    }
-
-    @Override
-    public int getLength() {
-        return myLength;
-    }
-
-    @Override
-    public int getOffset() {
-        return offset;
-    }
-
-    @Override
-    public void setOffset(int offset) {
-        this.offset = offset;
-    }
-
-    @Override
-    public void setDelimiter(@NonNull String delimiter) {
-        this.delimiter = delimiter;
-    }
-
-    @NonNull
-    @Override
-    public String getDelimiter() {
-        return delimiter;
+        throw new UnsupportedOperationException();
     }
 
     @NonNull
     @Override
     public char[] getArray() {
-        char[] chars = new char[myLength];
-        arraycopy(myChars, 0, chars, 0, myLength);
-        return chars;
+        return myChars;
     }
 
     @NonNull
     @Override
     public String get() {
-        return new String(myChars, 0, myLength);
+        return String.valueOf(myChars);
+    }
+
+    @NonNull
+    @Override
+    public String get(int start, int end) {
+        return String.valueOf(myChars, start, end - start);
     }
 
     @Override
-    public void copyChars(int start, int end, char[] dest, int destoff) {
-        arraycopy(myChars, start, dest, destoff, end - start);
-    }
-
-    @Override
-    public float nativeMeasureText(int start, int end, Paint paint) {
+    public float measure(int start, int end, @NonNull Paint paint) {
         return paint.measureText(myChars, start, end - start);
     }
 
     @Override
-    public int nativeGetTextWidths(int start, int end, float[] widths, Paint paint) {
+    public int getWidths(int start, int end, float[] widths, @NonNull Paint paint) {
         return paint.getTextWidths(myChars, start, end - start, widths);
     }
 
     @Override
-    public void nativeDrawText(Canvas canvas, int start, int end, float x, float y, Paint paint) {
+    public void draw(@NonNull Canvas canvas, int start, int end, float x, float y, @NonNull Paint paint) {
         canvas.drawText(myChars, start, end - start, x, y, paint);
     }
 
+    @Override
+    public void getChars(int start, int end, char[] dest, int destoff) {
+        System.arraycopy(myChars, start, dest, destoff, end - start);
+    }
 
+    @Override
+    public int length() {
+        return myChars.length;
+    }
+
+    @Override
+    public char charAt(int index) {
+        return myChars[index];
+    }
+
+    @NonNull
+    @Override
+    public CharSequence subSequence(int start, int end) {
+        return String.valueOf(myChars, start, end - start);
+    }
 }

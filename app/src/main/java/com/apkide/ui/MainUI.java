@@ -82,7 +82,7 @@ public class MainUI extends StyledUI implements
                     exitApp();
                 else {
                     lastBackPressedTimeMillis = currentTimeMillis();
-                    Toast.makeText(MainUI.this, "Press Exit again...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainUI.this, "再按一次退出", Toast.LENGTH_SHORT).show();
                 }
             }
         });

@@ -19,7 +19,7 @@ public class ViewBuild implements MenuCommand {
     }
 
     @Override
-    public boolean commandPerformed() {
+    public boolean run() {
         App.getMainUI().toggleBuildBrowser();
         return true;
     }

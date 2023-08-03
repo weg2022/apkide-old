@@ -22,7 +22,7 @@ public class GotoSettings implements MenuCommand {
     }
 
     @Override
-    public boolean commandPerformed() {
+    public boolean run() {
         App.getMainUI().startActivity(new Intent(App.getMainUI(), PreferencesUI.class));
         return true;
     }

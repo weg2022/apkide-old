@@ -19,7 +19,7 @@ public class ViewFind implements MenuCommand {
     }
 
     @Override
-    public boolean commandPerformed() {
+    public boolean run() {
         App.getMainUI().toggleFindBrowser();
         return true;
     }

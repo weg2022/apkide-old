@@ -19,7 +19,7 @@ public class ExitApp implements MenuCommand {
     }
 
     @Override
-    public boolean commandPerformed() {
+    public boolean run() {
         App.getMainUI().exitApp();
         return true;
     }

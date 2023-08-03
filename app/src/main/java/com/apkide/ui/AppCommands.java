@@ -68,7 +68,7 @@ public class AppCommands {
             if (command instanceof MenuCommand) {
                 if (item.getItemId() == ((MenuCommand) command).getId()) {
                     AppLog.s("menuCommandExec:"+item.getTitle());
-                    return command.commandPerformed();
+                    return command.run();
                 }
             }
         }

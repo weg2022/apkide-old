@@ -19,7 +19,7 @@ public class ViewFiles implements MenuCommand {
     }
 
     @Override
-    public boolean commandPerformed() {
+    public boolean run() {
         App.getMainUI().toggleFileBrowser();
         return true;
     }

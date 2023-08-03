@@ -8,7 +8,5 @@ public interface Command {
 
     boolean isEnabled();
 
-    void setEnabled(boolean enabled);
-
-    boolean commandPerformed();
+    boolean run();
 }

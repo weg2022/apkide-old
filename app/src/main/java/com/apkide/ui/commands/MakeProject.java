@@ -18,7 +18,7 @@ public class MakeProject implements MenuCommand {
     }
 
     @Override
-    public boolean commandPerformed() {
+    public boolean run() {
         return false;
     }
 }

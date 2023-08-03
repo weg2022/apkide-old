@@ -19,7 +19,7 @@ public class ViewProblem implements MenuCommand {
     }
 
     @Override
-    public boolean commandPerformed() {
+    public boolean run() {
         App.getMainUI().toggleProblemBrowser();
         return true;
     }

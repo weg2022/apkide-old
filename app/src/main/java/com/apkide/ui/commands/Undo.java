@@ -18,7 +18,7 @@ public class Undo implements MenuCommand {
     }
 
     @Override
-    public boolean commandPerformed() {
+    public boolean run() {
         return false;
     }
 }
