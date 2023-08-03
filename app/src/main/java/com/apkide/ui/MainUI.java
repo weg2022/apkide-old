@@ -11,6 +11,7 @@ import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -25,6 +26,8 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
+import com.apkide.common.ApplicationProvider;
+import com.apkide.common.KeyStrokeDetector;
 import com.apkide.ui.browsers.BrowserPager;
 import com.apkide.ui.databinding.UiMainBinding;
 
@@ -37,6 +40,7 @@ public class MainUI extends StyledUI implements
     private UiMainBinding mainBinding;
 
     private long lastBackPressedTimeMillis;
+    private KeyStrokeDetector myKeyStrokeDetector;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -44,6 +48,7 @@ public class MainUI extends StyledUI implements
         App.initialize(this);
         AppPreferences.registerListener(this);
         super.onCreate(savedInstanceState);
+        myKeyStrokeDetector =new KeyStrokeDetector(this);
         mainBinding = UiMainBinding.inflate(getLayoutInflater());
         setContentView(mainBinding.getRoot());
         setSupportActionBar(mainBinding.mainContentToolbar);
@@ -88,6 +93,11 @@ public class MainUI extends StyledUI implements
         });
 
         restoreBrowser();
+        //Test Editor
+        getEditorPager().openFile(ApplicationProvider.get().foundFile("JavaLexer.java").getAbsolutePath());
+        JavaHighlighting.setEditor(getEditorPager().getCurrentEditor());
+        getEditorPager().getCurrentEditor().getEditorModel().insertChar(0,0,'1');
+        getEditorPager().getCurrentEditor().select(0,0,1,1);
     }
 
     public void exitApp() {
@@ -252,5 +262,25 @@ public class MainUI extends StyledUI implements
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        myKeyStrokeDetector.onActivityKeyDown(keyCode,event);
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        myKeyStrokeDetector.onActivityKeyUp(keyCode,event);
+        return super.onKeyUp(keyCode, event);
+    }
+
+    public KeyStrokeDetector getKeyStrokeDetector() {
+        return myKeyStrokeDetector;
+    }
+
+    public IDEEditorPager getEditorPager(){
+        return mainBinding.mainEditorPager;
     }
 }

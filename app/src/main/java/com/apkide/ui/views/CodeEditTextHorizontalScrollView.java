@@ -2,6 +2,7 @@ package com.apkide.ui.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.widget.HorizontalScrollView;
 
 public class CodeEditTextHorizontalScrollView extends HorizontalScrollView {
@@ -25,11 +26,11 @@ public class CodeEditTextHorizontalScrollView extends HorizontalScrollView {
     }
 
 
-    protected CodeEditText getCodeEditText(){
+    protected CodeEditText getCodeEditText() {
         return (CodeEditText) getChildAt(0);
     }
 
-    protected CodeEditText.EditorView getEditorView(){
+    protected EditorView getEditorView() {
         return getCodeEditText().getEditorView();
     }
 
@@ -43,5 +44,42 @@ public class CodeEditTextHorizontalScrollView extends HorizontalScrollView {
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
         getEditorView().redraw();
+    }
+
+    @Override
+    public boolean onGenericMotionEvent(MotionEvent event) {
+        if ((event.getAction() & MotionEvent.ACTION_MOVE) != 0) {
+            return false;
+        }
+        return super.onGenericMotionEvent(event);
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if (isMouseButtonEvent(ev)) {
+            return true;
+        }
+        return super.onInterceptTouchEvent(ev);
+    }
+
+    private boolean isMouseButtonEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN ||
+                event.getAction() == MotionEvent.ACTION_CANCEL ||
+                event.getAction() == MotionEvent.ACTION_MOVE) {
+            if (event.getButtonState() == 0) {
+                return true;
+            }
+        }
+
+        if (event.getToolType(0) == 3) {
+            return true;
+        }
+        switch (event.getSource()) {
+            case 8194:
+            case 1048584:
+                return true;
+            default:
+                return false;
+        }
     }
 }

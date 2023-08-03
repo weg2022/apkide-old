@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -110,28 +111,55 @@ public class IDEEditorPager extends ViewPager implements OpenFileProvider {
         return editors;
     }
 
-    public void syncConfigure() {
-        for (int i = 0; i < myViews.size(); i++) {
-
-        }
-    }
-
     @SuppressLint("InflateParams")
     @Override
     public OpenFileModel openFile(String filePath) {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.editor, null);
         IDEEditor editor = view.findViewById(R.id.editorComponent);
-
-
+        OpenFileModel fileModel=  editor.openFile(filePath);
         myViews.add(view);
         requireNonNull(getAdapter()).notifyDataSetChanged();
         requestLayout();
-        return null;
+        return fileModel;
     }
 
     @Override
     public OpenFileModel closeFile(String filePath) {
 
         return null;
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if (isMouseButtonEvent(ev)){
+            return false;
+        }
+        if (ev.getAction() == 0 && getCurrentEditor() != null &&
+                getCurrentEditor().isTouchEventInsideHandle(ev)) {
+            return false;
+        }
+
+        return super.onInterceptTouchEvent(ev);
+    }
+
+    private boolean isMouseButtonEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN ||
+                event.getAction() == MotionEvent.ACTION_CANCEL ||
+                event.getAction() == MotionEvent.ACTION_MOVE) {
+            if (event.getButtonState() == 0) {
+                return true;
+            }
+        }
+
+        if (event.getToolType(0) == 3) {
+            return true;
+        }
+        switch (event.getSource()) {
+            case 8194:
+            case 1048584:
+                return true;
+            default:
+                return false;
+        }
     }
 }

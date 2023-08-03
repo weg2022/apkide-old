@@ -3,6 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.apkide.ui.views.CodeEditTextScrollView
+        android:id="@+id/editorScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <com.apkide.ui.views.CodeEditTextHorizontalScrollView
+            android:id="@+id/editorHorizontalScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
             <com.apkide.ui.IDEEditor
                 android:id="@+id/editorComponent"
                 android:layout_width="match_parent"
@@ -10,4 +20,8 @@
 
                 <requestFocus />
             </com.apkide.ui.IDEEditor>
+        </com.apkide.ui.views.CodeEditTextHorizontalScrollView>
+    </com.apkide.ui.views.CodeEditTextScrollView>
+
+
 </androidx.appcompat.widget.LinearLayoutCompat>

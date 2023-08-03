@@ -10,6 +10,7 @@ import android.os.Looper;
 import androidx.annotation.NonNull;
 
 import com.apkide.common.ApplicationProvider;
+import com.apkide.ui.services.keybinding.KeyBindingService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ public final class App {
     private static Handler sHandler;
     private static MainUI sMainUI;
 
+    private final KeyBindingService myKeyBindingService=new KeyBindingService();
     private App() {
 
     }
@@ -42,6 +44,10 @@ public final class App {
 
     public static boolean isShutdown() {
         return sApp == null;
+    }
+
+    public static KeyBindingService getKeyBindingService(){
+        return sApp.myKeyBindingService;
     }
 
 

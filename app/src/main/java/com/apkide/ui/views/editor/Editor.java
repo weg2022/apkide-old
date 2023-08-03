@@ -95,9 +95,9 @@ public class Editor extends Console {
 
         @Override
         public void run() {
-            if (!myInSelecting) {
+            if (!myInSelecting)
                 setSelectionAnchor(getCaretLine(), getCaretColumn());
-            }
+
             myInSelecting = true;
             myRunnable.run();
             myInSelecting = false;
@@ -123,6 +123,7 @@ public class Editor extends Console {
     private boolean myInSelecting;
 
     private void initView() {
+        setModel(new EditorModel());//Default
         boundAction(MoveCaretLeft, new UnSelectActionRunnable() {
             @Override
             public void run() {
@@ -478,20 +479,7 @@ public class Editor extends Console {
             if (isEditable())
                 unIndentSelection();
         });
-        boundAction(InsertLineBreak, () -> {
-            if (isEditable()) {
-                setInternalState(State.INSERTING);
-                if (getSelectionVisibility()) {
-                    removeSelection();
-                    moveCaret(getFirstSelectedLine(), getLastSelectedColumn());
-                    setSelectionVisibility(false);
-                }
-                int caretLine = getCaretLine();
-                int caretColumn = getCaretColumn();
-                getEditorModel().insertLineBreak(caretLine, caretColumn);
-
-            }
-        });
+        boundAction(InsertLineBreak, this::insertLineBreak);
         boundAction(InsertTab, this::insertTab);
         boundAction(RemovePrecedingChar, () -> {
             if (isEditable()) {
@@ -568,7 +556,7 @@ public class Editor extends Console {
 
     public boolean isEditable() {
         if (myEditable) {
-            return getEditorModel().isReadOnly();
+            return !getEditorModel().isReadOnly();
         }
         return false;
     }
@@ -591,6 +579,20 @@ public class Editor extends Console {
         return myIntendedColumnX;
     }
 
+    public void insertLineBreak(){
+        if (isEditable()) {
+            setInternalState(State.INSERTING);
+            if (getSelectionVisibility()) {
+                removeSelection();
+                moveCaret(getFirstSelectedLine(), getLastSelectedColumn());
+                setSelectionVisibility(false);
+            }
+            int caretLine = getCaretLine();
+            int caretColumn = getCaretColumn();
+            getEditorModel().insertLineBreak(caretLine, caretColumn);
+
+        }
+    }
 
     public void insertChar(char c) {
         if (isEditable()) {
@@ -616,10 +618,7 @@ public class Editor extends Console {
         int lineCount = getEditorModel().getLineCount() - 1;
         int length = getEditorModel().getLineLength(lineCount);
         if (lineCount == 0 && length == 0) return;
-        setSelectionAnchor(0, 0);
-        setSelectionPoint(lineCount, length);
-        moveCaret(lineCount, length);
-        setSelectionVisibility(true);
+        selection(0,0,lineCount,length);
     }
 
     private void removeSelection() {

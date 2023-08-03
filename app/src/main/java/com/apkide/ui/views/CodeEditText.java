@@ -14,37 +14,38 @@ import static android.view.KeyEvent.KEYCODE_MOVE_HOME;
 import static android.view.KeyEvent.KEYCODE_PAGE_DOWN;
 import static android.view.KeyEvent.KEYCODE_PAGE_UP;
 import static android.view.KeyEvent.KEYCODE_TAB;
-import static java.lang.Math.max;
 
 import android.content.Context;
-import android.os.Build;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputConnection;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.apkide.common.AppLog;
 import com.apkide.common.KeyStroke;
 import com.apkide.common.KeyStrokeDetector;
 import com.apkide.common.Styles;
 import com.apkide.common.SyntaxKind;
 import com.apkide.ui.views.editor.Action;
-import com.apkide.ui.views.editor.Editor;
 import com.apkide.ui.views.editor.EditorModel;
 import com.apkide.ui.views.editor.Model;
 import com.apkide.ui.views.editor.ModelListener;
 import com.apkide.ui.views.editor.TextStyle;
 
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CodeEditText extends ViewGroup {
+    private final List<KeyStrokeCommand> myEditorCommands = new ArrayList<>();
+    private final TextStyle[] myStyles = new TextStyle[SyntaxKind.values().length];
+    private int myDragHandleColor=0xff0099cc;
+    private int myDragHandleDownColor=0xff004e6a;
+
     public CodeEditText(Context context) {
         super(context);
         initView();
@@ -55,203 +56,11 @@ public class CodeEditText extends ViewGroup {
         initView();
     }
 
+
     public CodeEditText(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initView();
     }
-
-    private class EditorActionCommand implements KeyStrokeCommand {
-        private final String name;
-        private final KeyStroke key;
-        private final Action action;
-
-        public EditorActionCommand(String name, KeyStroke key, Action action) {
-            this.name = name;
-            this.key = key;
-            this.action = action;
-        }
-
-        @NonNull
-        @Override
-        public String getName() {
-            return name;
-        }
-
-        @Override
-        public boolean isEnabled() {
-            return true;
-        }
-
-        @Override
-        public boolean run() {
-            getEditorView().getActionRunnable(action).run();
-            return true;
-        }
-
-        @NonNull
-        @Override
-        public KeyStroke getKey() {
-            return key;
-        }
-    }
-
-
-    public class EditorView extends Editor {
-        private final WindowManager windowManager;
-        private final KeyStrokeDetector.KeyStrokeHandler myKeyStrokeHandler;
-
-        public EditorView(Context context) {
-            super(context);
-            windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-            setFocusable(true);
-            setFocusableInTouchMode(true);
-            setNextFocusUpId(CodeEditText.this.getNextFocusDownId());
-            setCaretVisibility(true);
-            myKeyStrokeHandler = new KeyStrokeDetector.KeyStrokeHandler() {
-                @Override
-                public boolean onKeyStroke(KeyStroke keyStroke) {
-                    return false;
-                }
-            };
-        }
-
-        public KeyStrokeDetector.KeyStrokeHandler getKeyStrokeHandler() {
-            return myKeyStrokeHandler;
-        }
-
-        @Override
-        protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-            int width;
-            int height;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                width = windowManager.getCurrentWindowMetrics().getBounds().width();
-                height = windowManager.getCurrentWindowMetrics().getBounds().height();
-            } else {
-                width = windowManager.getDefaultDisplay().getWidth();
-                height = windowManager.getDefaultDisplay().getHeight();
-            }
-            setMeasuredDimension(max(getMeasuredWidth(), width), max(getMeasuredHeight(), height));
-            AppLog.d("w:" + getMeasuredWidth() + " h:" + getMeasuredHeight());
-        }
-
-        @Override
-        public void indentLines(int startLine, int endLine) {
-
-        }
-
-        @Override
-        public boolean onCheckIsTextEditor() {
-            return true;
-        }
-
-        @Override
-        public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
-            if (getKeyStrokeDetector() != null) {
-                return getKeyStrokeDetector().createInputConnection(this, myKeyStrokeHandler);
-            }
-            return super.onCreateInputConnection(outAttrs);
-        }
-
-        @Override
-        public boolean onKeyDown(int keyCode, KeyEvent event) {
-            if (getKeyStrokeDetector() != null) {
-                if (getKeyStrokeDetector().onKeyDown(keyCode, event, myKeyStrokeHandler)) {
-                    return true;
-                }
-            }
-            return super.onKeyDown(keyCode, event);
-        }
-
-        @Override
-        public boolean onKeyUp(int keyCode, KeyEvent event) {
-            if (getKeyStrokeDetector() != null) {
-                if (getKeyStrokeDetector().onKeyUp(keyCode, event)) {
-                    return true;
-                }
-            }
-            return super.onKeyUp(keyCode, event);
-        }
-    }
-
-    protected class CodeEditTextEditorModel extends EditorModel {
-        private final Object myStylesLock = new Object();
-        private Styles myStyles = new Styles();
-        private Styles myStylesGUI = new Styles();
-        private final Object mySemanticStylesLock = new Object();
-        private Styles mySemanticsStyles = new Styles();
-        private Styles mySemanticsStylesGUI = new Styles();
-
-        public CodeEditTextEditorModel() {
-            super();
-            addModelListener(new ModelListener() {
-                @Override
-                public void insertUpdate(@NonNull Model model, int startLine, int startColumn, int endLine, int endColumn) {
-                    synchronized (myStylesLock) {
-                        myStylesGUI.insert(startLine, startColumn, endLine, endColumn);
-                    }
-                    synchronized (mySemanticStylesLock) {
-                        mySemanticsStylesGUI.insert(startLine, startColumn, endLine, endColumn);
-                    }
-                }
-
-                @Override
-                public void removeUpdate(@NonNull Model model, int startLine, int startColumn, int endLine, int endColumn) {
-                    synchronized (myStylesLock) {
-                        myStylesGUI.remove(startLine, startColumn, endLine, endColumn);
-                    }
-                    synchronized (mySemanticStylesLock) {
-                        mySemanticsStylesGUI.remove(startLine, startColumn, endLine, endColumn);
-                    }
-                }
-            });
-        }
-
-        @Override
-        public int getStyle(int line, int column) {
-            int style = mySemanticsStylesGUI.getStyle(line, column);
-            if (style == 0) {
-                return myStylesGUI.getStyle(line, column);
-            }
-            return style;
-        }
-
-        @Override
-        public int getStyleCount() {
-            return SyntaxKind.values().length;
-        }
-
-        @Nullable
-        @Override
-        public TextStyle getTextStyle(int style) {
-            return super.getTextStyle(style);
-        }
-
-
-        public void highlighting(SyntaxKind[] kinds, int[] startLines, int[] startColumns, int[] endLines, int[] endColumns, int size) {
-            myStyles.set(kinds, startLines, startColumns, endLines, endColumns, size);
-            synchronized (myStylesLock) {
-                Styles styles = myStylesGUI;
-                myStylesGUI = myStyles;
-                myStyles = styles;
-            }
-            postInvalidate();
-        }
-
-        public void semanticHighlighting(SyntaxKind[] kinds, int[] startLines, int[] startColumns, int[] endLines, int[] endColumns, int size) {
-            mySemanticsStyles.set(kinds, startLines, startColumns, endLines, endColumns, size);
-            synchronized (mySemanticStylesLock) {
-                Styles styles = mySemanticsStylesGUI;
-                mySemanticsStylesGUI = mySemanticsStyles;
-                mySemanticsStyles = styles;
-            }
-            postInvalidate();
-        }
-    }
-
-
-    private KeyStrokeDetector myKeyStrokeDetector;
-    private final List<KeyStrokeCommand> myEditorCommands = new ArrayList<>();
 
     private void initView() {
         removeAllViews();
@@ -319,8 +128,124 @@ public class CodeEditText extends ViewGroup {
         myEditorCommands.add(new EditorActionCommand("Select Right",
                 new KeyStroke(KEYCODE_DPAD_RIGHT, true, false, false), Action.MoveCaretRightSelect));
 
+        putTextStyle(SyntaxKind.Plain, new TextStyle(getEditorView().getFontColor()));
+        putTextStyle(SyntaxKind.Keyword, new TextStyle(0xff2c82c8, Typeface.BOLD));
+        putTextStyle(SyntaxKind.Operator, new TextStyle(0xff007c1f));
+        putTextStyle(SyntaxKind.Separator, new TextStyle(0xff0096ff));
+        putTextStyle(SyntaxKind.Literal, new TextStyle(0xffbc0000));
+        putTextStyle(SyntaxKind.NamespaceIdentifier, new TextStyle(0xff5d5d5d));
+        putTextStyle(SyntaxKind.TypeIdentifier, new TextStyle(0xff0096ff));
+        putTextStyle(SyntaxKind.VariableIdentifier, new TextStyle(0xff871094));
+        putTextStyle(SyntaxKind.FunctionIdentifier, new TextStyle(0xff00627A));
+        putTextStyle(SyntaxKind.FunctionCallIdentifier, new TextStyle(0xff00627A, Typeface.BOLD_ITALIC));
+        putTextStyle(SyntaxKind.Comment, new TextStyle(0xff009b00, Typeface.ITALIC));
+        putTextStyle(SyntaxKind.DocComment, new TextStyle(0xff009b00, Typeface.BOLD_ITALIC));
     }
 
+    public void putTextStyle(SyntaxKind style, TextStyle textStyle) {
+        myStyles[style.ordinal()] = textStyle;
+    }
+
+    public void putTextStyle(int style, TextStyle textStyle) {
+        myStyles[style] = textStyle;
+    }
+
+    public TextStyle getTextStyle(int style) {
+        return myStyles[style];
+    }
+
+
+    protected boolean handleKeyStroke(KeyStroke key) {
+        return false;
+    }
+
+    protected void onKeyStroke() {
+
+    }
+
+    protected List<KeyStroke> foundKeys(KeyStrokeCommand command) {
+        return null;
+    }
+
+    public boolean editorViewOnKeyDown(int keyCode, KeyEvent event) {
+        return getEditorView().onKeyDown(keyCode, event);
+    }
+
+    public boolean editorViewOnKeyUp(int keyCode, KeyEvent event) {
+        return getEditorView().onKeyUp(keyCode, event);
+    }
+
+    public void insertChar(char c) {
+        getEditorView().insertChar(c);
+    }
+
+    public void focus() {
+        if (getEditorView().hasFocus()) {
+            return;
+        }
+        getEditorView().requestFocus();
+    }
+
+    public void showDragHandle(){
+        getScrollView().showDragHandle();
+    }
+
+
+    public void select(int startLine, int startColumn, int endLine, int endColumn) {
+        getScrollView().selection(startLine, startColumn, endLine, endColumn);
+    }
+
+    public int getSelectionStartLine() {
+        if (getEditorView().getSelectionVisibility()) {
+            return getEditorView().getFirstSelectedLine();
+        }
+        return getEditorView().getCaretLine();
+    }
+
+    public int getSelectionStartColumn() {
+        if (getEditorView().getSelectionVisibility()) {
+            return getEditorView().getFirstSelectedColumn();
+        }
+        return getEditorView().getCaretColumn();
+    }
+
+    public int getSelectionEndLine() {
+        if (getEditorView().getSelectionVisibility()) {
+            return getEditorView().getLastSelectedLine();
+        }
+        return getEditorView().getCaretLine();
+    }
+
+    public int getSelectionEndColumn() {
+        if (getEditorView().getSelectionVisibility()) {
+            return getEditorView().getLastSelectedColumn();
+        }
+        return getEditorView().getCaretColumn();
+    }
+
+    public int getLineCount() {
+        return getEditorView().getEditorModel().getLineCount();
+    }
+
+    public int getTabSize() {
+        return getEditorView().getTabSize();
+    }
+
+    public int getDragHandleColor() {
+        return myDragHandleColor;
+    }
+
+    public void setDragHandleColor(int dragHandleColor) {
+        myDragHandleColor = dragHandleColor;
+    }
+
+    public int getDragHandleDownColor() {
+        return myDragHandleDownColor;
+    }
+
+    public void setDragHandleDownColor(int dragHandleDownColor) {
+        myDragHandleDownColor = dragHandleDownColor;
+    }
 
     public void putEditorCommand(KeyStrokeCommand command) {
         myEditorCommands.remove(command);
@@ -331,13 +256,10 @@ public class CodeEditText extends ViewGroup {
         return myEditorCommands;
     }
 
-    public void setKeyStrokeDetector(KeyStrokeDetector keyStrokeDetector) {
-        myKeyStrokeDetector = keyStrokeDetector;
+    public KeyStrokeDetector getKeyStrokeDetector() {
+        return null;
     }
 
-    public KeyStrokeDetector getKeyStrokeDetector() {
-        return myKeyStrokeDetector;
-    }
 
     public EditorView getEditorView() {
         return (EditorView) getChildAt(0);
@@ -355,5 +277,132 @@ public class CodeEditText extends ViewGroup {
         setMeasuredDimension(view.getMeasuredWidth(), view.getMeasuredHeight());
     }
 
+    public CodeEditTextScrollView getScrollView() {
+        return (CodeEditTextScrollView) getParent().getParent();
+    }
+
+    public boolean isTouchEventInsideHandle(MotionEvent event) {
+        return getScrollView().isTouchEventInsideHandle(event);
+    }
+
+    private class EditorActionCommand implements KeyStrokeCommand {
+        private final String name;
+        private final KeyStroke key;
+        private final Action action;
+
+        public EditorActionCommand(String name, KeyStroke key, Action action) {
+            this.name = name;
+            this.key = key;
+            this.action = action;
+        }
+
+        @NonNull
+        @Override
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return true;
+        }
+
+        @Override
+        public boolean run() {
+            getEditorView().getActionRunnable(action).run();
+            return true;
+        }
+
+        @NonNull
+        @Override
+        public KeyStroke getKey() {
+            return key;
+        }
+    }
+
+    protected class CodeEditTextEditorModel extends EditorModel {
+        private final Object myStylesLock = new Object();
+        private final Object mySemanticStylesLock = new Object();
+        private Styles myStyles = new Styles();
+        private Styles myStylesGUI = new Styles();
+        private Styles mySemanticsStyles = new Styles();
+        private Styles mySemanticsStylesGUI = new Styles();
+
+        public CodeEditTextEditorModel(Reader reader) {
+            super(reader, getTabSize());
+            init();
+        }
+
+        public CodeEditTextEditorModel() {
+            super();
+            init();
+        }
+
+        private void init() {
+            addModelListener(new ModelListener() {
+                @Override
+                public void insertUpdate(@NonNull Model model, int startLine, int startColumn, int endLine, int endColumn) {
+                    synchronized (myStylesLock) {
+                        myStylesGUI.insert(startLine, startColumn, endLine, endColumn);
+                    }
+                    synchronized (mySemanticStylesLock) {
+                        mySemanticsStylesGUI.insert(startLine, startColumn, endLine, endColumn);
+                    }
+                }
+
+                @Override
+                public void removeUpdate(@NonNull Model model, int startLine, int startColumn, int endLine, int endColumn) {
+                    synchronized (myStylesLock) {
+                        myStylesGUI.remove(startLine, startColumn, endLine, endColumn);
+                    }
+                    synchronized (mySemanticStylesLock) {
+                        mySemanticsStylesGUI.remove(startLine, startColumn, endLine, endColumn);
+                    }
+                }
+            });
+        }
+
+
+        @Override
+        public int getStyle(int line, int column) {
+            int style = mySemanticsStylesGUI.getStyle(line, column);
+            if (style == 0) {
+                return myStylesGUI.getStyle(line, column);
+            }
+            return style;
+        }
+
+        @Override
+        public int getStyleCount() {
+            return SyntaxKind.values().length;
+        }
+
+        @Nullable
+        @Override
+        public TextStyle getTextStyle(int style) {
+            return CodeEditText.this.getTextStyle(style);
+        }
+
+
+        public void highlighting(SyntaxKind[] kinds, int[] startLines, int[] startColumns, int[] endLines, int[] endColumns, int size) {
+            myStyles.set(kinds, startLines, startColumns, endLines, endColumns, size);
+            synchronized (myStylesLock) {
+                Styles styles = myStylesGUI;
+                myStylesGUI = myStyles;
+                myStyles = styles;
+            }
+            getEditorView().invalidate();
+        }
+
+        public void semanticHighlighting(SyntaxKind[] kinds, int[] startLines, int[] startColumns, int[] endLines, int[] endColumns, int size) {
+            mySemanticsStyles.set(kinds, startLines, startColumns, endLines, endColumns, size);
+            synchronized (mySemanticStylesLock) {
+                Styles styles = mySemanticsStylesGUI;
+                mySemanticsStylesGUI = mySemanticsStyles;
+                mySemanticsStyles = styles;
+            }
+            getEditorView().invalidate();
+        }
+    }
 
 }
