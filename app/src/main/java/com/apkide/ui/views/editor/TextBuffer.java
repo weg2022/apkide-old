@@ -73,7 +73,7 @@ public class TextBuffer implements TextLine {
 	@NonNull
 	@Override
 	public String get(int start, int end) {
-		return myBuilder.substring(start, end);
+		return myBuilder.subSequence(start, end).toString();
 	}
 
 	@Override
