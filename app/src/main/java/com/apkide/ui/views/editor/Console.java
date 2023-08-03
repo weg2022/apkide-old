@@ -1,6 +1,7 @@
 package com.apkide.ui.views.editor;
 
 import static java.lang.Math.log10;
+import static java.lang.Math.max;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -587,6 +588,19 @@ public class Console extends View implements ModelListener {
     @Override
     public void insertUpdate(@NonNull Model model, int startLine, int startColumn, int endLine, int endColumn) {
         computeSidebar();
+        invalidate();
+        if (startLine < myCaretLine && startLine != endLine) {
+            moveCaret((myCaretLine + endLine) - startLine, myCaretColumn, true);
+        } else if (startLine == myCaretLine && startColumn <= myCaretColumn) {
+            if (startLine == endLine) {
+                moveCaret(myCaretLine, ((myCaretColumn + endColumn) - startColumn) + 1, true);
+            } else {
+                moveCaret((myCaretLine + endLine) - startLine,
+                        ((myCaretColumn + endColumn) - startColumn) + 1, true);
+            }
+        }
+
+        setSelectionVisibility(false);
 
         if (startLine == endLine) {
             int maxColumn = getLineMaxColumn(startLine);
@@ -620,6 +634,23 @@ public class Console extends View implements ModelListener {
     @Override
     public void removeUpdate(@NonNull Model model, int startLine, int startColumn, int endLine, int endColumn) {
         computeSidebar();
+
+        invalidate();
+        if (startLine == endLine) {
+            if (endLine == myCaretLine && startColumn < myCaretColumn) {
+                moveCaret(myCaretLine, max(startColumn, myCaretColumn -
+                        ((endColumn - startColumn) + 1)), true);
+            }
+        } else if ((myCaretLine == startLine && startColumn < myCaretColumn) ||
+                (myCaretLine > startLine && myCaretLine < endLine) ||
+                (myCaretLine == endLine && myCaretColumn < endColumn)) {
+            moveCaret(startLine, startColumn, true);
+        } else if (myCaretLine == endLine) {
+            moveCaret(startLine, ((myCaretColumn + startColumn) - endColumn) - 1, true);
+        } else if (myCaretLine > endLine) {
+            moveCaret(myCaretLine - (endLine - startLine), myCaretColumn, true);
+        }
+        setSelectionVisibility(false);
 
         if (startLine == endLine) {
             if (startLine == myMaxColumnLine) {
