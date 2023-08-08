@@ -255,32 +255,9 @@ public class CodeEditTextScrollView extends ScrollView {
                 return true;
             }
         }
-        if (isMouseButtonEvent(ev)) {
-            return false;
-        }
         return super.onInterceptTouchEvent(ev);
     }
 
-    private boolean isMouseButtonEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN ||
-                event.getAction() == MotionEvent.ACTION_CANCEL ||
-                event.getAction() == MotionEvent.ACTION_MOVE) {
-            if (event.getButtonState() == 0) {
-                return true;
-            }
-        }
-
-        if (event.getToolType(0) == 3) {
-            return true;
-        }
-        switch (event.getSource()) {
-            case 8194:
-            case 1048584:
-                return true;
-            default:
-                return false;
-        }
-    }
 
     public void selection(int startLine, int startColumn, int endLine, int endColumn) {
         mySelectionVisible = true;
@@ -522,10 +499,10 @@ public class CodeEditTextScrollView extends ScrollView {
                     }
                 }
                 if (e.getAction() == 2) {
-                    float x = e.getX(0);
-                    float y = e.getY(0);
-                    float scrollX = getScrollColumnX() + (x - dragDX);
-                    float scrollLineY = getScrollLineY() + (y - dragDY);
+                    int x = (int) e.getX(0);
+                    int y = (int) e.getY(0);
+                    int scrollX = getScrollColumnX() + (x - dragDX);
+                    int scrollLineY = getScrollLineY() + (y - dragDY);
                     int line = getEditorView().computeLine(scrollLineY);
                     int column = getEditorView().computeColumn(line, scrollX);
                     if (line == getLine() && column == getColumn()) {

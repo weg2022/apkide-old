@@ -6,73 +6,54 @@ import android.graphics.Paint;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.apkide.common.AppLog;
+import com.apkide.common.app.AppLog;
+import com.apkide.common.io.IOUtils;
 
 import java.io.IOException;
+import java.io.LineNumberReader;
 import java.io.Reader;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
 public class EditorModel implements Model {
 
-
 	private final List<ModelListener> myListeners;
 	private final List<TextLine> myLines;
 	private final String myLineBreak;
-	private TextBuffer myBuffer;
+	private TextLineBuffer myBuffer;
 	private int mySpanLine;
 	private long myLastTimestamps;
 
 	public EditorModel() {
+		this(null);
+	}
+
+	public EditorModel(Reader reader) {
 		myListeners = new Vector<>(1);
-		myLines = new ArrayList<>(100);//use LinkedList ?
-		myLines.add(new TextLineImpl());
+		myLines = new LinkedList<>();
 		myLineBreak = System.lineSeparator();
 		myLastTimestamps = System.currentTimeMillis();
 		mySpanLine = -1;
 		myBuffer = null;
-		switchSpanLine(0);
-	}
-
-	public EditorModel(Reader reader, int tabSize) {
-		myListeners = new Vector<>(1);
-		myLines = new ArrayList<>(100);//use LinkedList ?
-		myLines.add(new TextLineImpl());
-		myLineBreak = System.lineSeparator();
-		myLastTimestamps = System.currentTimeMillis();
-		mySpanLine = -1;
-		myBuffer = null;
-		try {
-			open(reader, tabSize);
-		} catch (IOException e) {
-			AppLog.e(e);
-		}
-	}
-
-	public void open(Reader reader, int tabSize) throws IOException {
-
-		ReaderUtilities.read(reader, new ReaderUtilities.ReaderRunnable() {
-
-			@Override
-			public boolean readLine(int line, String text) {
-				if (text.length() == 0) {
-					myLines.add(new TextLineImpl());
-					return true;
+		if (reader != null) {
+			LineNumberReader lineNumberReader = new LineNumberReader(reader);
+			try {
+				String line;
+				while ((line = lineNumberReader.readLine()) != null) {
+					myLines.add(new TextLineImpl(line));
 				}
-				myLines.add(new TextLineImpl(text));
-				return true;
+			} catch (IOException e) {
+				AppLog.e(e);
+			}finally {
+				IOUtils.safeClose(lineNumberReader);
 			}
-
-			@Override
-			public void readLineBreak(String lineBreak) {
-
-			}
-		});
-		if (myLines.size() == 0) {
-			myLines.add(new TextLineImpl());
 		}
-		reader.close();
+
+		if (myLines.size() == 0)
+			myLines.add(new TextLineImpl());
+
+		switchSpanLine(0);
 	}
 
 	@Override
@@ -151,7 +132,7 @@ public class EditorModel implements Model {
 	public void removeChar(int line, int column) {
 		synchronized (this) {
 			switchSpanLine(line);
-			myBuffer.delete(column, column+1);
+			myBuffer.delete(column, column + 1);
 			lastEditTimestamps();
 		}
 		fireRemoveUpdate(line, column, line, column);
@@ -216,7 +197,7 @@ public class EditorModel implements Model {
 
 		mySpanLine = line;
 		if (myBuffer == null)
-			myBuffer = new TextBuffer(myLines.get(line));
+			myBuffer = new TextLineBuffer(myLines.get(line));
 		else
 			myBuffer.set(myLines.get(line));
 	}

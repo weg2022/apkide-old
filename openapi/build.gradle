@@ -28,7 +28,7 @@ android {
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     coreLibraryDesugaring libs.desugar.jdk.libs.nio
-    implementation project(':common')
-    api libs.antlr4.runtime
+    implementation libs.androidx.annotation
+    api project(':common')
     testImplementation libs.junit
 }

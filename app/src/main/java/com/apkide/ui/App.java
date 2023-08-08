@@ -9,9 +9,12 @@ import android.os.Looper;
 
 import androidx.annotation.NonNull;
 
-import com.apkide.common.ApplicationProvider;
+import com.apkide.common.app.Application;
+import com.apkide.ui.browsers.file.FileBrowserService;
+import com.apkide.ui.services.file.OpenFileService;
 import com.apkide.ui.services.keybinding.KeyBindingService;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +26,8 @@ public final class App {
     private static Handler sHandler;
     private static MainUI sMainUI;
 
+    private final FileBrowserService myFileBrowserService=new FileBrowserService();
+    private final OpenFileService myOpenFileService=new OpenFileService();
     private final KeyBindingService myKeyBindingService=new KeyBindingService();
     private App() {
 
@@ -32,6 +37,7 @@ public final class App {
         sApp = new App();
         sHandler = new Handler(requireNonNull(Looper.getMainLooper()));
         sMainUI = mainUI;
+        sApp.myOpenFileService.init();
     }
 
 
@@ -44,6 +50,15 @@ public final class App {
 
     public static boolean isShutdown() {
         return sApp == null;
+    }
+
+
+    public static FileBrowserService getFileBrowserService(){
+        return sApp.myFileBrowserService;
+    }
+
+    public static OpenFileService getOpenFileService(){
+        return sApp.myOpenFileService;
     }
 
     public static KeyBindingService getKeyBindingService(){
@@ -94,6 +109,10 @@ public final class App {
     }
 
     public static Context getContext() {
-        return ApplicationProvider.get().getContext();
+        return Application.get().getContext();
+    }
+
+    public static File getHomeDir(){
+        return getContext().getExternalFilesDir(null).getParentFile();
     }
 }

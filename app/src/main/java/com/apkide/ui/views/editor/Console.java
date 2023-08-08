@@ -16,6 +16,11 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import com.apkide.common.Location;
+import com.apkide.common.Position;
+import com.apkide.common.Size;
+import com.apkide.common.SyncRunner;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -685,7 +690,7 @@ public class Console extends View implements ModelListener {
 		if (line >= getModel().getLineCount()) line = getModel().getLineCount() - 1;
 		float y = computeLocationY(line);
 		float x = computeLocationX(line, column);
-		return new Location(x, y);
+		return new Location((int) x, (int) y);
 	}
 
 	@NonNull
@@ -715,14 +720,14 @@ public class Console extends View implements ModelListener {
 		float columnX = mySidebarX;
 		if (length == 0) return 0;
 		int column = 0;
-		float[] buffer = FloatBuffer.obtain(length);
+		float[] buffer = Buffers.floats(length);
 		getLineWidths(line, 0, length, buffer);
 		for (int i = 0; i < length; i++) {
 			if (columnX >= x) break;
 			columnX += buffer[i];
 			column++;
 		}
-		FloatBuffer.recycle(buffer);
+		Buffers.recycle(buffer);
 		return column;
 	}
 
@@ -750,9 +755,10 @@ public class Console extends View implements ModelListener {
 
 
 	protected float nativeMeasureLine(int line, int column, int length) {
+		int end = column+length;
 		float w = myModel.measureLine(line, column, length, myPaint);
 		float tabAdvance = myPaint.measureText("\t");
-		for (int i = column; i < length; i++) {
+		for (int i = column; i < end; i++) {
 			char c = myModel.getChar(line, i);
 			if (c == '\t') {
 				w -= tabAdvance;
@@ -763,8 +769,9 @@ public class Console extends View implements ModelListener {
 	}
 
 	protected void nativeGetLineWidths(int line, int column, int length, float[] widths) {
+		int end = column+length;
 		myModel.getLineWidths(line, column, length, widths, myPaint);
-		for (int i = column; i < length; i++) {
+		for (int i = column; i < end; i++) {
 			char c = myModel.getChar(line, i);
 			if (c == '\t') widths[i] = myTabCharWidth;
 		}
@@ -773,7 +780,7 @@ public class Console extends View implements ModelListener {
 	protected float drawText(Canvas canvas, int line, int column, int length, float x, float y) {
 		int end = column + length;
 		int begin = column;
-		for (int i = column; i < length; i++) {
+		for (int i = column; i < end; i++) {
 			if (myModel.getChar(line, i) == '\t') {
 				if (myPaint.getColor() != 0)
 					myModel.drawLine(canvas, line, begin, i - begin, x, y, myPaint);

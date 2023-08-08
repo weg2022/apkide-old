@@ -65,7 +65,6 @@ public interface Model {
     @NonNull
     Reader getReader(int startLine, int startColumn, int endLine, int endColumn);
 
-
     int getStyle(int line, int column);
 
     int getStyleCount();

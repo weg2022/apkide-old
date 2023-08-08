@@ -1,51 +1,51 @@
 package com.apkide.ui.views.editor;
 
-import static com.apkide.ui.views.editor.Action.AutoIndent;
-import static com.apkide.ui.views.editor.Action.CommentSelection;
-import static com.apkide.ui.views.editor.Action.CopySelection;
-import static com.apkide.ui.views.editor.Action.CutSelection;
-import static com.apkide.ui.views.editor.Action.DeleteWordLeft;
-import static com.apkide.ui.views.editor.Action.DeleteWordRight;
-import static com.apkide.ui.views.editor.Action.IndentSelection;
-import static com.apkide.ui.views.editor.Action.InsertLineBreak;
-import static com.apkide.ui.views.editor.Action.InsertTab;
-import static com.apkide.ui.views.editor.Action.MoveCaretDown;
-import static com.apkide.ui.views.editor.Action.MoveCaretDownSelect;
-import static com.apkide.ui.views.editor.Action.MoveCaretLeft;
-import static com.apkide.ui.views.editor.Action.MoveCaretLeftSelect;
-import static com.apkide.ui.views.editor.Action.MoveCaretPageDown;
-import static com.apkide.ui.views.editor.Action.MoveCaretPageDownSelect;
-import static com.apkide.ui.views.editor.Action.MoveCaretPageUp;
-import static com.apkide.ui.views.editor.Action.MoveCaretPageUpSelect;
-import static com.apkide.ui.views.editor.Action.MoveCaretRight;
-import static com.apkide.ui.views.editor.Action.MoveCaretRightSelect;
-import static com.apkide.ui.views.editor.Action.MoveCaretToBeginOfLine;
-import static com.apkide.ui.views.editor.Action.MoveCaretToBeginOfLineSelect;
-import static com.apkide.ui.views.editor.Action.MoveCaretToBeginOfText;
-import static com.apkide.ui.views.editor.Action.MoveCaretToBeginOfTextInLine;
-import static com.apkide.ui.views.editor.Action.MoveCaretToBeginOfTextInLineSelect;
-import static com.apkide.ui.views.editor.Action.MoveCaretToBeginOfTextSelect;
-import static com.apkide.ui.views.editor.Action.MoveCaretToEndOfLine;
-import static com.apkide.ui.views.editor.Action.MoveCaretToEndOfLineSelect;
-import static com.apkide.ui.views.editor.Action.MoveCaretToEndOfText;
-import static com.apkide.ui.views.editor.Action.MoveCaretToEndOfTextSelect;
-import static com.apkide.ui.views.editor.Action.MoveCaretUp;
-import static com.apkide.ui.views.editor.Action.MoveCaretUpSelect;
-import static com.apkide.ui.views.editor.Action.MoveCaretWordLeft;
-import static com.apkide.ui.views.editor.Action.MoveCaretWordLeftSelect;
-import static com.apkide.ui.views.editor.Action.MoveCaretWordRight;
-import static com.apkide.ui.views.editor.Action.MoveCaretWordRightSelect;
-import static com.apkide.ui.views.editor.Action.PasteSelection;
-import static com.apkide.ui.views.editor.Action.Redo;
-import static com.apkide.ui.views.editor.Action.RemoveCurrentChar;
-import static com.apkide.ui.views.editor.Action.RemoveCurrentLine;
-import static com.apkide.ui.views.editor.Action.RemovePrecedingChar;
-import static com.apkide.ui.views.editor.Action.RemoveSelection;
-import static com.apkide.ui.views.editor.Action.SelectAll;
-import static com.apkide.ui.views.editor.Action.ToggleOverwriteMode;
-import static com.apkide.ui.views.editor.Action.UnCommentSelection;
-import static com.apkide.ui.views.editor.Action.UnIndentSelection;
-import static com.apkide.ui.views.editor.Action.Undo;
+import static com.apkide.ui.views.editor.ActionTypes.AutoIndent;
+import static com.apkide.ui.views.editor.ActionTypes.CommentSelection;
+import static com.apkide.ui.views.editor.ActionTypes.CopySelection;
+import static com.apkide.ui.views.editor.ActionTypes.CutSelection;
+import static com.apkide.ui.views.editor.ActionTypes.DeleteWordLeft;
+import static com.apkide.ui.views.editor.ActionTypes.DeleteWordRight;
+import static com.apkide.ui.views.editor.ActionTypes.IndentSelection;
+import static com.apkide.ui.views.editor.ActionTypes.InsertLineBreak;
+import static com.apkide.ui.views.editor.ActionTypes.InsertTab;
+import static com.apkide.ui.views.editor.ActionTypes.MoveCaretDown;
+import static com.apkide.ui.views.editor.ActionTypes.MoveCaretDownSelect;
+import static com.apkide.ui.views.editor.ActionTypes.MoveCaretLeft;
+import static com.apkide.ui.views.editor.ActionTypes.MoveCaretLeftSelect;
+import static com.apkide.ui.views.editor.ActionTypes.MoveCaretPageDown;
+import static com.apkide.ui.views.editor.ActionTypes.MoveCaretPageDownSelect;
+import static com.apkide.ui.views.editor.ActionTypes.MoveCaretPageUp;
+import static com.apkide.ui.views.editor.ActionTypes.MoveCaretPageUpSelect;
+import static com.apkide.ui.views.editor.ActionTypes.MoveCaretRight;
+import static com.apkide.ui.views.editor.ActionTypes.MoveCaretRightSelect;
+import static com.apkide.ui.views.editor.ActionTypes.MoveCaretToBeginOfLine;
+import static com.apkide.ui.views.editor.ActionTypes.MoveCaretToBeginOfLineSelect;
+import static com.apkide.ui.views.editor.ActionTypes.MoveCaretToBeginOfText;
+import static com.apkide.ui.views.editor.ActionTypes.MoveCaretToBeginOfTextInLine;
+import static com.apkide.ui.views.editor.ActionTypes.MoveCaretToBeginOfTextInLineSelect;
+import static com.apkide.ui.views.editor.ActionTypes.MoveCaretToBeginOfTextSelect;
+import static com.apkide.ui.views.editor.ActionTypes.MoveCaretToEndOfLine;
+import static com.apkide.ui.views.editor.ActionTypes.MoveCaretToEndOfLineSelect;
+import static com.apkide.ui.views.editor.ActionTypes.MoveCaretToEndOfText;
+import static com.apkide.ui.views.editor.ActionTypes.MoveCaretToEndOfTextSelect;
+import static com.apkide.ui.views.editor.ActionTypes.MoveCaretUp;
+import static com.apkide.ui.views.editor.ActionTypes.MoveCaretUpSelect;
+import static com.apkide.ui.views.editor.ActionTypes.MoveCaretWordLeft;
+import static com.apkide.ui.views.editor.ActionTypes.MoveCaretWordLeftSelect;
+import static com.apkide.ui.views.editor.ActionTypes.MoveCaretWordRight;
+import static com.apkide.ui.views.editor.ActionTypes.MoveCaretWordRightSelect;
+import static com.apkide.ui.views.editor.ActionTypes.PasteSelection;
+import static com.apkide.ui.views.editor.ActionTypes.Redo;
+import static com.apkide.ui.views.editor.ActionTypes.RemoveCurrentChar;
+import static com.apkide.ui.views.editor.ActionTypes.RemoveCurrentLine;
+import static com.apkide.ui.views.editor.ActionTypes.RemovePrecedingChar;
+import static com.apkide.ui.views.editor.ActionTypes.RemoveSelection;
+import static com.apkide.ui.views.editor.ActionTypes.SelectAll;
+import static com.apkide.ui.views.editor.ActionTypes.ToggleOverwriteMode;
+import static com.apkide.ui.views.editor.ActionTypes.UnCommentSelection;
+import static com.apkide.ui.views.editor.ActionTypes.UnIndentSelection;
+import static com.apkide.ui.views.editor.ActionTypes.Undo;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -55,7 +55,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import com.apkide.common.IOUtils;
+import com.apkide.common.io.IOUtils;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -77,7 +77,7 @@ public class Editor extends Console {
         initView();
     }
 
-    private abstract class UnSelectActionRunnable implements ActionRunnable {
+    private abstract class UnSelectActionRunnable implements Runnable {
         @Override
         public void run() {
             if (getSelectionVisibility() && !myInSelecting) {
@@ -86,10 +86,10 @@ public class Editor extends Console {
         }
     }
 
-    private class SelectActionRunnable implements ActionRunnable {
-        private final ActionRunnable myRunnable;
+    private class SelectActionRunnable implements Runnable {
+        private final Runnable myRunnable;
 
-        public SelectActionRunnable(Action action) {
+        public SelectActionRunnable(ActionTypes action) {
             myRunnable = getActionRunnable(action);
         }
 
@@ -119,7 +119,7 @@ public class Editor extends Console {
     private boolean myEditable;
     private State myInternalState;
     private float myIntendedColumnX;
-    private final Hashtable<Action, ActionRunnable> myActions = new Hashtable<>();
+    private final Hashtable<ActionTypes, Runnable> myActions = new Hashtable<>();
     private boolean myInSelecting;
 
     private void initView() {
@@ -534,12 +534,12 @@ public class Editor extends Console {
     }
 
 
-    public void boundAction(@NonNull Action action, @NonNull ActionRunnable runnable) {
+    public void boundAction(@NonNull ActionTypes action, @NonNull Runnable runnable) {
         myActions.put(action, runnable);
     }
 
 
-    public ActionRunnable getActionRunnable(@NonNull Action action) {
+    public Runnable getActionRunnable(@NonNull ActionTypes action) {
         if (myActions.containsKey(action))
             return myActions.get(action);
         throw new IllegalArgumentException("unknown action:" + action);
@@ -555,10 +555,7 @@ public class Editor extends Console {
     }
 
     public boolean isEditable() {
-        if (myEditable) {
-            return !getEditorModel().isReadOnly();
-        }
-        return false;
+        return myEditable;
     }
 
     protected void setInternalState(@NonNull State internalState) {

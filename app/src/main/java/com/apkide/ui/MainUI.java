@@ -1,10 +1,12 @@
 package com.apkide.ui;
 
 import static android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import static com.apkide.ui.browsers.BrowserPager.BUILD_BROWSER;
-import static com.apkide.ui.browsers.BrowserPager.FILE_BROWSER;
-import static com.apkide.ui.browsers.BrowserPager.FIND_BROWSER;
-import static com.apkide.ui.browsers.BrowserPager.PROBLEM_BROWSER;
+import static com.apkide.ui.AppCommands.ActionBarCommand;
+import static com.apkide.ui.AppCommands.MenuCommand;
+import static com.apkide.ui.AppCommands.TitleMenuCommand;
+import static com.apkide.ui.AppCommands.VisibleMenuCommand;
+import static com.apkide.ui.AppCommands.foundActionBarCommand;
+import static com.apkide.ui.AppCommands.foundMenuCommand;
 import static java.lang.System.currentTimeMillis;
 
 import android.annotation.SuppressLint;
@@ -26,8 +28,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
-import com.apkide.common.ApplicationProvider;
-import com.apkide.common.KeyStrokeDetector;
+import com.apkide.common.keybinding.KeyStrokeDetector;
 import com.apkide.ui.browsers.BrowserPager;
 import com.apkide.ui.databinding.UiMainBinding;
 
@@ -93,11 +94,6 @@ public class MainUI extends StyledUI implements
         });
 
         restoreBrowser();
-        //Test Editor
-        getEditorPager().openFile(ApplicationProvider.get().foundFile("JavaLexer.java").getAbsolutePath());
-        JavaHighlighting.setEditor(getEditorPager().getCurrentEditor());
-        getEditorPager().getCurrentEditor().getEditorModel().insertChar(0,0,'1');
-        getEditorPager().getCurrentEditor().select(0,0,1,1);
     }
 
     public void exitApp() {
@@ -135,28 +131,6 @@ public class MainUI extends StyledUI implements
             toggleBrowser(current, true);
     }
 
-
-    public void toggleFileBrowser() {
-
-        toggleBrowser(FILE_BROWSER, false);
-    }
-
-    public void toggleProblemBrowser() {
-
-        toggleBrowser(PROBLEM_BROWSER, false);
-    }
-
-    public void toggleBuildBrowser() {
-
-        toggleBrowser(BUILD_BROWSER, false);
-    }
-
-    public void toggleFindBrowser() {
-
-        toggleBrowser(FIND_BROWSER, false);
-    }
-
-
     public void toggleBrowser(int index, boolean refresh) {
         if (!isDrawerOpened()) {
             openDrawer();
@@ -168,7 +142,6 @@ public class MainUI extends StyledUI implements
         return mainBinding.mainBrowserPager;
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_options, menu);
@@ -177,27 +150,55 @@ public class MainUI extends StyledUI implements
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-
+        boolean r = super.onPrepareOptionsMenu(menu);
+        menu.clear();
+        getMenuInflater().inflate(R.menu.main_options, menu);
         if (!App.isShutdown()) {
-            if (AppCommands.menuCommandPreExec(menu)) {
-                return true;
+            applyMenu(menu);
+        }
+        return r;
+    }
+
+    private void applyMenu(Menu menu) {
+        for (int i = 0; i < menu.size(); i++) {
+            MenuItem item = menu.getItem(i);
+
+            MenuCommand menuCommand = foundMenuCommand(item.getItemId());
+            if (menuCommand != null) {
+                item.setEnabled(menuCommand.isEnabled());
+                if (menuCommand instanceof VisibleMenuCommand)
+                    item.setVisible(((VisibleMenuCommand) menuCommand).getVisible(false));
+
+                if (menuCommand instanceof TitleMenuCommand)
+                    item.setTitle(((TitleMenuCommand) menuCommand).getTitle());
+            }
+
+            ActionBarCommand actionBarCommand = foundActionBarCommand(item.getItemId());
+            if (actionBarCommand != null) {
+                item.setEnabled(actionBarCommand.isEnabled());
+                item.setVisible(actionBarCommand.isVisible());
+            }
+
+            if (item.hasSubMenu()) {
+                applyMenu(item.getSubMenu());
             }
         }
-
-        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
-        if (!App.isShutdown()) {
-            if (AppCommands.menuCommandExec(item))
-                return true;
+    public boolean onOptionsItemSelected(MenuItem item) {
+        MenuCommand menuCommand = foundMenuCommand(item.getItemId());
+        if (menuCommand != null && menuCommand.isEnabled()) {
+            menuCommand.run();
+            return true;
         }
-
+        ActionBarCommand actionBarCommand = foundActionBarCommand(item.getItemId());
+        if (actionBarCommand != null && actionBarCommand.isVisible()) {
+            actionBarCommand.run();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

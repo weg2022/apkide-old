@@ -2,7 +2,7 @@ package com.apkide.ui.views.editor;
 
 import java.io.Reader;
 
-class ModelReader extends Reader {
+public class ModelReader extends Reader {
     private final Model myModel;
     private int myStartLine;
     private int myStartColumn;
@@ -12,7 +12,7 @@ class ModelReader extends Reader {
     private final char[] myLineBreak;
     private int myColumn;
 
-    ModelReader(Model model, int startLine, int startColumn, int endLine, int endColumn, boolean useSpaces, String lineBreak) {
+    public ModelReader(Model model, int startLine, int startColumn, int endLine, int endColumn, boolean useSpaces, String lineBreak) {
         myModel = model;
         myStartLine = startLine;
         myStartColumn = startColumn;

@@ -47,7 +47,7 @@
 
 
         <activity
-            android:name=".activities.AboutUI"
+            android:name=".AboutUI"
             android:label="About"
             android:theme="@style/Theme.UI" />
 
@@ -56,10 +56,6 @@
             android:label="Preferences"
             android:theme="@style/Theme.UI.Preferences" />
 
-        <provider
-            android:authorities="com.apkide.ui.initializer"
-            android:name=".IDEInitializer"
-            android:exported="false"/>
     </application>
 
 </manifest>

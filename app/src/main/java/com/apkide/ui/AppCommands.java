@@ -1,77 +1,125 @@
 package com.apkide.ui;
 
-import static java.lang.System.arraycopy;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 
-import android.view.Menu;
-import android.view.MenuItem;
+import com.apkide.common.command.Command;
+import com.apkide.common.keybinding.KeyStroke;
 
-import com.apkide.common.AppLog;
-import com.apkide.common.Command;
-import com.apkide.ui.commands.ExitApp;
-import com.apkide.ui.commands.GotoSettings;
-import com.apkide.ui.commands.MakeProject;
-import com.apkide.ui.commands.Redo;
-import com.apkide.ui.commands.Undo;
-import com.apkide.ui.commands.view.ViewBuild;
-import com.apkide.ui.commands.view.ViewFiles;
-import com.apkide.ui.commands.view.ViewFind;
-import com.apkide.ui.commands.view.ViewProblem;
-import com.apkide.ui.util.MenuCommand;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 public class AppCommands {
 
-    private static final Command[] commands;
-    private static final MenuCommand[] menuCommands;
+	public interface MenuCommand extends Command {
+		int getId();
+
+		boolean isEnabled();
+
+		boolean run();
+	}
+
+	public interface VisibleMenuCommand extends MenuCommand {
+		boolean getVisible(boolean preview);
+	}
+
+	public interface TitleMenuCommand extends MenuCommand {
+		@NonNull
+		String getTitle();
+	}
+
+	public interface ActionBarCommand extends Command {
+		int getId();
+
+		@NonNull
+		String getLabel();
+
+		boolean isEnabled();
+
+		boolean isVisible();
+
+		boolean run();
+	}
+
+	public interface BrowserCommand extends Command {
+
+		boolean getVisible(boolean preview);
+		@DrawableRes
+		int getIcon();
+
+		@StringRes
+		int getLabel();
+
+		boolean isEnabled();
+
+		boolean run();
+	}
+
+	public interface ShortcutKeyCommand extends Command {
+		@NonNull
+		String getName();
 
 
-    static {
-        menuCommands = new MenuCommand[]{
-                new Undo(),
-                new Redo(),
-                new MakeProject(),
-                new GotoSettings(),
-                new ExitApp(),
+		boolean isEnabled();
 
-                //View
-                new ViewFiles(),
-                new ViewProblem(),
-                new ViewBuild(),
-                new ViewFind(),
+		boolean run();
 
-        };
-
-        commands = new Command[menuCommands.length];
-        arraycopy(menuCommands, 0, commands, 0, menuCommands.length);
-    }
+		@NonNull
+		KeyStroke getKeyStroke();
+	}
 
 
-    public static boolean menuCommandPreExec(Menu menu) {
-        long startTime=System.currentTimeMillis();
-        boolean apply = false;
-        for (Command command : commands) {
-            if (command instanceof MenuCommand) {
-                MenuItem item = menu.findItem(((MenuCommand) command).getId());
-                if (item != null) {
-                    item.setEnabled(command.isEnabled());
-                    item.setVisible(((MenuCommand) command).isVisible());
-                    apply = true;
-                }
-            }
-        }
-        long endTime=System.currentTimeMillis();
-        AppLog.s("menuCommandPreExec:"+(endTime-startTime));
-        return apply;
-    }
+	private static final HashSet<Class<?>> sCommandClasses = new HashSet<>(50);
+	private static final List<Command> sCommands = new ArrayList<>(50);
 
-    public static boolean menuCommandExec(MenuItem item) {
-        for (Command command : commands) {
-            if (command instanceof MenuCommand) {
-                if (item.getItemId() == ((MenuCommand) command).getId()) {
-                    AppLog.s("menuCommandExec:"+item.getTitle());
-                    return command.run();
-                }
-            }
-        }
-        return false;
-    }
+	static {
+
+	}
+
+	private static void addCommands(Command[] commands, List<ShortcutKeyCommand> keyCommands) {
+		for (Command command : commands) {
+			if (command instanceof ShortcutKeyCommand) {
+				if (!keyCommands.contains(command))
+					keyCommands.add((ShortcutKeyCommand) command);
+			}
+			if (!sCommandClasses.contains(command.getClass())) {
+				sCommandClasses.add(command.getClass());
+				sCommands.add(command);
+			}
+		}
+	}
+
+	public static List<Command> getCommands() {
+		return sCommands;
+	}
+
+	public static List<BrowserCommand> getBrowserCommands() {
+		ArrayList<BrowserCommand> commands = new ArrayList<>();
+		for (Command command : getCommands()) {
+			if (command instanceof BrowserCommand) {
+				commands.add((BrowserCommand) command);
+			}
+		}
+		return commands;
+	}
+
+	public static MenuCommand foundMenuCommand(int id) {
+		for (Command command : getCommands()) {
+			if (command instanceof MenuCommand && ((MenuCommand) command).getId() == id) {
+				return (MenuCommand) command;
+			}
+		}
+		return null;
+	}
+
+	public static ActionBarCommand foundActionBarCommand(int id) {
+		for (Command command : getCommands()) {
+			if (command instanceof ActionBarCommand && ((ActionBarCommand) command).getId() == id) {
+				return (ActionBarCommand) command;
+			}
+		}
+		return null;
+	}
 }

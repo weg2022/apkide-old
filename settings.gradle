@@ -1,10 +1,5 @@
 rootProject.name = "apkide"
 include ':app'
 include ':common'
-include ':apktool'
-include ':apktool:androlib'
-include ':apktool:common'
-include ':apktool:directory'
-include ':apktool:util'
 include ':engine'
 include ':openapi'

@@ -3,9 +3,9 @@ package com.apkide.ui.services.keybinding;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 
-import com.apkide.common.KeyStroke;
+import com.apkide.common.keybinding.KeyStroke;
 import com.apkide.ui.App;
-import com.apkide.ui.views.KeyStrokeCommand;
+import com.apkide.ui.AppCommands;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,7 +17,7 @@ public class KeyBindingService {
 	private SharedPreferences myPreferences;
 
 
-	public void bound(KeyStrokeCommand command, KeyStroke key) {
+	public void bound(AppCommands.ShortcutKeyCommand command, KeyStroke key) {
 		if (key == null) {
 			myKeyMaps.remove(command.getClass().getName() + command.getName());
 		} else {
@@ -26,16 +26,13 @@ public class KeyBindingService {
 		save();
 	}
 
-	public List<KeyStroke> getKeys(KeyStrokeCommand command) {
+	public List<KeyStroke> getKeys(AppCommands.ShortcutKeyCommand command) {
 		ArrayList<KeyStroke> keys = new ArrayList<>();
 		KeyStroke key = myKeyMaps.get(command.getClass().getName() + command.getName());
 		if (key != null) {
 			keys.add(key);
 		} else {
-			keys.add(command.getKey());
-			if (command instanceof MultiKeyStrokeCommand) {
-				keys.addAll(((MultiKeyStrokeCommand) command).getKeys());
-			}
+			keys.add(command.getKeyStroke());
 		}
 		return keys;
 	}

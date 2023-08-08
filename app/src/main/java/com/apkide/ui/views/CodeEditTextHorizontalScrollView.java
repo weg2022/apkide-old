@@ -56,30 +56,7 @@ public class CodeEditTextHorizontalScrollView extends HorizontalScrollView {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (isMouseButtonEvent(ev)) {
-            return true;
-        }
         return super.onInterceptTouchEvent(ev);
     }
 
-    private boolean isMouseButtonEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN ||
-                event.getAction() == MotionEvent.ACTION_CANCEL ||
-                event.getAction() == MotionEvent.ACTION_MOVE) {
-            if (event.getButtonState() == 0) {
-                return true;
-            }
-        }
-
-        if (event.getToolType(0) == 3) {
-            return true;
-        }
-        switch (event.getSource()) {
-            case 8194:
-            case 1048584:
-                return true;
-            default:
-                return false;
-        }
-    }
 }

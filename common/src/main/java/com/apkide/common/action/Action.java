@@ -1,14 +1,23 @@
 package com.apkide.common.action;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public interface Action {
-    boolean isEnabled();
+	boolean isEnabled();
 
-    void setEnabled(boolean enabled);
+	void setEnabled(boolean enabled);
 
-    @NonNull
-    String getName();
+	@NonNull
+	String getName();
 
-    void actionPerformed(ActionEvent event);
+	void setProperty(@NonNull Object key, @Nullable Object value);
+
+	@Nullable
+	Object getProperty(@NonNull Object key);
+
+	@Nullable
+	Object getProperty(@NonNull Object key, @Nullable Object def);
+
+	void actionPerformed(@NonNull ActionEvent event);
 }

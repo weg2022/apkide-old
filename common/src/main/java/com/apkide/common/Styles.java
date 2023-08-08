@@ -52,21 +52,21 @@ public class Styles {
                 resize(line, col + 1);
                 byte[] styles = this.myLines[line];
                 byte lastStyle = styles[startColumn - 1];
-                if (lastStyle == SyntaxKind.Comment.ordinal() + 1) {
+            /*    if (lastStyle == SyntaxKind.Comment.ordinal() + 1) {*/
                     styles[startColumn] = lastStyle;
                     return;
-                }
+               // }
             }
             resize(line, col + endColumn);
             byte[] styles = this.myLines[line];
             int endIndex = startColumn + endColumn;
             System.arraycopy(styles, startColumn, styles, endIndex, (styles.length - startColumn) - endColumn);
             byte lastStyle = startColumn > 0 ? styles[startColumn - 1] : (byte) 0;
-            byte currStyle = styles[startColumn];
+    /*        byte currStyle = styles[startColumn];
             byte realStyle = currStyle >= SyntaxKind.DocComment.ordinal() + 1 ? (byte) (SyntaxKind.DocComment.ordinal() + 1) : (byte) 0;
             if (lastStyle != currStyle || lastStyle ==SyntaxKind.Operator.ordinal() + 1 || lastStyle ==SyntaxKind.Separator.ordinal() + 1) {
                 lastStyle = realStyle;
-            }
+            }*/
             for (int i = startColumn; i < endIndex; i++) {
                 styles[i] = lastStyle;
             }
@@ -101,11 +101,11 @@ public class Styles {
             resize(endLine, endColumn + 1);
             byte[] styles = this.myLines[endLine];
             for (int i = startColumn; i <= endColumn; i++) {
-                if (styles[i] >= SyntaxKind.DocComment.ordinal() + 1) {
+         /*       if (styles[i] >= SyntaxKind.DocComment.ordinal() + 1) {
                     styles[i] = (byte) (SyntaxKind.values().length + style);
-                } else {
+                } else {*/
                     styles[i] = style;
-                }
+               // }
             }
             return;
         }
@@ -113,11 +113,11 @@ public class Styles {
         resize(endLine, endColumn + 1);
         byte[] startStyles = this.myLines[startLine];
         for (int i = startColumn; i < startStyles.length; i++) {
-            if (startStyles[i] >= SyntaxKind.DocComment.ordinal() + 1) {
+          /*  if (startStyles[i] >= SyntaxKind.DocComment.ordinal() + 1) {
                 startStyles[i] = (byte) (SyntaxKind.values().length + style);
-            } else {
+            } else {*/
                 startStyles[i] = style;
-            }
+            //}
         }
         int firstLine = startLine + 1;
         int line;
@@ -128,22 +128,22 @@ public class Styles {
             }
             byte[] styles = this.myLines[firstLine];
             while (line < styles.length) {
-                if (styles[line] >=SyntaxKind.DocComment.ordinal() + 1) {
+           /*     if (styles[line] >=SyntaxKind.DocComment.ordinal() + 1) {
                     styles[line] = (byte) (SyntaxKind.values().length + style);
-                } else {
+                } else {*/
                     styles[line] = style;
-                }
+               // }
                 line++;
             }
             firstLine++;
         }
         byte[] endStyles = this.myLines[endLine];
         while (line <= endColumn) {
-            if (endStyles[line] >= SyntaxKind.DocComment.ordinal() + 1) {
+           /* if (endStyles[line] >= SyntaxKind.DocComment.ordinal() + 1) {
                 endStyles[line] = (byte) (SyntaxKind.values().length + style);
-            } else {
+            } else {*/
                 endStyles[line] = style;
-            }
+           // }
             line++;
         }
     }

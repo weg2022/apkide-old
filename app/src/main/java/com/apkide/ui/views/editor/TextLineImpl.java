@@ -11,10 +11,7 @@ public class TextLineImpl implements TextLine {
     private static final char[] EMPTY = new char[0];
     private char[] myChars = EMPTY;
 
-    public TextLineImpl() {
-
-    }
-
+    public TextLineImpl() {}
 
     public TextLineImpl(char[] chars) {
         myChars = chars;
@@ -86,8 +83,8 @@ public class TextLineImpl implements TextLine {
     }
 
     @Override
-    public int getWidths(int start, int end, float[] widths, @NonNull Paint paint) {
-        return paint.getTextWidths(myChars, start, end - start, widths);
+    public void getWidths(int start, int end, @NonNull float[] widths, @NonNull Paint paint) {
+        paint.getTextWidths(myChars, start, end - start, widths);
     }
 
     @Override

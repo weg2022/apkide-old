@@ -96,8 +96,4 @@ dependencies {
     implementation project(':common')
     implementation project(':openapi')
     implementation project(':engine')
-    implementation project(':apktool:androlib')
-    implementation project(':apktool:common')
-    implementation project(':apktool:directory')
-    implementation project(':apktool:util')
 }

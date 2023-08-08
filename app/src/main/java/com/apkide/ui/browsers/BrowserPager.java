@@ -18,8 +18,8 @@ import com.apkide.ui.MainUI;
 import com.apkide.ui.R;
 import com.apkide.ui.browsers.build.BuildBrowser;
 import com.apkide.ui.browsers.file.FileBrowser;
-import com.apkide.ui.browsers.find.FindBrowser;
 import com.apkide.ui.browsers.problem.ProblemBrowser;
+import com.apkide.ui.browsers.search.SearchBrowser;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -39,16 +39,16 @@ public class BrowserPager extends ViewPager {
     private static final String PREF_NAME = "browserPager";
     private SharedPreferences preferences;
     public static final int FILE_BROWSER = 0;
-    public static final int PROBLEM_BROWSER = 1;
-    public static final int FIND_BROWSER = 2;
+    public static final int SEARCH_BROWSER = 1;
+    public static final int PROBLEM_BROWSER = 2;
     public static final int BUILD_BROWSER = 3;
     private final List<View> browsers = new ArrayList<>();
 
     private void initView() {
         browsers.add(new FileBrowser(getContext()));
+        browsers.add(new SearchBrowser(getContext()));
         browsers.add(new ProblemBrowser(getContext()));
         browsers.add(new BuildBrowser(getContext()));
-        browsers.add(new FindBrowser(getContext()));
 
         try {
             Field declaredField = requireNonNull(getClass().getSuperclass()).getDeclaredField("mTouchSlop");
@@ -93,7 +93,7 @@ public class BrowserPager extends ViewPager {
                     index = position;
                     postDelayed(() -> {
                         Browser browser = (Browser) browsers.get(index);
-                        browser.onSyncing();
+                        browser.onApply();
                         getPreferences().edit().putInt("currentIndex", index).apply();
                     }, 100L);
                 }
@@ -121,8 +121,8 @@ public class BrowserPager extends ViewPager {
         return (BuildBrowser) browserAt(BUILD_BROWSER);
     }
 
-    public FindBrowser getFindBrowser() {
-        return (FindBrowser) browserAt(FIND_BROWSER);
+    public SearchBrowser getFindBrowser() {
+        return (SearchBrowser) browserAt(SEARCH_BROWSER);
     }
 
 

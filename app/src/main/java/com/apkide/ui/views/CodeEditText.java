@@ -1,8 +1,10 @@
 package com.apkide.ui.views;
 
 import static android.view.KeyEvent.KEYCODE_A;
+import static android.view.KeyEvent.KEYCODE_BUTTON_A;
 import static android.view.KeyEvent.KEYCODE_C;
 import static android.view.KeyEvent.KEYCODE_DEL;
+import static android.view.KeyEvent.KEYCODE_DPAD_CENTER;
 import static android.view.KeyEvent.KEYCODE_DPAD_DOWN;
 import static android.view.KeyEvent.KEYCODE_DPAD_LEFT;
 import static android.view.KeyEvent.KEYCODE_DPAD_RIGHT;
@@ -14,6 +16,7 @@ import static android.view.KeyEvent.KEYCODE_MOVE_HOME;
 import static android.view.KeyEvent.KEYCODE_PAGE_DOWN;
 import static android.view.KeyEvent.KEYCODE_PAGE_UP;
 import static android.view.KeyEvent.KEYCODE_TAB;
+import static com.apkide.ui.AppCommands.ShortcutKeyCommand;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -22,29 +25,28 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
-import com.apkide.common.KeyStroke;
-import com.apkide.common.KeyStrokeDetector;
-import com.apkide.common.Styles;
 import com.apkide.common.SyntaxKind;
-import com.apkide.ui.views.editor.Action;
-import com.apkide.ui.views.editor.EditorModel;
-import com.apkide.ui.views.editor.Model;
-import com.apkide.ui.views.editor.ModelListener;
+import com.apkide.common.app.AppLog;
+import com.apkide.common.keybinding.KeyStroke;
+import com.apkide.common.keybinding.KeyStrokeDetector;
+import com.apkide.ui.AppCommands;
+import com.apkide.ui.views.editor.ActionTypes;
 import com.apkide.ui.views.editor.TextStyle;
 
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CodeEditText extends ViewGroup {
-    private final List<KeyStrokeCommand> myEditorCommands = new ArrayList<>();
+    private final List<ShortcutKeyCommand> myEditorCommands = new ArrayList<>();
     private final TextStyle[] myStyles = new TextStyle[SyntaxKind.values().length];
     private int myDragHandleColor=0xff0099cc;
     private int myDragHandleDownColor=0xff004e6a;
+    private KeyStrokeDetector.KeyStrokeHandler myStrokeHandler;
 
     public CodeEditText(Context context) {
         super(context);
@@ -66,67 +68,67 @@ public class CodeEditText extends ViewGroup {
         removeAllViews();
         addView(new EditorView(getContext()));
         myEditorCommands.add(new EditorActionCommand("Copy",
-                new KeyStroke(KEYCODE_C, false, true, false), Action.CopySelection));
+                new KeyStroke(KEYCODE_C, false, true, false), ActionTypes.CopySelection));
         myEditorCommands.add(new EditorActionCommand("Select All",
-                new KeyStroke(KEYCODE_A, false, true, false), Action.SelectAll));
+                new KeyStroke(KEYCODE_A, false, true, false), ActionTypes.SelectAll));
         myEditorCommands.add(new EditorActionCommand("Delete Character",
-                new KeyStroke(KEYCODE_DEL, false, false, false), Action.RemovePrecedingChar));
+                new KeyStroke(KEYCODE_DEL, false, false, false), ActionTypes.RemovePrecedingChar));
         myEditorCommands.add(new EditorActionCommand("Delete Character Right",
-                new KeyStroke(KEYCODE_FORWARD_DEL, false, false, false), Action.RemoveCurrentChar));
+                new KeyStroke(KEYCODE_FORWARD_DEL, false, false, false), ActionTypes.RemoveCurrentChar));
         myEditorCommands.add(new EditorActionCommand("Delete Word",
-                new KeyStroke(KEYCODE_DEL, false, true, false), Action.DeleteWordLeft));
+                new KeyStroke(KEYCODE_DEL, false, true, false), ActionTypes.DeleteWordLeft));
         myEditorCommands.add(new EditorActionCommand("Insert Tab",
-                new KeyStroke(KEYCODE_TAB, false, false, false), Action.InsertTab));
+                new KeyStroke(KEYCODE_TAB, false, false, false), ActionTypes.InsertTab));
         myEditorCommands.add(new EditorActionCommand("Insert LineBreak",
-                new KeyStroke(KEYCODE_ENTER, false, false, false), Action.InsertLineBreak));
+                new KeyStroke(KEYCODE_ENTER, false, false, false), ActionTypes.InsertLineBreak));
         myEditorCommands.add(new EditorActionCommand("Move to Beginning of File",
-                new KeyStroke(KEYCODE_DPAD_UP, false, true, true), Action.MoveCaretToBeginOfText));
+                new KeyStroke(KEYCODE_DPAD_UP, false, true, true), ActionTypes.MoveCaretToBeginOfText));
         myEditorCommands.add(new EditorActionCommand("Move to End of File",
-                new KeyStroke(KEYCODE_DPAD_DOWN, false, true, true), Action.MoveCaretToEndOfText));
+                new KeyStroke(KEYCODE_DPAD_DOWN, false, true, true), ActionTypes.MoveCaretToEndOfText));
         myEditorCommands.add(new EditorActionCommand("Move to Beginning of Line",
-                new KeyStroke(KEYCODE_MOVE_HOME, false, false, false), Action.MoveCaretToBeginOfTextInLine));
+                new KeyStroke(KEYCODE_MOVE_HOME, false, false, false), ActionTypes.MoveCaretToBeginOfTextInLine));
         myEditorCommands.add(new EditorActionCommand("Move to End of Line",
-                new KeyStroke(KEYCODE_MOVE_END, false, false, false), Action.MoveCaretToEndOfLine));
+                new KeyStroke(KEYCODE_MOVE_END, false, false, false), ActionTypes.MoveCaretToEndOfLine));
         myEditorCommands.add(new EditorActionCommand("Select to Beginning of File",
-                new KeyStroke(KEYCODE_DPAD_UP, true, true, true), Action.MoveCaretToBeginOfTextSelect));
+                new KeyStroke(KEYCODE_DPAD_UP, true, true, true), ActionTypes.MoveCaretToBeginOfTextSelect));
         myEditorCommands.add(new EditorActionCommand("Select to End of File",
-                new KeyStroke(KEYCODE_DPAD_DOWN, true, true, true), Action.MoveCaretToEndOfTextSelect));
+                new KeyStroke(KEYCODE_DPAD_DOWN, true, true, true), ActionTypes.MoveCaretToEndOfTextSelect));
         myEditorCommands.add(new EditorActionCommand("Select to Beginning of Line",
-                new KeyStroke(KEYCODE_MOVE_HOME, true, false, false), Action.MoveCaretToBeginOfTextInLineSelect));
+                new KeyStroke(KEYCODE_MOVE_HOME, true, false, false), ActionTypes.MoveCaretToBeginOfTextInLineSelect));
         myEditorCommands.add(new EditorActionCommand("Select to End of Line",
-                new KeyStroke(KEYCODE_MOVE_END, true, false, false), Action.MoveCaretToEndOfLineSelect));
+                new KeyStroke(KEYCODE_MOVE_END, true, false, false), ActionTypes.MoveCaretToEndOfLineSelect));
         myEditorCommands.add(new EditorActionCommand("Move Page Up",
-                new KeyStroke(KEYCODE_PAGE_UP, false, false, false), Action.MoveCaretPageUp));
+                new KeyStroke(KEYCODE_PAGE_UP, false, false, false), ActionTypes.MoveCaretPageUp));
         myEditorCommands.add(new EditorActionCommand("Move Page Down",
-                new KeyStroke(KEYCODE_PAGE_DOWN, false, false, false), Action.MoveCaretPageDown));
+                new KeyStroke(KEYCODE_PAGE_DOWN, false, false, false), ActionTypes.MoveCaretPageDown));
         myEditorCommands.add(new EditorActionCommand("Move Up",
-                new KeyStroke(KEYCODE_DPAD_UP, false, false, false), Action.MoveCaretUp));
+                new KeyStroke(KEYCODE_DPAD_UP, false, false, false), ActionTypes.MoveCaretUp));
         myEditorCommands.add(new EditorActionCommand("Move Down",
-                new KeyStroke(KEYCODE_DPAD_DOWN, false, false, false), Action.MoveCaretDown));
+                new KeyStroke(KEYCODE_DPAD_DOWN, false, false, false), ActionTypes.MoveCaretDown));
         myEditorCommands.add(new EditorActionCommand("Move Left",
-                new KeyStroke(KEYCODE_DPAD_LEFT, false, false, false), Action.MoveCaretLeft));
+                new KeyStroke(KEYCODE_DPAD_LEFT, false, false, false), ActionTypes.MoveCaretLeft));
         myEditorCommands.add(new EditorActionCommand("Move Right",
-                new KeyStroke(KEYCODE_DPAD_RIGHT, false, false, false), Action.MoveCaretRight));
+                new KeyStroke(KEYCODE_DPAD_RIGHT, false, false, false), ActionTypes.MoveCaretRight));
         myEditorCommands.add(new EditorActionCommand("Move Word Left",
-                new KeyStroke(KEYCODE_DPAD_LEFT, false, true, false), Action.MoveCaretWordLeft));
+                new KeyStroke(KEYCODE_DPAD_LEFT, false, true, false), ActionTypes.MoveCaretWordLeft));
         myEditorCommands.add(new EditorActionCommand("Move Word Right",
-                new KeyStroke(KEYCODE_DPAD_RIGHT, false, true, false), Action.MoveCaretWordRight));
+                new KeyStroke(KEYCODE_DPAD_RIGHT, false, true, false), ActionTypes.MoveCaretWordRight));
         myEditorCommands.add(new EditorActionCommand("Select Page Up",
-                new KeyStroke(KEYCODE_PAGE_UP, true, false, false), Action.MoveCaretPageUpSelect));
+                new KeyStroke(KEYCODE_PAGE_UP, true, false, false), ActionTypes.MoveCaretPageUpSelect));
         myEditorCommands.add(new EditorActionCommand("Select Page Down",
-                new KeyStroke(KEYCODE_PAGE_DOWN, true, false, false), Action.MoveCaretPageDownSelect));
+                new KeyStroke(KEYCODE_PAGE_DOWN, true, false, false), ActionTypes.MoveCaretPageDownSelect));
         myEditorCommands.add(new EditorActionCommand("Select Word Left",
-                new KeyStroke(KEYCODE_DPAD_LEFT, true, true, false), Action.MoveCaretWordLeftSelect));
+                new KeyStroke(KEYCODE_DPAD_LEFT, true, true, false), ActionTypes.MoveCaretWordLeftSelect));
         myEditorCommands.add(new EditorActionCommand("Select Word Right",
-                new KeyStroke(KEYCODE_DPAD_RIGHT, true, true, false), Action.MoveCaretWordRightSelect));
+                new KeyStroke(KEYCODE_DPAD_RIGHT, true, true, false), ActionTypes.MoveCaretWordRightSelect));
         myEditorCommands.add(new EditorActionCommand("Select Up",
-                new KeyStroke(KEYCODE_DPAD_UP, true, false, false), Action.MoveCaretUpSelect));
+                new KeyStroke(KEYCODE_DPAD_UP, true, false, false), ActionTypes.MoveCaretUpSelect));
         myEditorCommands.add(new EditorActionCommand("Select Down",
-                new KeyStroke(KEYCODE_DPAD_DOWN, true, false, false), Action.MoveCaretDownSelect));
+                new KeyStroke(KEYCODE_DPAD_DOWN, true, false, false), ActionTypes.MoveCaretDownSelect));
         myEditorCommands.add(new EditorActionCommand("Select Left",
-                new KeyStroke(KEYCODE_DPAD_LEFT, true, false, false), Action.MoveCaretLeftSelect));
+                new KeyStroke(KEYCODE_DPAD_LEFT, true, false, false), ActionTypes.MoveCaretLeftSelect));
         myEditorCommands.add(new EditorActionCommand("Select Right",
-                new KeyStroke(KEYCODE_DPAD_RIGHT, true, false, false), Action.MoveCaretRightSelect));
+                new KeyStroke(KEYCODE_DPAD_RIGHT, true, false, false), ActionTypes.MoveCaretRightSelect));
 
         putTextStyle(SyntaxKind.Plain, new TextStyle(getEditorView().getFontColor()));
         putTextStyle(SyntaxKind.Keyword, new TextStyle(0xff2c82c8, Typeface.BOLD));
@@ -140,6 +142,55 @@ public class CodeEditText extends ViewGroup {
         putTextStyle(SyntaxKind.FunctionCallIdentifier, new TextStyle(0xff00627A, Typeface.BOLD_ITALIC));
         putTextStyle(SyntaxKind.Comment, new TextStyle(0xff009b00, Typeface.ITALIC));
         putTextStyle(SyntaxKind.DocComment, new TextStyle(0xff009b00, Typeface.BOLD_ITALIC));
+
+        myStrokeHandler = new KeyStrokeDetector.KeyStrokeHandler() {
+
+            private AppCommands.ShortcutKeyCommand foundCommand(KeyStroke key) {
+                List<AppCommands.ShortcutKeyCommand> commands = getEditorCommands();
+                for (AppCommands.ShortcutKeyCommand command : commands) {
+                    List<KeyStroke> keys = foundKeys(command);
+                    if (keys != null) {
+                        for (KeyStroke stroke : keys) {
+                            if (stroke.matches(key)) {
+                                return command;
+                            }
+                        }
+                    }
+                }
+                return null;
+            }
+
+            @Override
+            public boolean onKeyStroke(KeyStroke keyStroke) {
+                AppLog.s("EditorView::onKeyStroke");
+                int keyCode = keyStroke.getKeyCode();
+                if (keyCode != KEYCODE_BUTTON_A && keyCode != KEYCODE_DPAD_CENTER) {
+                    AppCommands.ShortcutKeyCommand command = foundCommand(keyStroke);
+                    if (command != null) {
+                        if (command.isEnabled()) {
+                            command.run();
+                            return true;
+                        }
+                    }
+
+                    if (keyStroke.isChar()) {
+                        AppLog.s(String.valueOf(keyStroke.getChar()));
+                        insertChar(keyStroke.getChar());
+                        return true;
+                    }
+
+                    if (keyCode == KEYCODE_ENTER) {
+                        getEditorView().insertLineBreak();
+                        return true;
+                    } else {
+                        return handleKeyStroke(keyStroke);
+                    }
+                }
+                return false;
+            }
+        };
+        setFocusable(true);
+        setFocusableInTouchMode(true);
     }
 
     public void putTextStyle(SyntaxKind style, TextStyle textStyle) {
@@ -163,7 +214,7 @@ public class CodeEditText extends ViewGroup {
 
     }
 
-    protected List<KeyStroke> foundKeys(KeyStrokeCommand command) {
+    protected List<KeyStroke> foundKeys(ShortcutKeyCommand command) {
         return null;
     }
 
@@ -247,12 +298,12 @@ public class CodeEditText extends ViewGroup {
         myDragHandleDownColor = dragHandleDownColor;
     }
 
-    public void putEditorCommand(KeyStrokeCommand command) {
+    public void putEditorCommand(ShortcutKeyCommand command) {
         myEditorCommands.remove(command);
         myEditorCommands.add(command);
     }
 
-    public List<KeyStrokeCommand> getEditorCommands() {
+    public List<ShortcutKeyCommand> getEditorCommands() {
         return myEditorCommands;
     }
 
@@ -285,12 +336,46 @@ public class CodeEditText extends ViewGroup {
         return getScrollView().isTouchEventInsideHandle(event);
     }
 
-    private class EditorActionCommand implements KeyStrokeCommand {
+    @Override
+    public boolean onCheckIsTextEditor() {
+        return true;
+    }
+
+    @Override
+    public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
+        if (getKeyStrokeDetector() != null) {
+            return getKeyStrokeDetector().createInputConnection(this, myStrokeHandler);
+        }
+        return super.onCreateInputConnection(outAttrs);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (getKeyStrokeDetector() != null) {
+            if (getKeyStrokeDetector().onKeyDown(keyCode, event, myStrokeHandler)) {
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (getKeyStrokeDetector() != null) {
+            if (getKeyStrokeDetector().onKeyUp(keyCode, event)) {
+                return true;
+            }
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+
+
+    private class EditorActionCommand implements ShortcutKeyCommand {
         private final String name;
         private final KeyStroke key;
-        private final Action action;
+        private final ActionTypes action;
 
-        public EditorActionCommand(String name, KeyStroke key, Action action) {
+        public EditorActionCommand(String name, KeyStroke key, ActionTypes action) {
             this.name = name;
             this.key = key;
             this.action = action;
@@ -315,93 +400,8 @@ public class CodeEditText extends ViewGroup {
 
         @NonNull
         @Override
-        public KeyStroke getKey() {
+        public KeyStroke getKeyStroke() {
             return key;
-        }
-    }
-
-    protected class CodeEditTextEditorModel extends EditorModel {
-        private final Object myStylesLock = new Object();
-        private final Object mySemanticStylesLock = new Object();
-        private Styles myStyles = new Styles();
-        private Styles myStylesGUI = new Styles();
-        private Styles mySemanticsStyles = new Styles();
-        private Styles mySemanticsStylesGUI = new Styles();
-
-        public CodeEditTextEditorModel(Reader reader) {
-            super(reader, getTabSize());
-            init();
-        }
-
-        public CodeEditTextEditorModel() {
-            super();
-            init();
-        }
-
-        private void init() {
-            addModelListener(new ModelListener() {
-                @Override
-                public void insertUpdate(@NonNull Model model, int startLine, int startColumn, int endLine, int endColumn) {
-                    synchronized (myStylesLock) {
-                        myStylesGUI.insert(startLine, startColumn, endLine, endColumn);
-                    }
-                    synchronized (mySemanticStylesLock) {
-                        mySemanticsStylesGUI.insert(startLine, startColumn, endLine, endColumn);
-                    }
-                }
-
-                @Override
-                public void removeUpdate(@NonNull Model model, int startLine, int startColumn, int endLine, int endColumn) {
-                    synchronized (myStylesLock) {
-                        myStylesGUI.remove(startLine, startColumn, endLine, endColumn);
-                    }
-                    synchronized (mySemanticStylesLock) {
-                        mySemanticsStylesGUI.remove(startLine, startColumn, endLine, endColumn);
-                    }
-                }
-            });
-        }
-
-
-        @Override
-        public int getStyle(int line, int column) {
-            int style = mySemanticsStylesGUI.getStyle(line, column);
-            if (style == 0) {
-                return myStylesGUI.getStyle(line, column);
-            }
-            return style;
-        }
-
-        @Override
-        public int getStyleCount() {
-            return SyntaxKind.values().length;
-        }
-
-        @Nullable
-        @Override
-        public TextStyle getTextStyle(int style) {
-            return CodeEditText.this.getTextStyle(style);
-        }
-
-
-        public void highlighting(SyntaxKind[] kinds, int[] startLines, int[] startColumns, int[] endLines, int[] endColumns, int size) {
-            myStyles.set(kinds, startLines, startColumns, endLines, endColumns, size);
-            synchronized (myStylesLock) {
-                Styles styles = myStylesGUI;
-                myStylesGUI = myStyles;
-                myStyles = styles;
-            }
-            getEditorView().invalidate();
-        }
-
-        public void semanticHighlighting(SyntaxKind[] kinds, int[] startLines, int[] startColumns, int[] endLines, int[] endColumns, int size) {
-            mySemanticsStyles.set(kinds, startLines, startColumns, endLines, endColumns, size);
-            synchronized (mySemanticStylesLock) {
-                Styles styles = mySemanticsStylesGUI;
-                mySemanticsStylesGUI = mySemanticsStyles;
-                mySemanticsStyles = styles;
-            }
-            getEditorView().invalidate();
         }
     }
 

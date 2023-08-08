@@ -30,6 +30,7 @@ android {
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     coreLibraryDesugaring libs.desugar.jdk.libs.nio
+    implementation libs.androidx.annotation
     implementation project(':common')
     implementation project(':openapi')
     testImplementation libs.junit

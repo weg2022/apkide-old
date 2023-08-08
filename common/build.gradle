@@ -35,20 +35,8 @@ android {
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     coreLibraryDesugaring libs.desugar.jdk.libs.nio
+    implementation libs.androidx.annotation
     implementation libs.androidx.preference
     implementation libs.material
-
-    api libs.com.android.tools.smali.smali
-    api libs.com.android.tools.smali.smali.util
-    api libs.com.android.tools.smali.smali.baksmali
-    api libs.com.google.guava.guava
-    api libs.org.apache.commons.commons.text
-    api 'org.yaml:snakeyaml:1.33:android'
-    api libs.xmlunit.xmlunit
-    api libs.tools.r8
-    api libs.dialogx
-
-    api 'com.thoughtworks.xstream:xstream:1.4.20'
-
     testImplementation libs.junit
 }

@@ -1,76 +1,148 @@
 package com.apkide.ui.browsers.file;
 
 import static android.view.LayoutInflater.from;
+import static com.apkide.ui.browsers.file.FileBrowserService.FileBrowserServiceListener;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.PopupMenu;
+import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.apkide.common.EntryListAdapter;
+import com.apkide.common.FileSystem;
+import com.apkide.common.app.AppLog;
+import com.apkide.ui.App;
+import com.apkide.ui.AppCommands;
 import com.apkide.ui.R;
-import com.apkide.ui.browsers.Browser;
+import com.apkide.ui.browsers.BrowserLayout;
 import com.apkide.ui.databinding.BrowserFileBinding;
-import com.apkide.ui.databinding.BrowserHeaderBinding;
-import com.apkide.ui.util.EntryAdapter;
 
+import java.util.ArrayList;
+import java.util.List;
 
-@SuppressLint("InflateParams")
-public class FileBrowser extends LinearLayout implements Browser, PopupMenu.OnMenuItemClickListener, EntryAdapter.EntryClickListener, EntryAdapter.EntryLongPressListener {
+public class FileBrowser extends BrowserLayout implements
+		FileBrowserServiceListener,
+		EntryListAdapter.OnEntryClickListener,
+		EntryListAdapter.OnEntryLongPressListener {
 
-    private BrowserHeaderBinding myHeaderBinding;
-    private BrowserFileBinding myBinding;
-    private final FileEntryAdapter myAdapter=new FileEntryAdapter();
+	private BrowserFileBinding myBinding;
+	private EntryListAdapter myListAdapter;
 
-    @SuppressLint("ClickableViewAccessibility")
-    public FileBrowser(Context context) {
-        super(context);
-        removeAllViews();
-        setOrientation(VERTICAL);
-        LayoutInflater inflater = from(getContext());
-        myHeaderBinding = BrowserHeaderBinding.inflate(inflater, this, false);
-        myBinding = BrowserFileBinding.inflate(inflater, this, false);
-        addView(myHeaderBinding.getRoot());
-        addView(myBinding.getRoot());
+	public FileBrowser(Context context) {
+		super(context);
+		LayoutInflater inflater = from(getContext());
+		myBinding = BrowserFileBinding.inflate(inflater, this, false);
+		addView(myBinding.getRoot(),new ViewGroup.LayoutParams(-1,-1));
+		getHeader().browserHeaderLabel.setText("Files");
+		getHeader().browserHeaderIcon.setImageResource(R.mipmap.folder);
+		getHeader().browserHeaderHelp.setOnClickListener(v -> {
 
-        myHeaderBinding.browserHeaderLabel.setText("Files");
-        myHeaderBinding.browserHeaderIcon.setImageResource(R.mipmap.folder);
-        myHeaderBinding.browserHeaderHelp.setOnClickListener(v -> {
-            PopupMenu menu = new PopupMenu(getContext(), v);
-            menu.inflate(R.menu.filebrowser_options);
-            menu.setOnMenuItemClickListener(FileBrowser.this);
-            menu.show();
-        });
+		});
+		myListAdapter = new FileEntryAdapter();
+		myListAdapter.setClickListener(this);
+		myListAdapter.setLongPressListener(this);
+		myBinding.fileListView.setLayoutManager(new LinearLayoutManager(getContext()));
+		myBinding.fileListView.setNestedScrollingEnabled(false);
+		myBinding.fileListView.setAdapter(myListAdapter);
+		App.getFileBrowserService().setFileBrowserServiceListener(this);
+		syncFormDisk();
+	}
 
-        myBinding.filebrowserListView.setNestedScrollingEnabled(false);
-        myBinding.filebrowserListView.setLayoutManager(new LinearLayoutManager(getContext()));
-        myBinding.filebrowserListView.setAdapter(myAdapter);
-        myAdapter.setClickListener(this);
-        myAdapter.setLongPressListener(this);
-    }
+	@NonNull
+	@Override
+	public String getPreferencesName() {
+		return "FileBrowser";
+	}
 
+	@Override
+	public void folderOpened(String folderPath) {
+		AppLog.d(folderPath);
+		syncFormDisk();
+	}
 
-    @Override
-    public void onSyncing() {
+	public void syncFormDisk() {
+		App.getMainUI().runOnStorage(() -> {
 
-    }
+			String dir = App.getFileBrowserService().getFolderPath();
 
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        return false;
-    }
+			getHeader().browserHeaderLabel.setText(dir);
+			List<FileEntry> entries = new ArrayList<>();
+			String parentDir = FileSystem.getParentDirPath(dir);
+			if (parentDir != null) {
+				if (!parentDir.endsWith(App.getFileBrowserService().getDefaultFolderPath()))
+					entries.add(new FileEntry(parentDir, "...", false));
+			}
 
-    @Override
-    public void entryClicked(EntryAdapter.Entry entry, View view, int position) {
+			for (AppCommands.BrowserCommand command : AppCommands.getBrowserCommands()) {
+				if (command.getVisible(false)) {
+					entries.add(new FileEntry(command));
+				}
+			}
 
-    }
+			List<String> files = FileSystem.getChildEntries(dir);
+			files.sort((o1, o2) -> {
+				boolean isDir = FileSystem.isDirectory(o1);
+				boolean isDir2 = FileSystem.isDirectory(o2);
+				String fileName = FileSystem.getName(o1);
+				String fileName2 = FileSystem.getName(o2);
+				if (isDir && !isDir2) {
+					return -1;
+				}
 
-    @Override
-    public boolean entryLongPressed(EntryAdapter.Entry entry, View view, int position) {
-        return false;
-    }
+				if (isDir || !isDir2) {
+					if (isDir) {
+						boolean isHidden = FileEntry.isHidden(o1);
+						boolean isHidden2 = FileEntry.isHidden(o2);
+						if (isHidden && !isHidden2) return -1;
+						return fileName.compareTo(fileName2);
+					}
+					return fileName.compareTo(fileName2);
+				}
+				return 1;
+
+			});
+
+			for (String file : files) {
+				entries.add(new FileEntry(file, FileSystem.getName(file), FileSystem.isFile(file)));
+			}
+			myListAdapter.updateEntries(entries);
+		});
+	}
+
+	@Override
+	public void onEntryClicked(EntryListAdapter.Entry entry, View view, int position) {
+		if (entry == null) return;
+
+		if (entry instanceof FileEntry) {
+			FileEntry fileEntry = (FileEntry) entry;
+			if (fileEntry.getCommand() != null) {
+				if (fileEntry.getCommand().getVisible(false)) {
+					fileEntry.getCommand().run();
+				}
+			} else if (fileEntry.isFile()) {
+				String filePath = fileEntry.getFilePath();
+				App.getOpenFileService().openFile(filePath,true);
+					//App.getMainUI().openFile(filePath);
+			} else if (fileEntry.isBackEntry()) {
+				String dir = fileEntry.getFilePath();
+				if (dir != null)
+					App.getFileBrowserService().folderOpen(dir);
+
+			} else {
+				String path = fileEntry.getFilePath();
+				if (path != null) {
+
+					App.getFileBrowserService().folderOpen(path);
+				}
+			}
+		}
+	}
+
+	@Override
+	public boolean onEntryLongPressed(EntryListAdapter.Entry entry, View view, int position) {
+		return false;
+	}
 }

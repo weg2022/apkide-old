@@ -1,17 +1,19 @@
 package com.apkide.ui.browsers.build;
 
 import android.content.Context;
-import android.widget.LinearLayout;
 
-import com.apkide.ui.browsers.Browser;
+import androidx.annotation.NonNull;
 
-public class BuildBrowser extends LinearLayout implements Browser {
-    public BuildBrowser(Context context) {
-        super(context);
-    }
+import com.apkide.ui.browsers.BrowserLayout;
 
-    @Override
-    public void onSyncing() {
+public class BuildBrowser extends BrowserLayout {
+	public BuildBrowser(Context context) {
+		super(context);
+	}
 
-    }
+	@NonNull
+	@Override
+	public String getPreferencesName() {
+		return "BuildBrowser";
+	}
 }

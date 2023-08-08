@@ -1,161 +1,83 @@
 package com.apkide.ui.browsers.file;
 
-import com.apkide.ui.FileSystem;
+
+import com.apkide.common.EntryListAdapter;
+import com.apkide.common.FileSystem;
+import com.apkide.ui.App;
+import com.apkide.ui.AppCommands;
 import com.apkide.ui.R;
-import com.apkide.ui.util.EntryAdapter;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.List;
+public class FileEntry implements EntryListAdapter.Entry {
 
-public class FileEntry implements EntryAdapter.Entry, Comparable<FileEntry> {
+	private String filePath;
+	private String label;
+	private int icon;
+	private boolean isFile;
+	private AppCommands.BrowserCommand command;
 
-    private final String myFilePath;
+	public FileEntry(String filePath, String label, boolean isFile) {
+		this.filePath = filePath;
+		this.label = label;
+		if (isFile) {
+			this.icon = FileIcons.getIcon(filePath);
+		} else if (!isBackEntry()) {
+			if (isHidden(filePath)) {
+				this.icon = R.mipmap.folder_hidden;
+			} else {
+				this.icon = R.mipmap.folder;
+			}
+		} else {
+			this.icon = R.mipmap.folder_open;
+		}
+		this.isFile = isFile;
+	}
 
-    public FileEntry(String filePath) {
-        myFilePath = filePath;
-    }
+	public FileEntry(AppCommands.BrowserCommand command) {
+		this.command = command;
 
-    public boolean isBinary() {
-        return FileSystem.isBinary(myFilePath);
-    }
+		icon = command.getIcon();
+		int label = command.getLabel();
+		if (label != 0) {
+			this.label = App.getContext().getResources().getString(label);
+		}
+	}
 
-    public boolean exists() {
-        return FileSystem.exists(myFilePath);
-    }
+	public static boolean isHidden(String filePath) {
+		String name = FileSystem.getName(filePath);
+		return name.startsWith(".") ||
+				name.startsWith("bin") ||
+				name.startsWith(".obj") ||
+				name.startsWith("build") ||
+				name.startsWith("gradle");
+	}
 
-    public boolean isFile() {
-        return FileSystem.isFile(myFilePath);
-    }
+	public boolean isBackEntry() {
+		if (isFile) return false;
+		return label.equals("...");
+	}
 
-    public boolean isNormalFile() {
-        return FileSystem.isNormalFile(myFilePath);
-    }
+	public boolean isDir() {
+		if (isFile) return false;
+		return !isBackEntry();
+	}
 
-    public boolean isDirectory() {
-        return FileSystem.isDirectory(myFilePath);
-    }
+	public boolean isFile() {
+		return isFile;
+	}
 
-    public boolean isNormalDirectory() {
-        return FileSystem.isNormalDirectory(myFilePath);
-    }
+	public String getFilePath() {
+		return filePath;
+	}
 
-    public boolean isJarEntry() {
-        return FileSystem.isJarEntry(myFilePath);
-    }
+	public String getLabel() {
+		return label;
+	}
 
-    public boolean isJarFile() {
-        return FileSystem.isJar(myFilePath);
-    }
+	public int getIcon() {
+		return icon;
+	}
 
-    public boolean isJarFileEntry() {
-        return FileSystem.isJarFileEntry(myFilePath);
-    }
-
-    public boolean isJarDirectoryEntry() {
-        return FileSystem.isJarDirectoryEntry(myFilePath);
-    }
-
-    public String getJarFilePath() {
-        return FileSystem.getEnclosingJar(myFilePath);
-    }
-
-    public String getParentPath(String dirName) {
-        return FileSystem.getEnclosingDir(myFilePath, dirName);
-    }
-
-    public Reader getReader() throws IOException {
-        return FileSystem.readFile(myFilePath);
-    }
-
-    public void delete() throws IOException {
-        FileSystem.delete(myFilePath);
-    }
-
-    public void rename(String newFileName) throws IOException {
-        FileSystem.rename(myFilePath, getParentPath() + File.separator + newFileName);
-    }
-
-    public long getLength() {
-        return FileSystem.getLength(myFilePath);
-    }
-
-    public long getLastModified() {
-        return FileSystem.getLastModified(myFilePath);
-    }
-
-    public String getName() {
-        return FileSystem.getName(myFilePath);
-    }
-
-    public String getExtensionName() {
-        return FileSystem.getExtension(myFilePath);
-    }
-
-    public String getFilePath() {
-        return myFilePath;
-    }
-
-    public String getParentPath() {
-        return FileSystem.getParentDirPath(myFilePath);
-    }
-
-    public List<String> getChildren() {
-        return FileSystem.getChildEntries(myFilePath);
-    }
-
-    @Override
-    public int compareTo(FileEntry o) {
-        //TODO: 文件类型排序
-        return 0;
-    }
-
-
-    public int getIcon() {
-        if (isJarFile()) {
-            return R.mipmap.file_type_unknown;
-        }
-
-        if (isDirectory()) {
-            if (getName().startsWith(".")) {
-                return R.mipmap.folder_hidden;
-            }
-            return R.mipmap.folder;
-        }
-        String name = getName();
-        switch (name) {
-            case "build.gradle":
-            case "settings.gradle":
-            case "gradle.properties":
-            case ".classpath":
-            case ".project":
-            case "apktool.yml":
-                return R.mipmap.project_properties;
-        }
-        String extension = getExtensionName();
-        switch (extension) {
-            case ".java":
-            case ".class":
-                return R.mipmap.file_type_java;
-            case ".c":
-                return R.mipmap.file_type_c;
-            case ".cpp":
-                return R.mipmap.file_type_cpp;
-            case ".css":
-                return R.mipmap.file_type_css;
-            case ".h":
-                return R.mipmap.file_type_h;
-            case ".html":
-                return R.mipmap.file_type_html;
-            case ".xml":
-                return R.mipmap.file_type_xml;
-            case ".js":
-                return R.mipmap.file_type_js;
-            case ".txt":
-                return R.mipmap.file_type_txt;
-            default:
-                return R.mipmap.file_type_unknown;
-        }
-    }
+	public AppCommands.BrowserCommand getCommand() {
+		return command;
+	}
 }
