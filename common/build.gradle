@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace 'com.apkide.common'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         minSdk 26
@@ -26,7 +26,6 @@ android {
     }
 
     compileOptions {
-        coreLibraryDesugaringEnabled = true
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
@@ -34,7 +33,6 @@ android {
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
-    coreLibraryDesugaring libs.desugar.jdk.libs.nio
     implementation libs.androidx.annotation
     implementation libs.androidx.preference
     implementation libs.material

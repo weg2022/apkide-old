@@ -12,6 +12,9 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/common" />
             <option value="$PROJECT_DIR$/engine" />
+            <option value="$PROJECT_DIR$/language-java" />
+            <option value="$PROJECT_DIR$/language-smali" />
+            <option value="$PROJECT_DIR$/language-xml" />
             <option value="$PROJECT_DIR$/openapi" />
           </set>
         </option>

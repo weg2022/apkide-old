@@ -112,8 +112,8 @@ public class Console extends View implements ModelListener {
 		configurePaint();
 		configureColors();
 		computeMaxColumn();
-		computeSidebar();
-		redraw();
+		updateSidebar();
+		redrawOnVisible();
 		myLayoutUpdateRunner.run();
 	}
 
@@ -196,8 +196,9 @@ public class Console extends View implements ModelListener {
 		return myErrorColor;
 	}
 
-	private void computeSidebar() {
-		float padding = (float) ((myNumberCharWidth * log10(myModel.getLineCount() + 2.0d))) + getSidebarPaddingLeft();
+	private void updateSidebar() {
+		float padding = (float) ((myNumberCharWidth *
+				log10(myModel.getLineCount() + 2.0d))) + getSidebarPaddingLeft();
 		mySidebarX = padding + (mySpaceCharWidth * 2.0f);
 	}
 
@@ -229,7 +230,8 @@ public class Console extends View implements ModelListener {
 	}
 
 	public void addOverwriteModeListener(@NonNull OverwriteModeListener listener) {
-		if (!myOverwriteModeListeners.contains(listener)) myOverwriteModeListeners.add(listener);
+		if (!myOverwriteModeListeners.contains(listener))
+			myOverwriteModeListeners.add(listener);
 	}
 
 	public void removeOverwriteModeListener(@NonNull OverwriteModeListener listener) {
@@ -324,7 +326,8 @@ public class Console extends View implements ModelListener {
 			int length = myModel.getLineLength(line);
 			int lineMaxColumn = 0;
 			for (int column = 0; column < length; column++) {
-				lineMaxColumn += myModel.getChar(line, column) == '\t' ? myTabSize - (lineMaxColumn % myTabSize) : 1;
+				lineMaxColumn += myModel.getChar(line, column) == '\t' ?
+						myTabSize - (lineMaxColumn % myTabSize) : 1;
 			}
 			if (lineMaxColumn > maxColumn) {
 				maxColumn = lineMaxColumn;
@@ -339,7 +342,8 @@ public class Console extends View implements ModelListener {
 		int length = myModel.getLineLength(line);
 		int maxColumn = 0;
 		for (int column = 0; column < length; column++) {
-			maxColumn += myModel.getChar(line, column) == '\t' ? myTabSize - (maxColumn % myTabSize) : 1;
+			maxColumn += myModel.getChar(line, column) == '\t' ?
+					myTabSize - (maxColumn % myTabSize) : 1;
 		}
 		return maxColumn;
 	}
@@ -521,7 +525,6 @@ public class Console extends View implements ModelListener {
 				&& myLastSelectedLine == endLine && myLastSelectedColumn == endColumn) {
 			return;
 		}
-		log(String.format("sl:%d sc:%d el:%d ec:%d", startLine,startColumn,endLine,endColumn));
 		myFirstSelectedLine = startLine;
 		myFirstSelectedColumn = startColumn;
 		myLastSelectedLine = endLine;
@@ -584,22 +587,27 @@ public class Console extends View implements ModelListener {
 	}
 
 
-	protected int computeDiffCount(int firstLine, int firstColumn, int lastLine, int lastColumn) {
+	protected int computeDiffCount(int firstLine, int firstColumn,
+	                               int lastLine, int lastColumn) {
 		return firstLine == lastLine ? firstColumn - lastColumn : firstLine - lastLine;
 	}
 
 
 	@Override
-	public void insertUpdate(@NonNull Model model, int startLine, int startColumn, int endLine, int endColumn) {
-		computeSidebar();
+	public void insertUpdate(@NonNull Model model,
+	                         int startLine, int startColumn,
+	                         int endLine, int endColumn) {
+		updateSidebar();
 		invalidate();
 		if (startLine < myCaretLine && startLine != endLine) {
 			moveCaret((myCaretLine + endLine) - startLine, myCaretColumn, true);
 		} else if (startLine == myCaretLine && startColumn <= myCaretColumn) {
 			if (startLine == endLine) {
-				moveCaret(myCaretLine, ((myCaretColumn + endColumn) - startColumn) + 1, true);
+				moveCaret(myCaretLine,
+						((myCaretColumn + endColumn) - startColumn) + 1, true);
 			} else {
-				moveCaret((myCaretLine + endLine) - startLine, ((myCaretColumn + endColumn) - startColumn) + 1, true);
+				moveCaret((myCaretLine + endLine) - startLine,
+						((myCaretColumn + endColumn) - startColumn) + 1, true);
 			}
 		}
 
@@ -635,20 +643,27 @@ public class Console extends View implements ModelListener {
 	}
 
 	@Override
-	public void removeUpdate(@NonNull Model model, int startLine, int startColumn, int endLine, int endColumn) {
-		computeSidebar();
+	public void removeUpdate(@NonNull Model model,
+	                         int startLine, int startColumn,
+	                         int endLine, int endColumn) {
+		updateSidebar();
 
 		invalidate();
 		if (startLine == endLine) {
 			if (endLine == myCaretLine && startColumn < myCaretColumn) {
-				moveCaret(myCaretLine, max(startColumn, myCaretColumn - ((endColumn - startColumn) + 1)), true);
+				moveCaret(myCaretLine, max(startColumn,
+						myCaretColumn - ((endColumn - startColumn) + 1)), true);
 			}
-		} else if ((myCaretLine == startLine && startColumn < myCaretColumn) || (myCaretLine > startLine && myCaretLine < endLine) || (myCaretLine == endLine && myCaretColumn < endColumn)) {
+		} else if ((myCaretLine == startLine && startColumn < myCaretColumn)
+				|| (myCaretLine > startLine && myCaretLine < endLine)
+				|| (myCaretLine == endLine && myCaretColumn < endColumn)) {
 			moveCaret(startLine, startColumn, true);
 		} else if (myCaretLine == endLine) {
-			moveCaret(startLine, ((myCaretColumn + startColumn) - endColumn) - 1, true);
+			moveCaret(startLine,
+					((myCaretColumn + startColumn) - endColumn) - 1, true);
 		} else if (myCaretLine > endLine) {
-			moveCaret(myCaretLine - (endLine - startLine), myCaretColumn, true);
+			moveCaret(myCaretLine - (endLine - startLine),
+					myCaretColumn, true);
 		}
 		setSelectionVisibility(false);
 
@@ -672,7 +687,9 @@ public class Console extends View implements ModelListener {
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		//Actual size, no over-provisioning
-		setMeasuredDimension((int) (((myMaxColumn + 1) * mySpaceCharWidth) + mySidebarX), myModel == null ? 0 : (int) (myModel.getLineCount() * myFontHeight));
+		setMeasuredDimension(
+				(int) (((myMaxColumn + 1) * mySpaceCharWidth) + mySidebarX),
+				myModel == null ? 0 : (int) (myModel.getLineCount() * myFontHeight));
 	}
 
 	@NonNull
@@ -773,7 +790,8 @@ public class Console extends View implements ModelListener {
 		myModel.getLineWidths(line, column, length, widths, myPaint);
 		for (int i = column; i < end; i++) {
 			char c = myModel.getChar(line, i);
-			if (c == '\t') widths[i] = myTabCharWidth;
+			if (c == '\t')
+				widths[i] = myTabCharWidth;
 		}
 	}
 
@@ -796,7 +814,7 @@ public class Console extends View implements ModelListener {
 		return x;
 	}
 
-	public void redraw() {
+	public void redrawOnVisible() {
 		getLocalVisibleRect(myRect);
 		invalidate();
 	}

@@ -20,12 +20,12 @@ android {
         }
     }
     namespace 'com.apkide.ui'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId 'com.apkide.ui'
         minSdk 26
-        targetSdk 33
+        targetSdk 34
         versionCode 20230315
         versionName '1.0beta1'
         multiDexEnabled true
@@ -50,7 +50,6 @@ android {
 
     buildFeatures {
         viewBinding true
-        aidl true
         buildConfig true
     }
 
@@ -93,6 +92,7 @@ dependencies {
     implementation libs.androidx.multidex
     implementation libs.androidx.preference
     implementation libs.material
+    implementation libs.interface.loader
     implementation project(':common')
     implementation project(':openapi')
     implementation project(':engine')

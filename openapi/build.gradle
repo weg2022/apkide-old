@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace 'com.apkide.openapi'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         minSdk 26
@@ -19,16 +19,25 @@ android {
         }
     }
     compileOptions {
-        coreLibraryDesugaringEnabled = true
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
+    }
+    buildFeatures {
+        buildConfig false
+        resValues false
+    }
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/java']
+            resources.srcDirs = ['src/main/java', 'src/main/resources']
+        }
     }
 }
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
-    coreLibraryDesugaring libs.desugar.jdk.libs.nio
     implementation libs.androidx.annotation
+    implementation libs.interface.loader
     api project(':common')
     testImplementation libs.junit
 }

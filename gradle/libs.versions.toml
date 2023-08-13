@@ -3,7 +3,6 @@ agp = "8.2.0-alpha15"
 android-r8 = "8.1.56"
 gradle = "8.2.0-alpha15"
 desugar_jdk_libs_nio = "2.0.3"
-jakewharton-dalvik-dx = "11.0.0_r3"
 junit = "4.13.2"
 multidex = "2.0.1"
 #noinspection GradleDependency
@@ -12,6 +11,8 @@ annotation = "1.2.0"
 preference = "1.1.0"
 #noinspection GradleDependency
 material = "1.5.0"
+
+interface-loader = "0.0.1"
 
 [libraries]
 androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "multidex" }
@@ -22,8 +23,7 @@ gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
 desugar_jdk_libs_nio = { module = "com.android.tools:desugar_jdk_libs_nio", version.ref = "desugar_jdk_libs_nio" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 tools-r8 = { module = "com.android.tools:r8", version.ref = "android-r8" }
-tools-dx = { module = "com.jakewharton.android.repackaged:dalvik-dx", version.ref = "jakewharton-dalvik-dx" }
-
+interface-loader = { module = "com.jeremyliao:interface-loader", version.ref = "interface-loader" }
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 

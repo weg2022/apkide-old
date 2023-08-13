@@ -1,41 +1,27 @@
 # APK-IDE
 
-APK-IDE is an Android software for decompiling, compiling and modifying APKs.
-Internally use ApkTool 2.7.0
+APK-IDE是一款用于反编译；编译；逆向；修改APK的安卓软件。
+编译与反编译核心使用的是 APK-Tool 开源项目
 
-## Readme
+## 功能 （待实现）
 
-* [简体中文](./README_zh.md)
+- [ ] 反编译与编译APK
+- [ ] 代码编辑器 (快速编辑大型文本文件，可配置命令，控制台？，快捷键，查找替换，撤销与重做，超链接，颜色高亮)
+- [ ] 代码分析与重构 (代码分析与诊断，，重命名，安全删除，格式化，缩进，代码生成，注释，取消注释，Surround
+  With...)
+- [ ] 代码补全 (基本补全，语法级别补全)
+- [ ] 代码导航 (API搜索， 转到符号，签名信息，查找用例)
+- [ ] 代码高亮 (基本高亮，语法级别补全)
 
-## Features
+### 使用的库与资源
 
-- [x] Access the class file in the archive file
-- [x] Decompile and compile the apk file
-- [x] aapt (Ported for apktool. v1/v2)
-- [ ] APK signing
-- [ ] APK align optimize
-- [ ] Git integration
-- [ ] Decompile and build Log output
-- [ ] Configurable ApkTool(Framework...) options
-- [ ] Quickly edit large text files
-- [ ] Syntax highlighting (Smali, Java, C/C++, Xml)
-- [ ] Code completion (smali only?)
-- [ ] Code Analysis and Refactoring (Smali only?)
-
-### Libraries used
-
-* [androidx](https://github.com/androidx/androidx)
-* [material-components-android](https://github.com/material-components/material-components-android)
-* [apktool](https://github.com/iBotPeaches/Apktool)
-* [fernflower](https://github.com/fesh0r/fernflower)
-* [cascadia-code](https://github.com/microsoft/cascadia-code)
-* [smali](https://github.com/google/smali)
-* [commons-text](https://github.com/apache/commons-text)
-* [guava](https://github.com/google/guava)
-* [snakeyaml](https://bitbucket.org/snakeyaml/snakeyaml)
-* [xmlpull-xpp3](https://github.com/codelibs/xpp3)
-* [xmlunit](https://github.com/xmlunit/xmlunit)
-* [r8](https://r8.googlesource.com/r8)
+* [Androidx](https://github.com/androidx/androidx)
+* [Material-Components](https://github.com/material-components/material-components-android)
+* [Apktool](https://github.com/iBotPeaches/Apktool)
+* [Smali](https://github.com/google/smali)
+* [Fernflower](https://github.com/fesh0r/fernflower)
+* [R8](https://r8.googlesource.com/r8)
+* [InterfaceLoader](https://github.com/JeremyLiao/InterfaceLoader)
 
 ## License
 

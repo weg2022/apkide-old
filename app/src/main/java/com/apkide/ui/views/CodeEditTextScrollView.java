@@ -46,8 +46,7 @@ public class CodeEditTextScrollView extends ScrollView {
 
         myMiddleHandle = new DragHandle(getIcon(R.drawable.text_select_handle_middle),
                 getIcon(R.drawable.text_select_handle_middle),
-                0.5f, -0.2f, 100000L) {
-                //0.5f, -0.2f, 3000L) {
+                0.5f, -0.2f, 3000L) {
 
             @Override
             protected int getColumn() {
@@ -173,20 +172,17 @@ public class CodeEditTextScrollView extends ScrollView {
         getEditorView().addCaretListener((console, caretLine, caretColumn, isTyping) -> {
             scrollToCaretVisible();
             hide();
-            showDragHandle();
         });
 
         getEditorView().addSelectionListener(new SelectionListener() {
             @Override
             public void selectUpdate(@NonNull Console console) {
                 hide();
-                showDragHandle();
             }
 
             @Override
             public void selectChanged(@NonNull Console console, boolean select) {
                hide();
-               showDragHandle();
             }
         });
         scrollToVisible(getEditorView().getCaretLine(), getEditorView().getCaretColumn(), 1, 1, 1, 1);
@@ -206,13 +202,13 @@ public class CodeEditTextScrollView extends ScrollView {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        getEditorView().redraw();
+        getEditorView().redrawOnVisible();
     }
 
     @Override
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
-        getEditorView().redraw();
+        getEditorView().redrawOnVisible();
     }
 
     @Override

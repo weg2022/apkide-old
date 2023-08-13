@@ -139,7 +139,7 @@ public class IDEEditorPager extends ViewPager implements OpenFileService.OpenFil
 		requestLayout();
 		postDelayed(() -> {
 			editor.makeCaretVisible();
-			editor.getEditorView().redraw();
+			editor.getEditorView().redrawOnVisible();
 		}, 50L);
 		return model;
 	}

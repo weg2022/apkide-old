@@ -20,7 +20,7 @@
 		android:summary="Show legal information about the application"
 		android:title="About &amp; Licenses">
 		<intent
-			android:targetClass="com.apkide.ui.AboutUI"
+			android:targetClass="com.apkide.ui.about.AboutUI"
 			android:targetPackage="com.apkide.ui" />
 	</Preference>
 </PreferenceScreen>

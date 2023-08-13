@@ -27,8 +27,7 @@ import java.io.Serializable;
 public class KeyStroke implements Serializable {
 
     private static final long serialVersionUID = -1170266913954804590L;
-    public static final char CHAR_UNDEFINED = 0xFFFF;
-    private final boolean alt;
+	private final boolean alt;
 	private final char ch;
 	private final boolean ctrl;
 	private final int keyCode;
@@ -78,7 +77,7 @@ public class KeyStroke implements Serializable {
 		if (pressedKeyStroke == null) return false;
 		if (this.alt == pressedKeyStroke.alt && this.ctrl == pressedKeyStroke.ctrl && this.shift == pressedKeyStroke.shift) {
 			if (this.keyCode == -1 || this.keyCode != pressedKeyStroke.keyCode) {
-				return this.ch != CHAR_UNDEFINED && this.ch == pressedKeyStroke.ch;
+				return isChar() && this.ch == pressedKeyStroke.ch;
 			}
 			return true;
 		}

@@ -13,7 +13,6 @@ import static android.view.KeyEvent.KEYCODE_SEARCH;
 import static android.view.KeyEvent.KEYCODE_SHIFT_LEFT;
 import static android.view.KeyEvent.KEYCODE_SHIFT_RIGHT;
 import static android.view.KeyEvent.KEYCODE_UNKNOWN;
-import static java.lang.Character.isISOControl;
 import static java.lang.Character.isUpperCase;
 import static java.lang.Character.toLowerCase;
 import static java.lang.Character.toUpperCase;
@@ -218,13 +217,14 @@ public class KeyStrokeDetector {
 
     public boolean onKeyDown(int keyCode, KeyEvent event, KeyStrokeHandler keyStrokeHandler) {
         debugOnKey("onKeyDown", keyCode, event);
+        int oldKey=keyCode;
         if (keyCode == KEYCODE_SEARCH) {
             keyCode = KEYCODE_ALT_LEFT;
         }
         handleMetaKeysDown(keyCode, (event.getFlags() & 2) != 0);
         KeyStroke keyStroke = makeKeyStroke(keyCode, event);
         if (keyStroke == null || !keyStrokeHandler.onKeyStroke(keyStroke)) {
-            return false;
+            return oldKey==KEYCODE_SEARCH;
         }
         debugOnKeyStroke(keyStroke);
         return true;
@@ -248,11 +248,12 @@ public class KeyStrokeDetector {
 
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         debugOnKey("onKeyUp", keyCode, event);
+        int oldKey=keyCode;
         if (keyCode == KEYCODE_SEARCH) {
             keyCode = KEYCODE_ALT_LEFT;
         }
         handleMetaKeysUp(keyCode, (event.getFlags() & FLAG_SOFT_KEYBOARD) != 0);
-        return false;
+        return oldKey==KEYCODE_SEARCH;
     }
 
     public KeyStroke makeKeyStroke(char ch) {
@@ -273,11 +274,11 @@ public class KeyStrokeDetector {
                 return null;
             default:
                 boolean shift = this.shiftLeftDown | this.shiftRightDown | event.isShiftPressed();
-                boolean ctrl = this.ctrlLeftDown | this.ctrlRightDown | isCtrl(event.getMetaState());
+                boolean ctrl = this.ctrlLeftDown | this.ctrlRightDown | event.isCtrlPressed();
                 boolean alt = this.altLeftDown | this.altRightDown | event.isAltPressed();
                 char ch = 65535;
                 int chi = event.getUnicodeChar();
-                if (chi != 0 && !isISOControl(chi)) {
+                if (chi != 0 ) {
                     ch = (char) chi;
                 }
                 return new KeyStroke(keyCode, ch, shift, ctrl, alt);
