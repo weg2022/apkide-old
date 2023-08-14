@@ -14,6 +14,7 @@ import com.apkide.ui.App;
 import com.apkide.ui.R;
 
 import java.io.File;
+import java.io.IOException;
 
 public class IDEProjectManager implements ProjectManager {
 
@@ -35,7 +36,7 @@ public class IDEProjectManager implements ProjectManager {
 	@Override
 	public boolean checkIsSupportedProjectRootPath(@NonNull String rootPath) {
 		File config = new File(rootPath, FileSystem.getName(rootPath) + ".dev");
-		AppLog.s(this,config.getAbsolutePath());
+		AppLog.s(this, config.getAbsolutePath());
 		File apktool = new File(rootPath, "apktool.yml");
 		return config.exists() || apktool.exists();
 	}
@@ -59,13 +60,20 @@ public class IDEProjectManager implements ProjectManager {
 	}
 
 	@Override
-	public void open(@NonNull String rootPath) {
-		String workspace = getEnclosingParent(rootPath, s -> {
-			File config = new File(s, FileSystem.getName(s) + ".dev");
-			File apktool = new File(s, "apktool.yml");
-			return config.exists() || apktool.exists();
-		});
-		assert workspace != null;
+	public void open(@NonNull String rootPath) throws IOException {
+		String workspace;
+		if (checkIsSupportedProjectRootPath(rootPath)) {
+			workspace = rootPath;
+		} else {
+			workspace = getEnclosingParent(rootPath, s -> {
+				File config = new File(s, FileSystem.getName(s) + ".dev");
+				File apktool = new File(s, "apktool.yml");
+				return config.exists() || apktool.exists();
+			});
+		}
+		if (workspace == null) {
+			throw new IOException("rootPath is null");
+		}
 		myRootPath = workspace;
 		myConfigureFile = new IDEConfigureFile(
 				myRootPath + separator + FileSystem.getName(myRootPath) + ".dev",

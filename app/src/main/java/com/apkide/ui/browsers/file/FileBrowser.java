@@ -101,11 +101,11 @@ public class FileBrowser extends HeaderBrowserLayout implements FileBrowserServi
 					"Open Project",
 					"This directory is a supported project,\n" +
 							" do I need to open this directory according to the project?",
-					false,getContext().getString(android.R.string.ok),() -> {
+					false, getContext().getString(android.R.string.ok), () -> {
 						if (App.getProjectService().openProject(entry.getFilePath())) {
 							//Do action
 						}
-					},getContext().getString(android.R.string.cancel), () -> {
+					}, getContext().getString(android.R.string.cancel), () -> {
 
 					});
 		}
@@ -119,11 +119,12 @@ public class FileBrowser extends HeaderBrowserLayout implements FileBrowserServi
 			MessageBox.showInfo(App.getMainUI(),
 					"Open Project",
 					"The current file is in the project file, open the project?",
-					false,getContext().getString(android.R.string.ok),() -> {
-						if (App.getProjectService().openProject(entry.getFilePath())) {
+					false, getContext().getString(android.R.string.ok), () -> {
+						String parent = FileSystem.getParentDirPath(entry.getFilePath());
+						if (parent != null && App.getProjectService().openProject(parent)) {
 							//Do action
 						}
-					},getContext().getString(android.R.string.cancel), () -> {
+					}, getContext().getString(android.R.string.cancel), () -> {
 
 					});
 		}
@@ -163,7 +164,7 @@ public class FileBrowser extends HeaderBrowserLayout implements FileBrowserServi
 
 			if (item.getItemId() == R.id.fileBrowserCommandShowCurrent) {
 				if (App.getOpenFileService().isOpen()) {
-					String path = App.getOpenFileService().getCurrentFilePath();
+					String path = App.getOpenFileService().getVisibleFilePath();
 					if (path != null && (path = FileSystem.getParentDirPath(path)) != null) {
 						App.getFileBrowserService().openFolder(path);
 					}

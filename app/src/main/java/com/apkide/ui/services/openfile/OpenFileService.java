@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import com.apkide.ui.App;
 import com.apkide.ui.util.IDEService;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +27,7 @@ public class OpenFileService implements IDEService {
 	private final HashMap<String, OpenFileModelFactory> myFactors = new HashMap<>();
 	private final List<OpenFileServiceListener> myListeners = new Vector<>();
 
-	private String myCurrentFilePath;
+	private String myVisibleFilePath;
 
 	private SharedPreferences getPreferences() {
 		if (myPreferences == null)
@@ -63,9 +64,9 @@ public class OpenFileService implements IDEService {
 
 	public void openFile(@NonNull String filePath) {
 		if (isOpenFile(filePath)) {
-			myCurrentFilePath = filePath;
+			myVisibleFilePath = filePath;
 			for (OpenFileServiceListener listener : myListeners) {
-				listener.fileOpened(filePath, requireNonNull(getOpenFile(filePath)));
+				listener.fileOpened(filePath, requireNonNull(getOpenFileModel(filePath)));
 			}
 			return;
 		}
@@ -74,7 +75,7 @@ public class OpenFileService implements IDEService {
 				try {
 					OpenFileModel fileModel = factory.createFileModel(filePath);
 					myOpenFileModels.put(filePath, fileModel);
-					myCurrentFilePath = filePath;
+					myVisibleFilePath = filePath;
 					for (OpenFileServiceListener listener : myListeners) {
 						listener.fileOpened(filePath, fileModel);
 					}
@@ -86,22 +87,28 @@ public class OpenFileService implements IDEService {
 		}
 	}
 
+	public void closeAll() {
+		for (String filePath : myOpenFileModels.keySet()) {
+			closeFile(filePath);
+		}
+	}
+
+	public void closeVisibleFile() {
+		if (myVisibleFilePath != null)
+			closeFile(myVisibleFilePath);
+	}
+
 	public void closeFile(@NonNull String filePath) {
 		if (isOpenFile(filePath)) {
-			if (filePath.equals(myCurrentFilePath))
-				myCurrentFilePath = null;
+			if (filePath.equals(myVisibleFilePath))
+				myVisibleFilePath = null;
 			OpenFileModel model = myOpenFileModels.get(filePath);
-
-			try {
-				assert model != null;
-				model.save();
-			} catch (IOException e) {
-				Toast.makeText(App.getUI(), e.getMessage(), Toast.LENGTH_SHORT).show();
-			}
-
 			myOpenFileModels.remove(filePath);
-			for (OpenFileServiceListener listener : myListeners) {
-				listener.fileClosed(filePath, model);
+			if (model != null) {
+				saveFile(filePath);
+				for (OpenFileServiceListener listener : myListeners) {
+					listener.fileClosed(filePath, model);
+				}
 			}
 		}
 	}
@@ -119,8 +126,8 @@ public class OpenFileService implements IDEService {
 		return !myOpenFileModels.isEmpty();
 	}
 
-	public String getCurrentFilePath() {
-		return myCurrentFilePath;
+	public String getVisibleFilePath() {
+		return myVisibleFilePath;
 	}
 
 	public boolean isOpenFile(@NonNull String filePath) {
@@ -141,10 +148,37 @@ public class OpenFileService implements IDEService {
 	}
 
 	@Nullable
-	public OpenFileModel getOpenFile(@NonNull String filePath) {
+	public OpenFileModel getOpenFileModel(@NonNull String filePath) {
 		if (myOpenFileModels.containsKey(filePath)) {
 			return myOpenFileModels.get(filePath);
 		}
 		return null;
+	}
+
+	public void saveFile(@NonNull String filePath) {
+
+		OpenFileModel fileModel = myOpenFileModels.get(filePath);
+		if (fileModel != null && !fileModel.isReadOnly()) {
+			File file = new File(fileModel.getFilePath());
+			if (file.lastModified() != file.lastModified()) {
+				try {
+					fileModel.save();
+				} catch (IOException e) {
+					e.printStackTrace();
+					Toast.makeText(App.getUI(), e.getMessage(), Toast.LENGTH_SHORT).show();
+				}
+			}
+		}
+	}
+
+	public void saveVisibleFile() {
+		if (myVisibleFilePath != null)
+			saveFile(myVisibleFilePath);
+	}
+
+	public void saveAll() {
+		for (String filePath : myOpenFileModels.keySet()) {
+			saveFile(filePath);
+		}
 	}
 }

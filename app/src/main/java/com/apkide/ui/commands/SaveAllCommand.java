@@ -2,6 +2,7 @@ package com.apkide.ui.commands;
 
 import androidx.annotation.IdRes;
 
+import com.apkide.ui.App;
 import com.apkide.ui.R;
 import com.apkide.ui.util.MenuCommand;
 
@@ -19,11 +20,12 @@ public class SaveAllCommand implements MenuCommand {
 
 	@Override
 	public boolean isEnabled() {
-		return false;
+		return App.getOpenFileService().isOpen();
 	}
 
 	@Override
 	public boolean run() {
-		return false;
+		App.getOpenFileService().saveAll();
+		return true;
 	}
 }

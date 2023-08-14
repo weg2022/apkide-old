@@ -3,6 +3,8 @@ package com.apkide.ui.services.project;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.io.IOException;
+
 public interface ProjectManager {
 
 	@NonNull
@@ -15,7 +17,7 @@ public interface ProjectManager {
 
 	boolean checkIsSupportedProjectPath(@NonNull String path);
 
-	void open(@NonNull String rootPath);
+	void open(@NonNull String rootPath)throws IOException;
 
 	void close();
 

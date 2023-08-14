@@ -3,6 +3,7 @@ package com.apkide.ui.services.project;
 import static java.util.Objects.requireNonNull;
 
 import android.content.SharedPreferences;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -11,6 +12,7 @@ import com.apkide.ui.App;
 import com.apkide.ui.util.IDEService;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -97,20 +99,22 @@ public class ProjectService implements IDEService {
 	public boolean openProject(@NonNull String rootPath) {
 		AppLog.s(this, "openProject: " + rootPath);
 		for (ProjectManager projectManager : myProjectManagerMap.values()) {
-			if (projectManager.checkIsSupportedProjectPath(rootPath) ||
+			if (projectManager.checkIsSupportedProjectRootPath(rootPath) ||
 					projectManager.checkIsSupportedProjectPath(rootPath)) {
 
 				if (isProjectOpened())
 					closeProject();
 
 				myProjectManager = projectManager;
-				myProjectManager.open(rootPath);
-				if (myProjectManager.isOpen()) {
+				try {
+					myProjectManager.open(rootPath);
 					getPreferences().edit().putString("open.project", myProjectManager.getRootPath()).apply();
 					for (ProjectServiceListener listener : myListeners) {
 						listener.projectOpened(requireNonNull(myProjectManager.getRootPath()));
 					}
 					return true;
+				} catch (IOException e) {
+					Toast.makeText(App.getUI(), e.getMessage(), Toast.LENGTH_SHORT).show();
 				}
 			}
 		}

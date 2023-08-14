@@ -19,8 +19,8 @@ public class ProjectBrowser extends HeaderBrowserLayout implements ProjectServic
 
 		});
 
-		App.getProjectService().addListener(this);
 		App.getProjectService().reloadProject();
+		App.getProjectService().addListener(this);
 	}
 
 	@NonNull
