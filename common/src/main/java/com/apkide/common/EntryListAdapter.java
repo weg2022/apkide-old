@@ -13,11 +13,12 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.apkide.common.app.Application;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 
 @SuppressLint("NotifyDataSetChanged")
@@ -38,10 +39,10 @@ public abstract class EntryListAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     public List<Entry> getEntries() {
-        return new ArrayList<>(entries);
+        return Collections.unmodifiableList(entries);
     }
 
-    public void updateEntries(@NonNull Collection<? extends Entry> entries) {
+    public void updateEntries(@NonNull Collection<Entry> entries) {
         this.entries.clear();
         this.entries.addAll(entries);
         notifyDataSetChanged();
@@ -68,11 +69,11 @@ public abstract class EntryListAdapter extends RecyclerView.Adapter<RecyclerView
     @Override
     public int getItemViewType(int position) {
         if (holderFactory != null) {
-            int type = holderFactory.getEntryType(entries.get(position), position);
+            int type = holderFactory.getEntryType(Objects.requireNonNull(entries.get(position)), position);
             if (type != -1)
                 return type;
         }
-        return getEntryType(entries.get(position), position);
+        return getEntryType(Objects.requireNonNull(entries.get(position)), position);
     }
 
 
@@ -130,7 +131,7 @@ public abstract class EntryListAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
 
-    public interface Entry {
+    public interface Entry extends Serializable {
     }
 
     public interface EntryHolderFactory {

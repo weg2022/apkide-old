@@ -1,138 +1,174 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/mainActionUndo"
-        android:icon="@mipmap/ic_l_undo"
-        android:title="@string/mainMenuUndo"
+        android:icon="@drawable/ic_undo"
         app:showAsAction="always"
-        tools:ignore="AlwaysShowAction" />
+        android:title="@string/action_undo"
+        android:id="@+id/commandUndo" />
 
     <item
-        android:id="@+id/mainActionRedo"
-        android:icon="@mipmap/ic_l_redo"
-        android:title="@string/mainMenuRedo"
-        app:showAsAction="always" />
+        android:icon="@drawable/ic_redo"
+        app:showAsAction="always"
+        android:title="@string/action_redo"
+        android:id="@+id/commandRedo" />
 
     <item
-        android:id="@+id/mainActionRun"
-        android:icon="@mipmap/ic_l_play"
-        android:title="@string/mainMenuMake"
-        app:showAsAction="always" />
+        android:icon="@drawable/ic_run"
+        app:showAsAction="always"
+        android:id="@+id/commandRun"
+        android:title="@string/action_run" />
 
     <item
-        android:id="@+id/mainActionFile"
-        android:title="@string/mainMenuFile">
+        android:icon="@drawable/ic_view"
+        app:showAsAction="always"
+        android:id="@+id/commandEditMode"
+        android:title="@string/action_edit_mode" />
 
+    <item
+        android:icon="@drawable/ic_edit"
+        app:showAsAction="always"
+        android:id="@+id/commandNavigateMode"
+        android:title="@string/action_navigate_mode" />
+
+    <item
+        android:id="@+id/commandEdit"
+        android:title="@string/action_group_edit">
         <menu>
-
             <item
-                android:id="@+id/mainActionFileSave"
-                android:title="@string/mainMenuFileSave" />
-
+                android:id="@+id/commandFind"
+                android:title="@string/action_find" />
             <item
-                android:id="@+id/mainActionFileReload"
-                android:title="@string/mainMenuFileReload" />
-
+                android:id="@+id/commandFindInFile"
+                android:title="@string/action_find_in_file" />
+            <item
+                android:id="@+id/commandFindReplace"
+                android:title="@string/action_find_replace" />
+            <item
+                android:id="@+id/commandFindReplaceInFile"
+                android:title="@string/action_find_replace_in_file" />
+            <item
+                android:id="@+id/commandFindUsages"
+                android:title="@string/action_find_usages" />
         </menu>
     </item>
 
-    <item android:title="@string/mainMenuEdit">
+    <item android:title="@string/action_group_view">
         <menu>
             <item
-                android:id="@+id/mainActionEditFind"
-                android:title="Find">
-                <menu>
-                  <item
-                      android:id="@+id/mainActionEditFindText"
-                      android:title="Find Text"/>
-                </menu>
-            </item>
-        </menu>
-    </item>
-
-    <item android:title="@string/mainMenuView">
-        <menu>
+                android:id="@+id/commandViewFile"
+                android:title="@string/action_view_file" />
             <item
-                android:id="@+id/mainActionViewFiles"
-                android:title="@string/mainMenuViewFiles"
-                app:showAsAction="always" />
+                android:id="@+id/commandViewError"
+                android:title="@string/action_view_error" />
             <item
-                android:id="@+id/mainActionViewProblems"
-                android:title="@string/mainMenuViewProblems"
-                app:showAsAction="always" />
+                android:id="@+id/commandViewSearch"
+                android:title="@string/action_view_search" />
             <item
-                android:id="@+id/mainActionViewFind"
-                android:title="@string/mainMenuViewFind"
-                app:showAsAction="always" />
-            <item
-                android:id="@+id/mainActionViewBuild"
-                android:title="@string/mainMenuViewBuild"
-                app:showAsAction="always" />
-        </menu>
-    </item>
-
-    <item android:title="@string/mainMenuNavigate">
-        <menu>
-            <item
-                android:id="@+id/mainActionBackward"
-                android:title="@string/mainMenuNavigateBackward"
-                app:showAsAction="always" />
-            <item
-                android:id="@+id/mainActionForward"
-                android:title="@string/mainMenuNavigateForward"
-                app:showAsAction="always" />
-        </menu>
-    </item>
-
-    <item android:title="@string/mainMenuCode">
-        <menu>
-
-        </menu>
-    </item>
-
-    <item android:title="@string/mainMenuRefactor">
-        <menu>
-
-        </menu>
-    </item>
-
-    <item android:title="@string/mainMenuBuild">
-        <menu>
-            <item
-                android:id="@+id/mainActionBuildClean"
-                android:title="@string/mainMenuBuildClean" />
-            <item
-                android:id="@+id/mainActionRebuild"
-                android:title="@string/mainMenuRebuild" />
-        </menu>
-    </item>
-
-    <item android:title="@string/mainMenuGit">
-        <menu>
-            <item
-                android:id="@+id/mainActionGitCommit"
-                android:title="@string/mainMenuGitCommit" />
-            <item
-                android:id="@+id/mainActionGitPush"
-                android:title="@string/mainMenuGitPush" />
-            <item
-                android:id="@+id/mainActionGitPull"
-                android:title="@string/mainMenuGitPull" />
+                android:id="@+id/commandViewBuild"
+                android:title="@string/action_view_build" />
         </menu>
     </item>
 
     <item
-        android:id="@+id/mainActionCloseProject"
-        android:title="@string/mainMenuCloseProject" />
+        android:id="@+id/commandNavigate"
+        android:title="@string/action_group_navigate">
+        <menu>
+            <item
+                android:id="@+id/commandBackward"
+                android:title="@string/action_backward" />
+            <item
+                android:id="@+id/commandForward"
+                android:title="@string/action_forward" />
+            <item
+                android:id="@+id/commandGoto"
+                android:title="@string/action_goto" />
+            <item
+                android:id="@+id/commandGotoDefinition"
+                android:title="@string/action_goto_definition" />
+        </menu>
+    </item>
 
     <item
-        android:id="@+id/mainActionSettings"
-        android:title="@string/mainMenuPreferences" />
+        android:id="@+id/commandCode"
+        android:title="@string/action_group_code">
+        <menu>
+            <item
+                android:id="@+id/commandOptimizeImports"
+                android:title="@string/action_optimize_imports" />
+            <item
+                android:id="@+id/commandReformatCode"
+                android:title="@string/action_reformat_code" />
+            <item
+                android:id="@+id/commandAutoIndentLines"
+                android:title="@string/action_auto_indent_lines" />
+            <item
+                android:id="@+id/commandGenerate"
+                android:title="@string/action_generate" />
+            <item
+                android:id="@+id/commandSurroundWith"
+                android:title="@string/action_surround_with" />
+            <item
+                android:id="@+id/commandOutLineComment"
+                android:title="@string/action_comment_with_line_comment" />
+            <item
+                android:id="@+id/commandOutBlockComment"
+                android:title="@string/action_comment_with_block_comment" />
+            <item
+                android:id="@+id/commandUnOutComment"
+                android:title="@string/action_uncomment"/>
+        </menu>
+    </item>
 
     <item
-        android:id="@+id/mainActionExit"
-        android:title="@string/mainMenuExit" />
+        android:title="@string/action_group_refactor"
+        android:id="@+id/commandRefactor">
+        <menu>
+            <item
+                android:title="@string/action_rename"
+                android:id="@+id/commandRename" />
+            <item
+                android:title="@string/action_inline"
+                android:id="@+id/commandInline" />
+            <item
+                android:title="@string/action_safe_delete"
+                android:id="@+id/commandSafeDelete" />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/commandBuild"
+        android:title="@string/action_group_project">
+        <menu>
+            <item
+                android:id="@+id/commandMakeProject"
+                android:title="@string/action_make_project" />
+            <item
+                android:id="@+id/commandCleanProject"
+                android:title="@string/action_clean_project" />
+            <item
+                android:id="@+id/commandRebuildProject"
+                android:title="@string/action_rebuild_project" />
+            <item
+                android:id="@+id/commandCloseProject"
+                android:title="@string/action_close_project" />
+        </menu>
+    </item>
+    <item
+        android:id="@+id/commandCloseFile"
+        android:title="@string/action_close_file" />
+
+    <item
+        android:id="@+id/commandSaveAll"
+        android:title="@string/action_save_all" />
+
+    <item
+        android:id="@+id/commandGotoSettings"
+        android:title="@string/action_settings" />
+
+    <item
+        android:id="@+id/commandExit"
+        android:title="@string/action_exit" />
+
 </menu>

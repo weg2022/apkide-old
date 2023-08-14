@@ -2,7 +2,7 @@ package com.apkide.openapi.ls.callback;
 
 import androidx.annotation.NonNull;
 
-import com.apkide.openapi.ls.symbol.Symbol;
+import com.apkide.openapi.ls.Symbol;
 
 public interface SymbolSearcherCallback {
 

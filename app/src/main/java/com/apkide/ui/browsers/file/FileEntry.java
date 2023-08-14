@@ -1,83 +1,115 @@
 package com.apkide.ui.browsers.file;
 
+import static com.apkide.common.FileSystem.getEnclosingDir;
+import static com.apkide.common.FileSystem.getEnclosingDirPrefix;
+import static com.apkide.common.FileSystem.getName;
+
+import androidx.annotation.NonNull;
 
 import com.apkide.common.EntryListAdapter;
-import com.apkide.common.FileSystem;
-import com.apkide.ui.App;
-import com.apkide.ui.AppCommands;
 import com.apkide.ui.R;
 
-public class FileEntry implements EntryListAdapter.Entry {
+public class FileEntry implements EntryListAdapter.Entry, Comparable<FileEntry> {
 
-	private String filePath;
-	private String label;
-	private int icon;
-	private boolean isFile;
-	private AppCommands.BrowserCommand command;
+	private static final long serialVersionUID = -4421092652929488640L;
+	private static final String PRV = "...";
+	private final String filePath;
+	private final String label;
+	private final int icon;
+	private final boolean isPrev;
+	private final boolean isDirectory;
+	private final boolean isHidden;
 
-	public FileEntry(String filePath, String label, boolean isFile) {
+	public FileEntry(@NonNull String filePath) {
 		this.filePath = filePath;
-		this.label = label;
-		if (isFile) {
-			this.icon = FileIcons.getIcon(filePath);
-		} else if (!isBackEntry()) {
-			if (isHidden(filePath)) {
-				this.icon = R.mipmap.folder_hidden;
-			} else {
-				this.icon = R.mipmap.folder;
-			}
-		} else {
-			this.icon = R.mipmap.folder_open;
-		}
-		this.isFile = isFile;
+		this.label = PRV;
+		this.icon = R.drawable.folder_open;
+		this.isPrev = true;
+		this.isDirectory = false;
+		this.isHidden = false;
 	}
 
-	public FileEntry(AppCommands.BrowserCommand command) {
-		this.command = command;
-
-		icon = command.getIcon();
-		int label = command.getLabel();
-		if (label != 0) {
-			this.label = App.getContext().getResources().getString(label);
+	public FileEntry(@NonNull String filePath, @NonNull String label, boolean isDirectory) {
+		this.filePath = filePath;
+		this.label = label;
+		this.isDirectory = isDirectory;
+		this.isPrev = false;
+		if (isDirectory) {
+			this.isHidden = isHidden(filePath);
+			icon = isHidden ? R.drawable.folder_hidden : R.drawable.folder;
+		} else {
+			this.isHidden = false;
+			icon = FileIcons.getIcon(filePath);
 		}
 	}
 
 	public static boolean isHidden(String filePath) {
-		String name = FileSystem.getName(filePath);
-		return name.startsWith(".") ||
-				name.startsWith("bin") ||
-				name.startsWith(".obj") ||
-				name.startsWith("build") ||
-				name.startsWith("gradle");
+		String name = getName(filePath);
+		if (name.startsWith(".") || name.equals("build") || name.equals("bin")) {
+			return true;
+		}
+		if (getEnclosingDirPrefix(filePath, ".") != null ||
+				getEnclosingDir(filePath, "build") != null ||
+				getEnclosingDir(filePath, "bin") != null) {
+			return true;
+		}
+		return false;
 	}
 
-	public boolean isBackEntry() {
-		if (isFile) return false;
-		return label.equals("...");
-	}
-
-	public boolean isDir() {
-		if (isFile) return false;
-		return !isBackEntry();
-	}
-
-	public boolean isFile() {
-		return isFile;
-	}
-
-	public String getFilePath() {
-		return filePath;
-	}
-
-	public String getLabel() {
-		return label;
+	public boolean isHidden() {
+		return isHidden;
 	}
 
 	public int getIcon() {
 		return icon;
 	}
 
-	public AppCommands.BrowserCommand getCommand() {
-		return command;
+	@NonNull
+	public String getLabel() {
+		return label;
+	}
+
+	@NonNull
+	public String getFilePath() {
+		return filePath;
+	}
+
+	public boolean isPrev() {
+		return isPrev;
+	}
+
+	public boolean isDirectory() {
+		if (isPrev) {
+			return false;
+		}
+		return isDirectory;
+	}
+
+	public boolean isFile() {
+		if (isPrev)
+			return false;
+		return !isDirectory;
+	}
+
+
+	@Override
+	public int compareTo(FileEntry o) {
+		if (isPrev() && !o.isPrev()) {
+			return -1;
+		}
+
+		if (!isPrev() && o.isPrev()) {
+			return 1;
+		}
+
+		if (isDirectory() && o.isFile()) {
+			return -1;
+		}
+
+		if (isFile() && o.isDirectory()) {
+			return 1;
+		}
+
+		return getLabel().compareTo(o.getLabel());
 	}
 }

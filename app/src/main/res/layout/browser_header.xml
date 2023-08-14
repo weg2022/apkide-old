@@ -25,7 +25,7 @@
             android:importantForAccessibility="no"
             android:paddingRight="5dp"
             android:scaleType="centerInside"
-            tools:srcCompat="@mipmap/file_type_unknown" />
+            tools:srcCompat="@drawable/file_type_unknown" />
 
         <TextView
             android:id="@+id/browserHeaderLabel"
@@ -34,7 +34,6 @@
             android:layout_weight="1"
             android:ellipsize="start"
             android:singleLine="true"
-            android:text="/"
             android:textSize="16sp" />
 
         <ImageView
@@ -46,6 +45,6 @@
             android:focusable="true"
             android:importantForAccessibility="no"
             android:scaleType="centerInside"
-            android:src="@mipmap/ic_l_more" />
+            android:src="@drawable/ic_more" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,44 +6,71 @@ import androidx.annotation.NonNull;
 
 import com.apkide.common.FileSystem;
 import com.apkide.ui.App;
+import com.apkide.ui.util.IDEService;
 
-public class FileBrowserService {
+import java.io.File;
+import java.io.IOException;
+
+public class FileBrowserService implements IDEService {
 
 	public interface FileBrowserServiceListener {
-		void folderOpened(String folderPath);
+		void fileBrowserFolderChanged(@NonNull String folderPath);
 	}
 
 	private SharedPreferences myPreferences;
+
 	private FileBrowserServiceListener myListener;
 
+	@Override
+	public void initialize() {
 
-	public void setFileBrowserServiceListener(FileBrowserServiceListener listener) {
+	}
+
+	@Override
+	public void shutdown() {
+
+	}
+
+	public void setListener(FileBrowserServiceListener listener) {
 		myListener = listener;
 	}
 
-	public void folderOpen(@NonNull String folderPath) {
-		if (!FileSystem.isDirectory(folderPath)) return;
-		getPreferences().edit().putString("open.folder", folderPath).apply();
+	public void sync() {
+		String lastFolder = getCurrentFolder();
 		if (myListener != null)
-			myListener.folderOpened(folderPath);
+			myListener.fileBrowserFolderChanged(lastFolder);
 	}
 
-	@NonNull
-	public String getFolderPath() {
-		String path = getPreferences().getString("open.folder", null);
-		if (path == null || !FileSystem.isDirectory(path)) {
-			path = getDefaultFolderPath();
-			FileSystem.mkdirs(path);
+	public void openFolder(@NonNull String folder) {
+		if (FileSystem.isNormalDirectory(folder) && !getCurrentFolder().equals(folder)) {
+			getPreferences().edit().putString("open.folder", folder).apply();
+			if (myListener != null)
+				myListener.fileBrowserFolderChanged(folder);
 		}
-		return path;
+	}
+
+
+	@NonNull
+	public String getCurrentFolder() {
+		return getPreferences().getString("open.folder", getDefaultFolder());
 	}
 
 	@NonNull
-	public String getDefaultFolderPath() {
-		return App.getHomeDir().getAbsolutePath();
+	public String getDefaultFolder() {
+		File file = App.getContext().getExternalFilesDir(null);
+		assert file != null;
+		if (!file.exists() || !file.isDirectory()) {
+			try {
+				FileSystem.mkdir(file.getAbsolutePath());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return file.getAbsolutePath();
 	}
 
-	private SharedPreferences getPreferences() {
+	@NonNull
+	protected SharedPreferences getPreferences() {
 		if (myPreferences == null)
 			myPreferences = App.getPreferences("FileBrowserService");
 		return myPreferences;

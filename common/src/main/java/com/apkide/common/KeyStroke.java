@@ -1,12 +1,17 @@
 package com.apkide.common;
 
-public class KeyStroke {
+import androidx.annotation.NonNull;
+
+import java.io.Serializable;
+
+public class KeyStroke implements Serializable {
+	private static final long serialVersionUID = -5001727409260147797L;
 	public static final char CHAR_UNDEFINED = 0xFFFF;
-	public int keyCode;
-	public char keyChar;
-	public boolean shift;
-	public boolean ctrl;
-	public boolean alt;
+	private final int keyCode;
+	private final char keyChar;
+	private final boolean shift;
+	private final boolean ctrl;
+	private final boolean alt;
 
 	public KeyStroke(int keyCode, boolean shift, boolean ctrl, boolean alt) {
 		this(keyCode, CHAR_UNDEFINED, shift, ctrl, alt);
@@ -24,8 +29,27 @@ public class KeyStroke {
 		return keyChar != CHAR_UNDEFINED;
 	}
 
-	public boolean match(KeyStroke key) {
-		if (key == null) return false;
+	public boolean isCtrlPressed(){
+		return ctrl;
+	}
+
+	public boolean isShiftPressed(){
+		return shift;
+	}
+
+	public boolean isAltPressed(){
+		return alt;
+	}
+
+	public int getKeyCode(){
+		return keyCode;
+	}
+
+	public char getKeyChar(){
+		return keyChar;
+	}
+
+	public boolean match(@NonNull KeyStroke key) {
 		if (key.keyCode == keyCode && key.shift == shift && key.ctrl == ctrl && key.alt == alt) {
 			if (isChar()) {
 				return key.keyChar == keyChar;
@@ -35,6 +59,7 @@ public class KeyStroke {
 		return false;
 	}
 
+	@NonNull
 	public String store() {
 		return keyCode + "," + keyChar + "," + shift + "," + ctrl + "," + alt;
 	}

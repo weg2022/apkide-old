@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/mainToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintBottom_toTopOf="@+id/mainFrame"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/mainFrame"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainToolbar">
+
+        <com.apkide.ui.views.SplitLayout
+            android:id="@+id/mainSplitLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <FrameLayout
+                android:id="@+id/mainContentFrame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <FrameLayout
+                    android:id="@+id/mainEmptyFrame"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/mainOpenFileButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:text="@string/non_open_file"
+                        android:textSize="18sp"
+                        android:focusable="true" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/mainEditorFrame"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.apkide.ui.editors.EditorPager
+                        android:id="@+id/mainEditorPager"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+
+                </FrameLayout>
+            </FrameLayout>
+
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/mainSplitSeparator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorSecondaryVariant"
+                android:paddingTop="2dp"
+                android:paddingRight="2dp" />
+
+            <FrameLayout
+                android:id="@+id/mainBottomFrame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.apkide.ui.browsers.BrowserPager
+                    android:id="@+id/mainBrowserPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </FrameLayout>
+
+        </com.apkide.ui.views.SplitLayout>
+
+        <ImageView
+            android:id="@+id/mainMoreButton"
+            android:layout_gravity="bottom|right"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="20dp"
+            android:clickable="true"
+            app:srcCompat="@drawable/master_button"
+            android:importantForAccessibility="no"
+            android:focusable="true" />
+
+    </FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

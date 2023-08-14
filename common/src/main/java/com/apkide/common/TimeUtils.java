@@ -2,12 +2,12 @@ package com.apkide.common;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class TimeUtils {
+public final class TimeUtils {
    private static final long INITIAL_TIME = System.currentTimeMillis();
    private static final AtomicInteger timeDelta = new AtomicInteger(0);
 
    public static long currentTimeMillis() {
-      return INITIAL_TIME + ((long)timeDelta.get() & 4294967295L) * 100L;
+      return INITIAL_TIME + ((long)timeDelta.get() & 0xffffffffL) * 100L;
    }
 
    static {

@@ -1,287 +1,224 @@
 package com.apkide.ui;
 
 import static android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import static com.apkide.ui.AppCommands.ActionBarCommand;
-import static com.apkide.ui.AppCommands.MenuCommand;
-import static com.apkide.ui.AppCommands.TitleMenuCommand;
-import static com.apkide.ui.AppCommands.VisibleMenuCommand;
-import static com.apkide.ui.AppCommands.foundActionBarCommand;
-import static com.apkide.ui.AppCommands.foundMenuCommand;
+import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO;
+import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES;
+import static androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode;
 import static java.lang.System.currentTimeMillis;
 
-import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.apkide.common.keybinding.KeyStrokeDetector;
+import com.apkide.common.Command;
 import com.apkide.ui.browsers.BrowserPager;
-import com.apkide.ui.databinding.UiMainBinding;
+import com.apkide.ui.databinding.MainBinding;
+import com.apkide.ui.util.MenuCommand;
+import com.apkide.ui.views.SplitLayout;
+
+import java.util.HashMap;
+import java.util.List;
+
 
 public class MainUI extends StyledUI implements
-        OnSharedPreferenceChangeListener,
-        View.OnClickListener,
-        DrawerLayout.DrawerListener,
-        ViewPager.OnPageChangeListener {
+		OnSharedPreferenceChangeListener,
+		SplitLayout.OnSplitChangeListener {
+	private SharedPreferences myPreferences;
+	private MainBinding myUiBinding;
+	private MainUIViewModel myUIViewModel;
+	private long myLastBackPressedTimestamps;
 
-    private UiMainBinding mainBinding;
+	@Override
+	protected void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		App.init(this);
+		AppPreferences.registerListener(this);
+		myUIViewModel = new ViewModelProvider(this, new ViewModelProvider.AndroidViewModelFactory(getApplication())).get(MainUIViewModel.class);
+		myUiBinding = MainBinding.inflate(getLayoutInflater());
+		setContentView(myUiBinding.getRoot());
+		setSupportActionBar(myUiBinding.mainToolbar);
 
-    private long lastBackPressedTimeMillis;
-    private KeyStrokeDetector myKeyStrokeDetector;
+		getSplitLayout().setOnSplitChangeListener(this);
+		myUiBinding.mainMoreButton.setOnClickListener(view -> {
 
-    @SuppressLint("ClickableViewAccessibility")
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        App.initialize(this);
-        AppPreferences.registerListener(this);
-        super.onCreate(savedInstanceState);
-        myKeyStrokeDetector =new KeyStrokeDetector(this);
-        mainBinding = UiMainBinding.inflate(getLayoutInflater());
-        setContentView(mainBinding.getRoot());
-        setSupportActionBar(mainBinding.mainContentToolbar);
+			getSplitLayout().toggleSplit(() -> {
 
-        if (getSupportActionBar() != null)
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			});
+		});
 
-        ActionBarDrawerToggle mainDrawerToggle = new ActionBarDrawerToggle(this, mainBinding.mainDrawerLayout,
-                android.R.string.ok, android.R.string.cancel);
-        mainBinding.mainDrawerLayout.addDrawerListener(mainDrawerToggle);
-        mainDrawerToggle.syncState();
+		myUiBinding.mainOpenFileButton.setOnClickListener(view -> {
+			App.postRun(() -> {
+				if (!getSplitLayout().isSplit())
+					getSplitLayout().openSplit();
+				if (getBrowserPager().getIndex() != BrowserPager.FILE_BROWSER)
+					getBrowserPager().toggle(BrowserPager.FILE_BROWSER);
+			}, 100L);
 
-        mainBinding.mainContentToolbar.setNavigationOnClickListener(v -> {
-            if (isDrawerOpened())
-                closeDrawer();
-            else
-                openDrawer();
-        });
-        mainBinding.mainDrawerLayout.addDrawerListener(this);
-        mainBinding.mainDrawerLayout.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_DOWN)
-                closeDrawer();
-            return false;
-        });
-        mainBinding.mainBrowserPager.addOnPageChangeListener(this);
-        getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
+		});
 
-                if (isDrawerOpened()) {
-                    closeDrawer();
-                    return;
-                }
+		getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+			@Override
+			public void handleOnBackPressed() {
+				if (getSplitLayout().isSplit()) {
+					getSplitLayout().closeSplit();
+					return;
+				}
 
-                if (currentTimeMillis() - lastBackPressedTimeMillis < 2000)
-                    exitApp();
-                else {
-                    lastBackPressedTimeMillis = currentTimeMillis();
-                    Toast.makeText(MainUI.this, "再按一次退出", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+				if (currentTimeMillis() - myLastBackPressedTimestamps < 2000) {
+					shutdown();
+				} else {
+					myLastBackPressedTimestamps = currentTimeMillis();
+					Toast.makeText(MainUI.this, "Press Exit again...", Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
+		boolean isSplit = getPreferences().getBoolean("isSplit", false);
+		if (isSplit)
+			getSplitLayout().openSplit();
+	}
 
-        restoreBrowser();
-    }
+	public void shutdown() {
+		finish();
+	}
 
-    public void exitApp() {
-        App.shutdown();
-        finish();
-    }
+	public SplitLayout getSplitLayout() {
+		return myUiBinding.mainSplitLayout;
+	}
 
-    public boolean isDrawerOpened() {
-        return mainBinding.mainDrawerLayout.isOpen();
-    }
+	public BrowserPager getBrowserPager() {
+		return myUiBinding.mainBrowserPager;
+	}
 
-    public void closeDrawer() {
-        mainBinding.mainDrawerLayout.closeDrawers();
-    }
+	private SharedPreferences getPreferences() {
+		if (myPreferences == null)
+			myPreferences = App.getPreferences("MainUI");
+		return myPreferences;
+	}
 
-    public void openDrawer() {
-        mainBinding.mainDrawerLayout.openDrawer(GravityCompat.START);
-    }
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		App.shutdown();
+		AppPreferences.unregisterListener(this);
+	}
 
-    public void lockDrawer() {
-        mainBinding.mainDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
-    }
-
-    public void unlockDrawer() {
-        mainBinding.mainDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-    }
-
-    public boolean isLockDrawer() {
-        return mainBinding.mainDrawerLayout.getDrawerLockMode(GravityCompat.START) == DrawerLayout.LOCK_MODE_LOCKED_OPEN;
-    }
-
-    private void restoreBrowser() {
-        int current = mainBinding.mainBrowserPager.getLastBrowser();
-        if (current >= 0)
-            toggleBrowser(current, true);
-    }
-
-    public void toggleBrowser(int index, boolean refresh) {
-        if (!isDrawerOpened()) {
-            openDrawer();
-        }
-        getBrowserPager().toggle(index, refresh);
-    }
-
-    public BrowserPager getBrowserPager() {
-        return mainBinding.mainBrowserPager;
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_options, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean r = super.onPrepareOptionsMenu(menu);
-        menu.clear();
-        getMenuInflater().inflate(R.menu.main_options, menu);
-        if (!App.isShutdown()) {
-            applyMenu(menu);
-        }
-        return r;
-    }
-
-    private void applyMenu(Menu menu) {
-        for (int i = 0; i < menu.size(); i++) {
-            MenuItem item = menu.getItem(i);
-
-            MenuCommand menuCommand = foundMenuCommand(item.getItemId());
-            if (menuCommand != null) {
-                item.setEnabled(menuCommand.isEnabled());
-                if (menuCommand instanceof VisibleMenuCommand)
-                    item.setVisible(((VisibleMenuCommand) menuCommand).getVisible(false));
-
-                if (menuCommand instanceof TitleMenuCommand)
-                    item.setTitle(((TitleMenuCommand) menuCommand).getTitle());
-            }
-
-            ActionBarCommand actionBarCommand = foundActionBarCommand(item.getItemId());
-            if (actionBarCommand != null) {
-                item.setEnabled(actionBarCommand.isEnabled());
-                item.setVisible(actionBarCommand.isVisible());
-            }
-
-            if (item.hasSubMenu()) {
-                applyMenu(item.getSubMenu());
-            }
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        MenuCommand menuCommand = foundMenuCommand(item.getItemId());
-        if (menuCommand != null && menuCommand.isEnabled()) {
-            menuCommand.run();
-            return true;
-        }
-        ActionBarCommand actionBarCommand = foundActionBarCommand(item.getItemId());
-        if (actionBarCommand != null && actionBarCommand.isVisible()) {
-            actionBarCommand.run();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        AppPreferences.unregisterListener(this);
-        if (mainBinding != null)
-            mainBinding = null;
-    }
-
-    @Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-    }
+	@Override
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @Nullable String key) {
+		if (key == null) return;
 
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.startsWith("editor")){
+		boolean recreated = false;
+		if (key.equals("app.theme.night")) {
+			if (isNightMode() != AppPreferences.isNightTheme()) {
+				setDefaultNightMode(AppPreferences.isNightTheme() ? MODE_NIGHT_YES : MODE_NIGHT_NO);
+				recreated = true;
+			}
+		}
 
-        }
-    }
+		if (key.equals("app.theme.followSystem")) {
+			if (AppCompatDelegate.getDefaultNightMode() != MODE_NIGHT_FOLLOW_SYSTEM) {
+				AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM);
+				recreated = true;
+			} else {
+				if (isNightMode() != AppPreferences.isNightTheme()) {
+					setDefaultNightMode(AppPreferences.isNightTheme() ? MODE_NIGHT_YES : MODE_NIGHT_NO);
+					recreated = true;
+				}
+			}
+		}
 
-    @Override
-    public void onClick(View v) {
+		if (recreated)
+			recreate();
+	}
 
-    }
+	@Override
+	public void onSplitChanged(boolean isSplit) {
+		myUiBinding.mainMoreButton.setVisibility(isSplit ? View.GONE : View.VISIBLE);
+		getPreferences().edit().putBoolean("isSplit", isSplit).apply();
+	}
 
-    @Override
-    public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main_options, menu);
+		return true;
+	}
 
-    }
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		applyMenuCommand(menu);
+		return super.onPrepareOptionsMenu(menu);
+	}
 
-    @Override
-    public void onDrawerOpened(@NonNull View drawerView) {
-        lockDrawer();
-    }
+	private final HashMap<Integer, MenuCommand> myCachedCommands = new HashMap<>(50);
 
-    @Override
-    public void onDrawerClosed(@NonNull View drawerView) {
-        unlockDrawer();
-    }
+	private void applyMenuCommand(Menu menu) {
+		if (App.isShutdown()) return;
 
-    @Override
-    public void onDrawerStateChanged(int newState) {
+		for (int i = 0; i < menu.size(); i++) {
+			MenuItem item = menu.getItem(i);
+			MenuCommand cached;
+			if (myCachedCommands.containsKey(item.getItemId()) &&
+					(cached = myCachedCommands.get(item.getItemId())) != null) {
 
-    }
+				item.setVisible(cached.isVisible());
+				item.setEnabled(cached.isEnabled());
+				if (cached.getTitle() != null)
+					item.setTitle(cached.getTitle());
+				if (cached.getIcon() != -1)
+					item.setIcon(cached.getIcon());
+			} else {
+				List<Command> commands = AppCommands.getCommands();
+				for (Command command : commands) {
+					if (command instanceof MenuCommand &&
+							item.getItemId() == ((MenuCommand) command).getId()) {
 
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+						myCachedCommands.put(item.getItemId(), (MenuCommand) command);
+						item.setVisible(((MenuCommand) command).isVisible());
+						item.setEnabled(command.isEnabled());
+						if (((MenuCommand) command).getTitle() != null)
+							item.setTitle(((MenuCommand) command).getTitle());
+						if (((MenuCommand) command).getIcon() != -1)
+							item.setIcon(((MenuCommand) command).getIcon());
+					}
+				}
+			}
 
-    }
+			if (item.hasSubMenu()) {
+				if (item.getSubMenu() != null)
+					applyMenuCommand(item.getSubMenu());
+			}
+		}
 
-    @Override
-    public void onPageSelected(int position) {
-        if (position == getBrowserPager().getBrowserCount() - 1) {
-            unlockDrawer();
-        } else {
-            if (!isLockDrawer())
-                lockDrawer();
-        }
-    }
+	}
 
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        myKeyStrokeDetector.onActivityKeyDown(keyCode,event);
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        myKeyStrokeDetector.onActivityKeyUp(keyCode,event);
-        return super.onKeyUp(keyCode, event);
-    }
-
-    public KeyStrokeDetector getKeyStrokeDetector() {
-        return myKeyStrokeDetector;
-    }
-
-    public IDEEditorPager getEditorPager(){
-        return mainBinding.mainEditorPager;
-    }
+	@Override
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+		if (myCachedCommands.containsKey(item.getItemId())) {
+			MenuCommand command = myCachedCommands.get(item.getItemId());
+			if (command != null && command.isEnabled()) {
+				command.run();
+				return true;
+			}
+		}
+		List<Command> commands = AppCommands.getCommands();
+		for (Command command : commands) {
+			if (command instanceof MenuCommand && ((MenuCommand) command).getId() == item.getItemId()) {
+				if (command.isEnabled()) {
+					command.run();
+					return true;
+				}
+			}
+		}
+		return super.onOptionsItemSelected(item);
+	}
 }

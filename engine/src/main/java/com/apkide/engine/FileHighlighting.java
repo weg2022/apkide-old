@@ -3,7 +3,7 @@ package com.apkide.engine;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.apkide.openapi.ls.highlight.HighlightKind;
+import com.apkide.openapi.ls.HighlightKind;
 
 public class FileHighlighting implements Parcelable {
 

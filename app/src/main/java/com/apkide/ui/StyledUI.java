@@ -17,15 +17,16 @@ import android.provider.Settings;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
-import com.apkide.common.app.AppLog;
+import com.apkide.common.AppLog;
+import com.apkide.common.MessageBox;
 
 
 public class StyledUI extends AppCompatActivity {
+
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,25 +98,25 @@ public class StyledUI extends AppCompatActivity {
 
 	@RequiresApi(api = VERSION_CODES.R)
 	private void requestManageStoragePermission() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("缺少必要权限");
-		builder.setMessage(getString(R.string.app_name) + ": 需要获得访问文件和媒体的权限");
-		builder.setPositiveButton("同意", (dialog, which) -> {
-			dialog.dismiss();
-			try {
-				Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-				intent.setData(Uri.parse("package:" + getPackageName()));
-				startActivity(intent);
-				ActivityCompat.startActivityForResult(this, intent, REQUEST_PERMISSION_CODE, null);
-			} catch (ActivityNotFoundException e) {
-				AppLog.e(e);
-			}
-		});
-		builder.setNegativeButton("拒绝", (dialog, which) -> {
-			dialog.dismiss();
-		});
-		builder.setCancelable(false);
-		builder.create().show();
+		MessageBox.showInfo(this,
+				getString(R.string.request_permission_label),
+				getString(R.string.app_name) +
+						getString(R.string.request_permission_message),
+				false,
+				() -> {
+					try {
+						Intent intent = new Intent(
+								Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+						intent.setData(Uri.parse("package:" + getPackageName()));
+						startActivity(intent);
+						ActivityCompat.startActivityForResult(
+								this, intent, REQUEST_PERMISSION_CODE, null);
+					} catch (ActivityNotFoundException e) {
+						AppLog.e(e);
+					}
+				}, () -> {
+					AppLog.s(this, "requestManageStoragePermission canceled.");
+				});
 	}
 
 	@Override
@@ -124,14 +125,14 @@ public class StyledUI extends AppCompatActivity {
 		if (requestCode == REQUEST_PERMISSION_CODE) {
 			if (SDK_INT >= VERSION_CODES.R) {
 				if (Environment.isExternalStorageManager()) {
-                    if (myStorageRunnable != null)
-                        myStorageRunnable.run();
-                }
+					if (myStorageRunnable != null)
+						myStorageRunnable.run();
+				}
 			} else {
 				if (ActivityCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE)
 						!= PERMISSION_GRANTED) {
-                    if (myStorageRunnable != null)
-                        myStorageRunnable.run();
+					if (myStorageRunnable != null)
+						myStorageRunnable.run();
 				}
 			}
 		}
@@ -143,9 +144,9 @@ public class StyledUI extends AppCompatActivity {
 		if (requestCode == REQUEST_PERMISSION_CODE) {
 			if (SDK_INT >= VERSION_CODES.R) {
 				if (Environment.isExternalStorageManager()) {
-                    if (myStorageRunnable != null)
-                        myStorageRunnable.run();
-                }
+					if (myStorageRunnable != null)
+						myStorageRunnable.run();
+				}
 			} else {
 				if (ActivityCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE)
 						!= PERMISSION_GRANTED) {

@@ -2,11 +2,9 @@ package com.apkide.ls.java;
 
 import androidx.annotation.NonNull;
 
-import com.apkide.common.collection.List;
 import com.apkide.openapi.ls.Feature;
 import com.apkide.openapi.ls.LanguageServer;
 import com.apkide.openapi.ls.Model;
-import com.apkide.openapi.ls.util.KeyValue;
 import com.apkide.openapi.ls.util.Position;
 import com.apkide.openapi.ls.util.Range;
 
@@ -23,7 +21,7 @@ public class JavaLanguageServer implements LanguageServer {
 	}
 
 	@Override
-	public void initialize(int processId, @NonNull String rootPath, @NonNull Map<String, Object> options, @NonNull List<KeyValue<String, String>> workspacePaths) {
+	public void initialize(int processId, @NonNull String rootPath, @NonNull Map<String, Object> options, @NonNull Map<String, String> workspacePaths) {
 		Map<String, Object> result = new HashMap<>();
 		result.put(Feature.CodeCompletion.name, true);
 
@@ -49,16 +47,7 @@ public class JavaLanguageServer implements LanguageServer {
 
 	@Override
 	public void requestHighlighting(@NonNull String filePath) {
-		if (!myModel.getOpenFileCallback().isOpenFile(filePath)) return;
 
-		long version = myModel.getOpenFileCallback().getOpenFileVersion(filePath);
-		myModel.getHighlighterCallback().highlightStarted(filePath, version);
-
-		myModel.getHighlighterCallback().highlightCompleted(filePath,version);
-
-		myModel.getHighlighterCallback().semanticHighlightStarted(filePath,version);
-
-		myModel.getHighlighterCallback().semanticHighlightCompleted(filePath,version);
 	}
 
 	@Override

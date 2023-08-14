@@ -7,9 +7,9 @@ import androidx.annotation.NonNull;
 import java.io.Serializable;
 import java.util.Arrays;
 
-public class IntArrayList implements Cloneable, Serializable {
+public class IntArrayList implements Serializable,Cloneable {
 
-	private static final long serialVersionUID = 5327565719369084735L;
+	private static final long serialVersionUID = 325280016244969720L;
 	private int[] data;
 	private int size;
 	
@@ -34,7 +34,7 @@ public class IntArrayList implements Cloneable, Serializable {
 		int oldCapacity = data.length;
 		if (minCapacity > oldCapacity){
 			int[] oldData = data;
-			int newCapacity = (oldCapacity * 3) / 2 + 1;
+			int newCapacity = oldCapacity * 5 / 4 ;
 			if (newCapacity < minCapacity){
 				newCapacity = minCapacity;
 			}

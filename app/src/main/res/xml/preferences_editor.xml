@@ -1,29 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen>
 
 
-	<PreferenceCategory android:title="Appearance">
-
-	</PreferenceCategory>
-
-
-	<PreferenceCategory android:title="Font">
-
-
-	</PreferenceCategory>
-
-	<PreferenceCategory android:title="Tabs &amp; Spaces">
-		<ListPreference
-			android:entries="@array/PefEditorTabSize"
-			android:entryValues="@array/PefEditorTabSize"
-			android:defaultValue="4"
-			android:key="tabSize"
-			android:title="Tab Size" />
-
-		<SwitchPreference
-			android:defaultValue="false"
-			android:key="useSpaces"
-			android:summary="Use spaces instead of tabs"
-			android:title="Use Spaces" />
-	</PreferenceCategory>
 </PreferenceScreen>

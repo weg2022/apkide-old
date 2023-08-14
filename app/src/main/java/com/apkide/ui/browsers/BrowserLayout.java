@@ -1,47 +1,50 @@
 package com.apkide.ui.browsers;
 
-import static android.view.LayoutInflater.from;
-
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.view.LayoutInflater;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.lifecycle.ViewModelStore;
+import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.apkide.ui.App;
-import com.apkide.ui.databinding.BrowserHeaderBinding;
 
-public abstract class BrowserLayout extends LinearLayout implements Browser {
-	private SharedPreferences preferences;
-	private final BrowserHeaderBinding myHeaderBinding;
 
-	public BrowserLayout(Context context) {
+public abstract class BrowserLayout extends LinearLayoutCompat implements Browser, ViewModelStoreOwner {
+
+	private SharedPreferences myPreferences;
+	private final ViewModelStore myViewModelStore;
+	public BrowserLayout(@NonNull Context context) {
 		super(context);
-		removeAllViews();
-		setOrientation(VERTICAL);
-		LayoutInflater inflater = from(getContext());
-		myHeaderBinding = BrowserHeaderBinding.inflate(inflater, this, false);
-		addView(myHeaderBinding.getRoot());
+		myViewModelStore=new ViewModelStore();
+	}
+
+
+	@NonNull
+	public SharedPreferences getPreferences(){
+		if (myPreferences==null)
+			myPreferences= App.getPreferences(getBrowserName());
+		return myPreferences;
 	}
 
 	@NonNull
-	public final BrowserHeaderBinding getHeader() {
-		return myHeaderBinding;
+	public abstract String getBrowserName();
+
+	@Override
+	public void refresh() {
+		requestFocus();
 	}
 
 	@NonNull
-	public abstract String getPreferencesName();
-
-	@NonNull
-	public SharedPreferences getPreferences() {
-		if (preferences == null)
-			preferences = App.getPreferences(getPreferencesName());
-		return preferences;
+	@Override
+	public ViewModelStore getViewModelStore() {
+		return myViewModelStore;
 	}
 
 	@Override
-	public void onApply() {
-		requestFocus();
+	protected void onDetachedFromWindow() {
+		myViewModelStore.clear();
+		super.onDetachedFromWindow();
 	}
 }

@@ -11,7 +11,7 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginStart="8dp"
-        tools:srcCompat="@mipmap/file_type_unknown"
+        tools:srcCompat="@drawable/file_type_unknown"
         android:importantForAccessibility="no" />
 
     <TextView

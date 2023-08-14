@@ -1,65 +1,47 @@
 package com.apkide.ui;
 
+import static androidx.preference.PreferenceManager.getDefaultSharedPreferences;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
-import androidx.preference.PreferenceManager;
 
-import com.apkide.common.app.Application;
 
-public class AppPreferences {
-
+public final class AppPreferences {
 
 	private static SharedPreferences preferences;
 
-	public static void init(Context context) {
-		PreferenceManager.setDefaultValues(context, R.xml.preferences_application, false);
-		PreferenceManager.setDefaultValues(context, R.xml.preferences_editor, false);
-		PreferenceManager.setDefaultValues(context, R.xml.preferences_compiler, false);
-		PreferenceManager.setDefaultValues(context, R.xml.preferences_sourcecontrol, false);
+	public static void initialize(Context context) {
+		preferences = getDefaultSharedPreferences(context);
 	}
 
-	public static void registerListener(SharedPreferences.OnSharedPreferenceChangeListener listener) {
+	public static void registerListener(@NonNull SharedPreferences.OnSharedPreferenceChangeListener listener) {
 		getPreferences().registerOnSharedPreferenceChangeListener(listener);
 	}
 
-	public static void unregisterListener(SharedPreferences.OnSharedPreferenceChangeListener listener) {
+	public static void unregisterListener(@NonNull SharedPreferences.OnSharedPreferenceChangeListener listener) {
 		getPreferences().unregisterOnSharedPreferenceChangeListener(listener);
 	}
 
 	@NonNull
 	public static SharedPreferences getPreferences() {
 		if (preferences == null)
-			preferences = PreferenceManager.getDefaultSharedPreferences(Application.get().getContext());
+			preferences = getDefaultSharedPreferences(App.getContext());
 		return preferences;
 	}
 
-	@NonNull
-	public static SharedPreferences.Editor getEditor() {
-		return getPreferences().edit();
+	public static String getAppLanguage() {
+		return getPreferences().getString("app.language", "default");
 	}
 
-
-	///////////////////////////////////////////////////////////////////////////
-	// Editor Preferences
-	///////////////////////////////////////////////////////////////////////////
-
-	public static boolean isUseTabs() {
-		return getPreferences().getBoolean("editor.useTabs", true);
+	public static boolean isNightTheme() {
+		return getPreferences().getBoolean("app.theme.night", false);
 	}
 
-	public static int getTabSize() {
-		return getPreferences().getInt("editor.tabSize", 4);
+	public static boolean isFollowSystemTheme() {
+		return getPreferences().getBoolean("app.theme.followSystem", true);
 	}
 
-	public static int getFontSize() {
-		String value = getPreferences().getString("editor.fontSize", "16");
-		try {
-			return Integer.parseInt(value);
-		} catch (NumberFormatException e) {
-			return 16;
-		}
-	}
 
 }

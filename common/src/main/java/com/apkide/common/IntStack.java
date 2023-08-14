@@ -21,7 +21,7 @@ public class IntStack implements Serializable {
 	
 	public void push(int t) {
 		if (size >= data.length) {
-			int[] newData = new int[data.length * 3 / 2];
+			int[] newData = new int[data.length * 5 / 4];
 			arraycopy(data, 0, newData, 0, size);
 			data = newData;
 		}

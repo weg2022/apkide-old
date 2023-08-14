@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item
+        android:id="@+id/fileBrowserCommandSyncWithDisk"
+        android:title="Sync With Disk" />
+    <item
+        android:id="@+id/fileBrowserCommandShowHome"
+        android:title="Show Home Folder" />
+    <item
+        android:id="@+id/fileBrowserCommandShowCurrent"
+        android:title="Show Current Folder" />
+    <item
+        android:title="New..."
+        android:id="@+id/fileBrowserCommandNew">
+        <menu>
+            <item android:id="@+id/fileBrowserCommandNewFile"
+                android:title="New File"/>
+
+            <item android:id="@+id/fileBrowserCommandNewFolder"
+                android:title="New Folder"/>
+        </menu>
+    </item>
 </menu>

@@ -2,7 +2,7 @@ package com.apkide.openapi.ls.callback;
 
 import androidx.annotation.NonNull;
 
-import com.apkide.openapi.ls.completion.Completion;
+import com.apkide.openapi.ls.Completion;
 import com.apkide.openapi.ls.util.Position;
 
 public interface CodeCompleterCallback {

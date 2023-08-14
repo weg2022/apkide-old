@@ -2,8 +2,6 @@ package com.apkide.openapi.ls;
 
 import androidx.annotation.NonNull;
 
-import com.apkide.common.collection.List;
-import com.apkide.openapi.ls.util.KeyValue;
 import com.apkide.openapi.ls.util.Position;
 import com.apkide.openapi.ls.util.Range;
 
@@ -13,7 +11,7 @@ public interface LanguageServer {
 
 	void initialize(int processId, @NonNull String rootPath,
 	                @NonNull Map<String, Object> options,
-	                @NonNull List<KeyValue<String, String>> workspacePaths);
+	                @NonNull Map<String, String> workspacePaths);
 
 	void shutdown();
 

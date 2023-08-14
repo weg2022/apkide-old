@@ -9,13 +9,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.apkide.ui.R;
 
-
 public class FileEntryViewHolder extends RecyclerView.ViewHolder {
-	public TextView label;
-	public ImageView icon;
+	public ImageView entryIcon;
+	public TextView entryLabel;
+
 	public FileEntryViewHolder(@NonNull View itemView) {
 		super(itemView);
-		label=itemView.findViewById(R.id.fileEntryLabel);
-		icon=itemView.findViewById(R.id.fileEntryIcon);
+		entryIcon = itemView.findViewById(R.id.fileEntryIcon);
+		entryLabel = itemView.findViewById(R.id.fileEntryLabel);
 	}
 }

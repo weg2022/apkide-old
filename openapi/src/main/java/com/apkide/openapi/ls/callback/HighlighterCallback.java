@@ -2,7 +2,7 @@ package com.apkide.openapi.ls.callback;
 
 import androidx.annotation.NonNull;
 
-import com.apkide.openapi.ls.highlight.HighlightKind;
+import com.apkide.openapi.ls.HighlightKind;
 
 public interface HighlighterCallback {
 	void highlightStarted(@NonNull String filePath, long version);

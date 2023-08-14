@@ -1,7 +1,5 @@
 package com.apkide.common;
 
-import com.apkide.common.io.IOUtils;
-
 import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.IOException;
@@ -46,7 +44,7 @@ public class LineIterator implements Iterator<String>, Closeable {
 				}
 			}
 		} catch (final IOException ioe) {
-			IOUtils.safeClose(this);
+			IoUtils.safeClose(this);
 			throw new IllegalStateException(ioe);
 		}
 	}
@@ -70,10 +68,10 @@ public class LineIterator implements Iterator<String>, Closeable {
 	}
 
 	@Override
-	public void close() throws IOException {
+	public void close() {
 		finished = true;
 		cachedLine = null;
-		IOUtils.safeClose(bufferedReader);
+		IoUtils.safeClose(bufferedReader);
 	}
 
 	@Override

@@ -1,128 +1,164 @@
 package com.apkide.ui;
 
-import static com.apkide.common.io.IOUtils.copyBytes;
-import static com.apkide.common.io.IOUtils.safeClose;
+import static com.apkide.common.IoUtils.copyAllBytes;
+import static com.apkide.common.IoUtils.safeClose;
 import static java.io.File.separator;
+import static java.util.Objects.requireNonNull;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
-import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.multidex.MultiDexApplication;
 
-import com.apkide.common.FileSystem;
+import com.apkide.common.AppLog;
+import com.apkide.common.Application;
+import com.apkide.common.FileUtils;
 import com.apkide.common.SafeRunner;
-import com.apkide.common.app.AppLog;
-import com.apkide.common.app.Application;
-import com.apkide.common.io.FileUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
 
 public class IDEApplication extends MultiDexApplication {
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        Application.set(new Application() {
 
-            @NonNull
-            @Override
-            public File foundBinary(@NonNull String binaryName) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    String binaryPath = getContext().getApplicationInfo().nativeLibraryDir
-                            + separator + "lib" + binaryName + ".so";
-                    AppLog.s(String.format("%s binary file found.", binaryPath));
-                    return new File(binaryPath);
-                }
-                String targetName = FileUtils.getFileName(binaryName);
-                String arch = "";
-                String[] abis=Build.SUPPORTED_ABIS;
-                label:
-                for (String abi : abis) {
-                    switch (abi) {
-                        case "armeabi-v7a":
-                            arch = "arm";
-                            break label;
-                        case "arm64-v8a":
-                            arch = "arm64";
-                            break label;
-                        case "x86":
-                        case "x86_64":
-                            arch = "x86";
-                            break label;
-                    }
-                }
+	@Override
+	public void onCreate() {
+		super.onCreate();
 
-                File targetFile = new File(getContext().getFilesDir(), targetName);
-                if (TextUtils.isEmpty(arch)) {
-                    AppLog.e(String.format("Unsupported processor architecture %s.",
-                            Arrays.toString(abis)));
-                    return targetFile;
-                }
+		Application.set(new Application() {
+			private SharedPreferences myPreferences;
 
-                if (targetFile.exists()) {
-                    AppLog.s(String.format("%s binary file found.", targetFile.getAbsolutePath()));
-                    return FileUtils.setExecutable(targetFile);
-                }
+			private SharedPreferences getPreferences() {
+				if (myPreferences == null) {
+					myPreferences = getContext().getSharedPreferences("IDEApp", Context.MODE_PRIVATE);
+				}
+				return myPreferences;
+			}
 
-                String fullFileName = "bin" + separator + arch + separator + binaryName;
+			private String[] getSupportedABI() {
+				String[] list = Build.SUPPORTED_ABIS;
+				for (String abi : list) {
+					switch (abi) {
+						case "armeabi":
+							return new String[]{"arm"};
+						case "arm64-v8a":
+							return new String[]{"arm64", "arm-pie", "arm"};
+						case "armeabi-v7a":
+							return new String[]{"arm-pie", "arm"};
+						case "x86":
+							return new String[]{"x86", "arm"};
+						case "x86_64":
+							return new String[]{"x86-pie", "x86", "arm"};
+					}
+				}
+				return new String[0];
+			}
 
-                AppLog.s(String.format("Extract binary file %s to %s from assets.", fullFileName, targetFile.getAbsolutePath()));
-                SafeRunner.run(() -> {
-                    FileSystem.createFile(targetFile.getAbsolutePath());
-                    InputStream inputStream = getContext().getAssets().open(fullFileName);
-                    FileOutputStream outputStream = new FileOutputStream(targetFile);
-                    copyBytes(inputStream, outputStream);
-                    safeClose(inputStream, outputStream);
-                });
+			@NonNull
+			@Override
+			public File foundBinary(@NonNull String binaryName) {
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+					String binaryPath = getContext().getApplicationInfo().nativeLibraryDir
+							+ separator + "lib" + binaryName + ".so";
+					return new File(binaryPath);
+				}
+				String targetName = FileUtils.getFileName(binaryName);
+				String[] arch = getSupportedABI();
+				File targetFile = new File(getDataDir(), targetName);
+				if (arch.length == 0) {
+					AppLog.e(String.format("Unsupported processor architecture %s.",
+							Arrays.toString(Build.SUPPORTED_ABIS)));
+					return targetFile;
+				}
 
-                AppLog.s(String.format("%s binary found.", targetFile.getAbsolutePath()));
-                return FileUtils.setExecutable(targetFile);
-            }
+				if (targetFile.exists() &&
+						getPreferences().getLong(binaryName, -1)
+								== targetFile.length()) {
+					return FileUtils.setExecutable(targetFile);
+				}
 
-            @NonNull
-            @Override
-            public File foundFile(@NonNull String fileName) {
-                String targetName = FileUtils.getFileName(fileName);
-                File targetFile = new File(getContext().getFilesDir(), targetName);
-                if (targetFile.exists()) {
-                    AppLog.s(String.format("%s file found.", targetFile.getAbsolutePath()));
-                    return targetFile;
-                }
 
-                AppLog.s(String.format("Extract file %s to %s.",
-                        fileName, targetFile.getAbsolutePath()));
-                SafeRunner.run(() -> {
-                    InputStream inputStream = getContext().getAssets().open(fileName);
-                    if (inputStream == null)
-                        inputStream = this.getClass().getResourceAsStream(fileName);
-                    if (inputStream != null) {
-                        FileOutputStream outputStream = new FileOutputStream(targetFile);
-                        copyBytes(inputStream, outputStream);
-                        safeClose(inputStream, outputStream);
-                    }
-                });
+				final long[] version = {-1};
+				final InputStream[] inputStreams = new InputStream[1];
+				for (String a : arch) {
+					String fullFileName = "bin" + separator + a + separator + binaryName;
+					try {
+						InputStream inputStream = getContext().getAssets().open(fullFileName);
+						inputStreams[0] = inputStream;
+						break;
+					} catch (IOException ignored) {
 
-                return targetFile;
-            }
+					}
+				}
 
-            @NonNull
-            @Override
-            public File getTempDirectory() {
-                return getApplicationContext().getExternalFilesDir(".temp");
-            }
+				if (inputStreams[0] != null) {
+					SafeRunner.run(() -> {
+						InputStream inputStream = inputStreams[0];
+						FileOutputStream outputStream = new FileOutputStream(targetFile);
+						version[0] = inputStream.available();
+						copyAllBytes(inputStream, outputStream);
+						safeClose(inputStream, outputStream);
+					});
+				}
 
-            @NonNull
-            @Override
-            public Context getContext() {
-                return getApplicationContext();
-            }
-        });
+				getPreferences().edit().putLong(binaryName, version[0]).apply();
+				return FileUtils.setExecutable(targetFile);
+			}
 
-        AppPreferences.init(getApplicationContext());
-    }
+			@NonNull
+			@Override
+			public File foundFile(@NonNull String fileName) {
+				File targetFile = new File(getDataDir(), fileName);
+				if (targetFile.exists() &&
+						getPreferences().getLong(fileName, -1)
+								== targetFile.length()) {
+					return targetFile;
+				}
+
+				long[] version = new long[]{-1};
+				SafeRunner.run(() -> {
+					InputStream inputStream = getContext().getAssets().open(fileName);
+					FileOutputStream outputStream = new FileOutputStream(targetFile);
+					version[0] = inputStream.available();
+					copyAllBytes(inputStream, outputStream);
+					safeClose(inputStream, outputStream);
+				});
+
+				getPreferences().edit().putLong(fileName, version[0]).apply();
+				return targetFile;
+			}
+
+			@NonNull
+			@Override
+			public File getDataDir() {
+				return getContext().getFilesDir();
+			}
+
+			@NonNull
+			@Override
+			public File getCacheDir() {
+				return requireNonNull(getContext().getExternalFilesDir(".cache"));
+			}
+
+			@NonNull
+			@Override
+			public File getTempDir() {
+				return requireNonNull(getContext().getExternalFilesDir(".temp"));
+			}
+
+			@NonNull
+			@Override
+			public Context getContext() {
+				return getApplicationContext();
+			}
+		});
+
+		AppPreferences.initialize(getApplicationContext());
+
+	}
 }

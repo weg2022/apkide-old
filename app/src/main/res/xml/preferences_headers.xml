@@ -13,12 +13,8 @@
 		android:summary="Configure Build and Decode settings."
 		android:title="Build &amp; Decode" />
 	<Preference
-		android:fragment="com.apkide.ui.preferences.SourceControlPreferencesFragment"
-		android:summary="Configure Git source control settings."
-		android:title="Git Source Control" />
-	<Preference
 		android:summary="Show legal information about the application"
-		android:title="About &amp; Licenses">
+		android:title="About">
 		<intent
 			android:targetClass="com.apkide.ui.about.AboutUI"
 			android:targetPackage="com.apkide.ui" />

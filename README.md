@@ -1,4 +1,4 @@
-# APK-IDE
+# Dev-A - APK-IDE
 
 APK-IDE是一款用于反编译；编译；逆向；修改APK的安卓软件。
 编译与反编译核心使用的是 APK-Tool 开源项目

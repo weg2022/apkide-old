@@ -40,6 +40,11 @@ public class PreferencesUI extends StyledUI {
     }
 
     @Override
+    public void recreate() {
+        //super.recreate();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (preferencesBinding != null)
