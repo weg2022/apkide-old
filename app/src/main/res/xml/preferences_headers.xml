@@ -1,22 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-	<Preference
-		android:fragment="com.apkide.ui.preferences.ApplicationPreferencesFragment"
-		android:summary="Configure global application settings."
-		android:title="Application" />
-	<Preference
-		android:fragment="com.apkide.ui.preferences.EditorPreferencesFragment"
-		android:summary="Configure the editor settings."
-		android:title="Editor" />
-	<Preference
-		android:fragment="com.apkide.ui.preferences.CompilerPreferencesFragment"
-		android:summary="Configure Build and Decode settings."
-		android:title="Build &amp; Decode" />
-	<Preference
-		android:summary="Show legal information about the application"
-		android:title="About">
-		<intent
-			android:targetClass="com.apkide.ui.about.AboutUI"
-			android:targetPackage="com.apkide.ui" />
-	</Preference>
+    <PreferenceCategory android:title="Application">
+        <Preference
+            android:fragment="com.apkide.ui.preferences.AppearancePreferencesFragment"
+            android:title="Appearance" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Editor">
+        <Preference
+            android:fragment="com.apkide.ui.preferences.EditorPreferencesFragment"
+            android:summary="Configure the editor settings."
+            android:title="Editor" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Editor">
+        <Preference
+            android:fragment="com.apkide.ui.preferences.CompilerPreferencesFragment"
+            android:summary="Configure Build and Decode settings."
+            android:title="Build &amp; Decode" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="About">
+        <Preference
+            android:summary="Show legal information about the application"
+            android:title="About">
+            <intent
+                android:targetClass="com.apkide.ui.about.AboutUI"
+                android:targetPackage="com.apkide.ui" />
+        </Preference>
+    </PreferenceCategory>
 </PreferenceScreen>

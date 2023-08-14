@@ -1,5 +1,9 @@
 package com.apkide.ui;
 
+import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO;
+import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES;
+import static androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode;
 import static com.apkide.common.IoUtils.copyAllBytes;
 import static com.apkide.common.IoUtils.safeClose;
 import static java.io.File.separator;
@@ -10,6 +14,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.multidex.MultiDexApplication;
 
 import com.apkide.common.AppLog;
@@ -159,6 +164,12 @@ public class IDEApplication extends MultiDexApplication {
 		});
 
 		AppPreferences.initialize(getApplicationContext());
-
+		if (AppPreferences.isFollowSystemTheme()) {
+			if (AppCompatDelegate.getDefaultNightMode() != MODE_NIGHT_FOLLOW_SYSTEM)
+				AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM);
+			else
+				setDefaultNightMode(AppPreferences.isNightTheme() ? MODE_NIGHT_YES : MODE_NIGHT_NO);
+		} else
+			setDefaultNightMode(AppPreferences.isNightTheme() ? MODE_NIGHT_YES : MODE_NIGHT_NO);
 	}
 }

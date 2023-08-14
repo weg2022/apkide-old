@@ -2,6 +2,7 @@
 	<!-- Base application theme. -->
 	<style name="Theme.App" parent="Theme.MaterialComponents.Light.NoActionBar">
 		<item name="android:windowBackground">@color/colorBackground</item>
+		<item name="textAllCaps">false</item>
 		<item name="colorPrimary">@color/colorPrimary</item>
 		<item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
 		<item name="colorOnPrimary">@color/colorOnPrimary</item>
@@ -13,6 +14,7 @@
 
 	<style name="Theme.UI" parent="Theme.MaterialComponents.Light.NoActionBar">
 		<item name="android:windowBackground">@color/colorBackground</item>
+		<item name="textAllCaps">false</item>
 		<item name="colorPrimary">@color/colorPrimary</item>
 		<item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
 		<item name="colorOnPrimary">@color/colorOnPrimary</item>
@@ -24,6 +26,7 @@
 
 	<style name="Theme.UI.Preferences" parent="Theme.MaterialComponents.Light.NoActionBar">
 		<item name="android:windowBackground">@color/colorBackground</item>
+		<item name="textAllCaps">false</item>
 		<item name="colorPrimary">@color/colorPrimary</item>
 		<item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
 		<item name="colorOnPrimary">@color/colorOnPrimary</item>

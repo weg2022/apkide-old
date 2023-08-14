@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:key="app.theme.night"
+        android:defaultValue="false"
+        android:title="Night Theme" />
+
+    <SwitchPreferenceCompat
+        android:key="app.theme.followSystem"
+        android:defaultValue="true"
+        android:title="Follow System Theme"/>
+</PreferenceScreen>
