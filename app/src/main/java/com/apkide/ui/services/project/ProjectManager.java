@@ -1,6 +1,7 @@
 package com.apkide.ui.services.project;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public interface ProjectManager {
 
@@ -10,13 +11,25 @@ public interface ProjectManager {
 	@NonNull
 	String[] getSupportedLanguages();
 
-	boolean isSupportedProject(@NonNull String rootPath);
+	boolean checkIsSupportedProjectRootPath(@NonNull String rootPath);
 
-	boolean isProjectFile(@NonNull String path);
+	boolean checkIsSupportedProjectPath(@NonNull String path);
 
 	void open(@NonNull String rootPath);
 
 	void close();
 
 	void sync();
+
+	boolean isOpen();
+
+	@Nullable
+	String getRootPath();
+
+	boolean isProjectFilePath(@NonNull String path);
+
+	@Nullable
+	String resolvePath(@NonNull String path);
+
+	int getIcon();
 }

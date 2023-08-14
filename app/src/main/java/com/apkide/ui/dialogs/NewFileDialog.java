@@ -8,11 +8,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.apkide.common.FileSystem;
 import com.apkide.common.MessageBox;
-import com.apkide.common.ResultRunnable;
 import com.apkide.ui.App;
 
 import java.io.File;
@@ -22,17 +20,10 @@ public class NewFileDialog extends MessageBox {
 
 	private String filePath;
 	private boolean isDirectory;
-	private ResultRunnable<String> writeContent;
 
 	public NewFileDialog(@NonNull String filePath, boolean isDirectory) {
 		this.filePath = filePath;
 		this.isDirectory = isDirectory;
-	}
-
-	public NewFileDialog(@NonNull String filePath, boolean isDirectory, @Nullable ResultRunnable<String> writeContent) {
-		this.filePath = filePath;
-		this.isDirectory = isDirectory;
-		this.writeContent = writeContent;
 	}
 
 	@NonNull
@@ -52,13 +43,6 @@ public class NewFileDialog extends MessageBox {
 					if (isDirectory) {
 						FileSystem.mkdir(newFilePath);
 					} else {
-						if (writeContent != null) {
-							String text = writeContent.run();
-							if (text != null)
-								FileSystem.createFile(newFilePath, text);
-							else
-								FileSystem.createFile(newFilePath);
-						}
 						FileSystem.createFile(newFilePath);
 					}
 				} catch (IOException e) {

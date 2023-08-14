@@ -1,7 +1,6 @@
 package com.apkide.ui.browsers.file;
 
-import static com.apkide.common.FileSystem.getEnclosingDir;
-import static com.apkide.common.FileSystem.getEnclosingDirPrefix;
+import static com.apkide.common.FileSystem.getEnclosingParent;
 import static com.apkide.common.FileSystem.getName;
 
 import androidx.annotation.NonNull;
@@ -48,12 +47,8 @@ public class FileEntry implements EntryListAdapter.Entry, Comparable<FileEntry> 
 		if (name.startsWith(".") || name.equals("build") || name.equals("bin")) {
 			return true;
 		}
-		if (getEnclosingDirPrefix(filePath, ".") != null ||
-				getEnclosingDir(filePath, "build") != null ||
-				getEnclosingDir(filePath, "bin") != null) {
-			return true;
-		}
-		return false;
+		return getEnclosingParent(filePath, s -> getName(s).startsWith(".")) != null ||
+				getEnclosingParent(filePath, s -> getName(s).equals("build")) != null;
 	}
 
 	public boolean isHidden() {

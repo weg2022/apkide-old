@@ -2,7 +2,7 @@ package com.apkide.common;
 
 import androidx.annotation.Nullable;
 
-public interface ResultRunnable<T> {
+public interface ResultRunnable<V,R> {
 	@Nullable
-	T run();
+	R run(V V);
 }

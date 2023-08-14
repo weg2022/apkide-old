@@ -60,6 +60,9 @@
                 android:id="@+id/commandViewFile"
                 android:title="@string/action_view_file" />
             <item
+                android:id="@+id/commandViewProject"
+                android:title="@string/action_view_project"/>
+            <item
                 android:id="@+id/commandViewError"
                 android:title="@string/action_view_error" />
             <item

@@ -1,16 +1,15 @@
-package com.apkide.ui.commands.project;
+package com.apkide.ui.commands.code;
 
 import androidx.annotation.IdRes;
 
-import com.apkide.ui.App;
 import com.apkide.ui.R;
 import com.apkide.ui.util.MenuCommand;
 
-public class CloseProjectCommand implements MenuCommand {
+public class OutBlockCommentCommand implements MenuCommand {
 	@IdRes
 	@Override
 	public int getId() {
-		return R.id.commandCloseProject;
+		return R.id.commandOutBlockComment;
 	}
 
 	@Override
@@ -20,12 +19,11 @@ public class CloseProjectCommand implements MenuCommand {
 
 	@Override
 	public boolean isEnabled() {
-		return App.getProjectService().isProjectOpened();
+		return false;
 	}
 
 	@Override
 	public boolean run() {
-		App.getProjectService().closeProject();
-		return true;
+		return false;
 	}
 }

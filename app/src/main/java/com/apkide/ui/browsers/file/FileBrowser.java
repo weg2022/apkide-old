@@ -101,10 +101,10 @@ public class FileBrowser extends HeaderBrowserLayout implements FileBrowserServi
 	}
 
 	private void showOpenFolder(FileEntry entry, View view) {
-		if (App.getProjectService().isSupportedProject(entry.getFilePath())) {
+		if (App.getProjectService().checkIsSupportedProjectRootPath(entry.getFilePath())) {
 			MessageBox.showInfo(App.getMainUI(),
 					"Open Project",
-					"The current directory is a project, do you want to open it ?",
+					"This directory is a supported project structure,\n do I need to open this directory according to the project structure?",
 					false,
 					"Open Project", () -> {
 						if (App.getProjectService().openProject(entry.getFilePath())) {
@@ -115,6 +115,27 @@ public class FileBrowser extends HeaderBrowserLayout implements FileBrowserServi
 		} else {
 			App.getFileBrowserService().openFolder(entry.getFilePath());
 		}
+	}
+
+	private void showOpenFile(FileEntry entry, View v) {
+		if (FileSystem.isBinary(entry.getFilePath())) {
+			AppLog.s(this, "showOpenFile: " + entry.getFilePath() + " is binary file.");
+			return;
+		}
+		MessageBox.showInfo(App.getMainUI(),
+				"Open Project",
+				"The current file is in the project file, open the project?",
+				false,
+				"Open Project", () -> {
+					if (App.getProjectService().openProject(entry.getFilePath())) {
+						//Do action
+					}
+				},
+				"Open File",
+				() -> {
+
+				});
+
 	}
 
 	@Override

@@ -22,6 +22,7 @@
     <string name="action_find_usages">Find Usages</string>
     <string name="action_group_view">View</string>
     <string name="action_view_file">Files</string>
+    <string name="action_view_project">Project</string>
     <string name="action_view_error">Errors</string>
     <string name="action_view_search">Search</string>
     <string name="action_view_build">Build</string>

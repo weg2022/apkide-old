@@ -1,20 +1,17 @@
-package com.apkide.ui.commands.code;
-
-import androidx.annotation.IdRes;
+package com.apkide.ui.commands.view;
 
 import com.apkide.ui.R;
 import com.apkide.ui.util.MenuCommand;
 
-public class OutBlockCommentBlockCommand implements MenuCommand {
-	@IdRes
+public class ViewProjectCommand implements MenuCommand {
 	@Override
 	public int getId() {
-		return R.id.commandOutBlockComment;
+		return R.id.commandViewError;
 	}
 
 	@Override
 	public boolean isVisible() {
-		return true;
+		return false;
 	}
 
 	@Override

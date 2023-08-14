@@ -16,6 +16,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -25,7 +26,7 @@ public class FileSystem {
 	private static final String TAG = "FileSystem";
 	private static final int BINARY_CHECK_BYTE_COUNT = 8000;
 
-	private static FileArchiveReader[] sArchiveReaders=new FileArchiveReader[0];
+	private static FileArchiveReader[] sArchiveReaders = new FileArchiveReader[0];
 	private static final Object sLock = new Object();
 
 	public static void setArchiveReaders(@NonNull FileArchiveReader[] archiveReaders) {
@@ -221,7 +222,7 @@ public class FileSystem {
 	public static String getParentDirPath(@NonNull String path) {
 		if (path.length() == 0)
 			return null;
-		if (path.equals("/"))
+		if (isRoot(path))
 			return null;
 		int index = path.lastIndexOf('/');
 		if (index == 0)
@@ -447,7 +448,7 @@ public class FileSystem {
 
 	@NonNull
 	public static String getCanonicalPathPreservingSymlinks(@NonNull File f) {
-		List<String> canonicalPathComponents = new ArrayList<>()   ;
+		List<String> canonicalPathComponents = new ArrayList<>();
 		String absolutePath = f.getAbsolutePath();
 		String[] absPathComponents = absolutePath.split("[/\\\\]");
 		for (String absPathComponent : absPathComponents) {
@@ -470,48 +471,19 @@ public class FileSystem {
 		return resBuilder.toString();
 	}
 
-	public static String getEnclosingParent(@NonNull String path, @NonNull String parentPath) {
+
+	@Nullable
+	public static String getEnclosingParent(@NonNull String path, @NonNull Predicate<String> runnable) {
 		path = getParentDirPath(path);
 		while (path != null) {
-			if (path.equals(parentPath))
+			if (runnable.test(path)) {
 				return path;
+			}
 			path = getParentDirPath(path);
 		}
 		return null;
 	}
 
-	@Nullable
-	public static String getEnclosingDir(@NonNull String path, @NonNull String dirName) {
-		path = getParentDirPath(path);
-		while (path != null) {
-			if (getName(path).equals(dirName))
-				return path;
-			path = getParentDirPath(path);
-		}
-		return null;
-	}
-
-	@Nullable
-	public static String getEnclosingDirPrefix(@NonNull String path, @NonNull String prefix) {
-		path = getParentDirPath(path);
-		while (path != null) {
-			if (getName(path).startsWith(prefix))
-				return path;
-			path = getParentDirPath(path);
-		}
-		return null;
-	}
-
-	@Nullable
-	public static String getEnclosingDirSuffix(@NonNull String path, @NonNull String suffix) {
-		path = getParentDirPath(path);
-		while (path != null) {
-			if (getName(path).endsWith(suffix))
-				return path;
-			path = getParentDirPath(path);
-		}
-		return null;
-	}
 	public static boolean isValidFilePath(@NonNull String path) {
 		return path.startsWith("/") && isNormalDirectory(getParentDirPath(path));
 	}

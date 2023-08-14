@@ -20,10 +20,11 @@ import com.apkide.ui.commands.actionbar.UndoCommand;
 import com.apkide.ui.commands.code.GenerateCommand;
 import com.apkide.ui.commands.code.IndentLinesCommand;
 import com.apkide.ui.commands.code.OptimizeImportsCommand;
-import com.apkide.ui.commands.code.OutBlockCommentBlockCommand;
+import com.apkide.ui.commands.code.OutBlockCommentCommand;
 import com.apkide.ui.commands.code.OutLineCommentCommand;
 import com.apkide.ui.commands.code.ReformatCodeCommand;
 import com.apkide.ui.commands.code.SurroundWithCommand;
+import com.apkide.ui.commands.code.UnOutComment;
 import com.apkide.ui.commands.edit.FindCommand;
 import com.apkide.ui.commands.edit.FindInFileCommand;
 import com.apkide.ui.commands.edit.FindReplaceCommand;
@@ -95,7 +96,8 @@ public final class AppCommands {
 				new GenerateCommand(),
 				new SurroundWithCommand(),
 				new OutLineCommentCommand(),
-				new OutBlockCommentBlockCommand()
+				new OutBlockCommentCommand(),
+				new UnOutComment(),
 		});
 
 		addAll(new Command[]{

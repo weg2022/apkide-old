@@ -58,10 +58,16 @@ public class MainUI extends StyledUI implements
 
 		myUiBinding.mainOpenFileButton.setOnClickListener(view -> {
 			App.postRun(() -> {
+				boolean projectOpen = App.getProjectService().isProjectOpened();
 				if (!getSplitLayout().isSplit())
 					getSplitLayout().openSplit();
-				if (getBrowserPager().getIndex() != BrowserPager.FILE_BROWSER)
-					getBrowserPager().toggle(BrowserPager.FILE_BROWSER);
+				if (getBrowserPager().getIndex() != (projectOpen ?
+						BrowserPager.PROJECT_BROWSER :
+						BrowserPager.FILE_BROWSER)) {
+					getBrowserPager().toggle(projectOpen ?
+							BrowserPager.PROJECT_BROWSER :
+							BrowserPager.FILE_BROWSER);
+				}
 			}, 100L);
 
 		});

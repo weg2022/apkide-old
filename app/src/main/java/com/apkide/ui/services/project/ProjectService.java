@@ -1,5 +1,7 @@
 package com.apkide.ui.services.project;
 
+import static java.util.Objects.requireNonNull;
+
 import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
@@ -15,32 +17,29 @@ import java.util.List;
 import java.util.Vector;
 
 public class ProjectService implements IDEService {
-
-
 	private final HashMap<String, ProjectManager> myProjectManagerMap = new HashMap<>();
 	private ProjectManager myProjectManager;
-	private String myProjectRootPath;
 	private SharedPreferences myPreferences;
 	private final List<ProjectServiceListener> myListeners = new Vector<>();
 
 	@Override
 	public void initialize() {
-		addProjectManager(new TestProjectManager());
+		addProjectManager(new IDEProjectManager());
 	}
 
 	@Override
 	public void shutdown() {
-		getPreferences().edit().putString("open.project", myProjectRootPath).apply();
+		if (isProjectOpened())
+			getPreferences().edit().putString("open.project", myProjectManager.getRootPath()).apply();
 		closeProject();
 		myProjectManagerMap.clear();
-		myProjectRootPath = null;
 		myPreferences = null;
 		myListeners.clear();
 	}
 
 	public void reloadProject() {
 		String rootPath = getPreferences().getString("open.project", "");
-		if (isSupportedProject(rootPath)) {
+		if (checkIsSupportedProjectPath(rootPath)) {
 			openProject(rootPath);
 		}
 	}
@@ -66,15 +65,29 @@ public class ProjectService implements IDEService {
 		return new ArrayList<>(myProjectManagerMap.keySet());
 	}
 
-	public boolean isSupportedProject(@NonNull String rootPath) {
+
+	public boolean checkIsSupportedProjectRootPath(@NonNull String rootPath) {
 		if (isProjectOpened()) {
-			if (rootPath.equals(myProjectRootPath)) {
+			if (myProjectManager.checkIsSupportedProjectRootPath(rootPath))
+				return false;
+		}
+		for (ProjectManager manager : myProjectManagerMap.values()) {
+			if (manager.checkIsSupportedProjectRootPath(rootPath)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean checkIsSupportedProjectPath(@NonNull String path) {
+		if (isProjectOpened()) {
+			if (myProjectManager.checkIsSupportedProjectPath(path)) {
 				return false;
 			}
 		}
 
-		for (ProjectManager value : myProjectManagerMap.values()) {
-			if (value.isSupportedProject(rootPath) || value.isProjectFile(rootPath)) {
+		for (ProjectManager manager : myProjectManagerMap.values()) {
+			if (manager.checkIsSupportedProjectPath(path)) {
 				return true;
 			}
 		}
@@ -84,17 +97,20 @@ public class ProjectService implements IDEService {
 
 	public boolean openProject(@NonNull String rootPath) {
 		if (FileSystem.isNormalDirectory(rootPath)) {
-			if (isProjectOpened()) {
+			if (isProjectOpened())
 				closeProject();
-			}
 
 			for (ProjectManager projectManager : myProjectManagerMap.values()) {
-				if (projectManager.isSupportedProject(rootPath)) {
-					projectManager.open(rootPath);
+				if (projectManager.checkIsSupportedProjectPath(rootPath)) {
 					myProjectManager = projectManager;
-					myProjectRootPath = rootPath;
-					getPreferences().edit().putString("open.project", rootPath).apply();
-					return true;
+					myProjectManager.open(rootPath);
+					if (myProjectManager.isOpen()) {
+						getPreferences().edit().putString("open.project", myProjectManager.getRootPath()).apply();
+						for (ProjectServiceListener listener : myListeners) {
+							listener.projectOpened(requireNonNull(myProjectManager.getRootPath()));
+						}
+						return true;
+					}
 				}
 			}
 		}
@@ -103,9 +119,13 @@ public class ProjectService implements IDEService {
 
 	public void closeProject() {
 		if (isProjectOpened()) {
+			String rootPath = myProjectManager.getRootPath();
 			myProjectManager.close();
-			myProjectRootPath = null;
 			getPreferences().edit().putString("open.project", null).apply();
+			for (ProjectServiceListener listener : myListeners) {
+				listener.projectClosed(requireNonNull(rootPath));
+			}
+
 		}
 	}
 
@@ -116,22 +136,26 @@ public class ProjectService implements IDEService {
 	}
 
 	public boolean isProjectOpened() {
-		if (myProjectManager != null && myProjectRootPath != null) {
-			File file = new File(myProjectRootPath);
+		if (myProjectManager != null && myProjectManager.isOpen()) {
+			String rootPath = myProjectManager.getRootPath();
+			if (rootPath == null) return false;
+			File file = new File(rootPath);
 			return file.exists() && file.isDirectory();
 		}
 		return false;
 	}
 
+	@NonNull
+	public String[] getSupportedLanguages() {
+		if (isProjectOpened()) {
+			return myProjectManager.getSupportedLanguages();
+		}
+		return new String[0];
+	}
+
 	public boolean isProjectFile(@NonNull String filePath) {
 		if (isProjectOpened()) {
-			return FileSystem.getEnclosingParent(filePath, myProjectRootPath) != null;
-		} else {
-			for (ProjectManager projectManager : myProjectManagerMap.values()) {
-				if (projectManager.isProjectFile(filePath)) {
-					return true;
-				}
-			}
+			return myProjectManager.isProjectFilePath(filePath);
 		}
 		return false;
 	}
