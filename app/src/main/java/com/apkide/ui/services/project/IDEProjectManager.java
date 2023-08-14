@@ -8,6 +8,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.apkide.common.AppLog;
 import com.apkide.common.FileSystem;
 import com.apkide.ui.App;
 import com.apkide.ui.R;
@@ -34,8 +35,9 @@ public class IDEProjectManager implements ProjectManager {
 	@Override
 	public boolean checkIsSupportedProjectRootPath(@NonNull String rootPath) {
 		File config = new File(rootPath, FileSystem.getName(rootPath) + ".dev");
+		AppLog.s(this,config.getAbsolutePath());
 		File apktool = new File(rootPath, "apktool.yml");
-		return config.exists() && apktool.exists();
+		return config.exists() || apktool.exists();
 	}
 
 	@Override
@@ -43,7 +45,7 @@ public class IDEProjectManager implements ProjectManager {
 		String workspace = getEnclosingParent(path, s -> {
 			File config = new File(s, FileSystem.getName(s) + ".dev");
 			File apktool = new File(s, "apktool.yml");
-			return config.exists() && apktool.exists();
+			return config.exists() || apktool.exists();
 		});
 		return workspace != null;
 	}
@@ -61,7 +63,7 @@ public class IDEProjectManager implements ProjectManager {
 		String workspace = getEnclosingParent(rootPath, s -> {
 			File config = new File(s, FileSystem.getName(s) + ".dev");
 			File apktool = new File(s, "apktool.yml");
-			return config.exists() && apktool.exists();
+			return config.exists() || apktool.exists();
 		});
 		assert workspace != null;
 		myRootPath = workspace;

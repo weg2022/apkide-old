@@ -31,7 +31,7 @@ public class DeleteFileDialog extends MessageBox {
 		String parent = FileSystem.getParentDirPath(filePath);
 		name = parent == null ? name : FileSystem.getName(parent) + File.separator + name;
 		builder.setTitle("Delete " + (isDir ? "Directory" : "File"));
-		builder.setMessage(String.format("Are you sure you want to delete\n ...%s %s?", name, isDir ? "Directory" : "File"));
+		builder.setMessage(String.format("Are you sure you want to delete\n \"...%s\" %s?", name, isDir ? "Directory" : "File"));
 		builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
 			dialog.dismiss();
 			try {

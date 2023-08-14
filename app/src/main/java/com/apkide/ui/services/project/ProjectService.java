@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 
-import com.apkide.common.FileSystem;
+import com.apkide.common.AppLog;
 import com.apkide.ui.App;
 import com.apkide.ui.util.IDEService;
 
@@ -29,19 +29,18 @@ public class ProjectService implements IDEService {
 
 	@Override
 	public void shutdown() {
-		if (isProjectOpened())
-			getPreferences().edit().putString("open.project", myProjectManager.getRootPath()).apply();
-		closeProject();
+		if (isProjectOpened()) {
+			String rootPath = myProjectManager.getRootPath();
+			closeProject();
+			getPreferences().edit().putString("open.project", rootPath).apply();
+		}
 		myProjectManagerMap.clear();
-		myPreferences = null;
 		myListeners.clear();
 	}
 
 	public void reloadProject() {
 		String rootPath = getPreferences().getString("open.project", "");
-		if (checkIsSupportedProjectPath(rootPath)) {
-			openProject(rootPath);
-		}
+		openProject(rootPath);
 	}
 
 	public void addListener(@NonNull ProjectServiceListener listener) {
@@ -96,21 +95,22 @@ public class ProjectService implements IDEService {
 
 
 	public boolean openProject(@NonNull String rootPath) {
-		if (FileSystem.isNormalDirectory(rootPath)) {
-			if (isProjectOpened())
-				closeProject();
+		AppLog.s(this, "openProject: " + rootPath);
+		for (ProjectManager projectManager : myProjectManagerMap.values()) {
+			if (projectManager.checkIsSupportedProjectPath(rootPath) ||
+					projectManager.checkIsSupportedProjectPath(rootPath)) {
 
-			for (ProjectManager projectManager : myProjectManagerMap.values()) {
-				if (projectManager.checkIsSupportedProjectPath(rootPath)) {
-					myProjectManager = projectManager;
-					myProjectManager.open(rootPath);
-					if (myProjectManager.isOpen()) {
-						getPreferences().edit().putString("open.project", myProjectManager.getRootPath()).apply();
-						for (ProjectServiceListener listener : myListeners) {
-							listener.projectOpened(requireNonNull(myProjectManager.getRootPath()));
-						}
-						return true;
+				if (isProjectOpened())
+					closeProject();
+
+				myProjectManager = projectManager;
+				myProjectManager.open(rootPath);
+				if (myProjectManager.isOpen()) {
+					getPreferences().edit().putString("open.project", myProjectManager.getRootPath()).apply();
+					for (ProjectServiceListener listener : myListeners) {
+						listener.projectOpened(requireNonNull(myProjectManager.getRootPath()));
 					}
+					return true;
 				}
 			}
 		}
@@ -125,7 +125,6 @@ public class ProjectService implements IDEService {
 			for (ProjectServiceListener listener : myListeners) {
 				listener.projectClosed(requireNonNull(rootPath));
 			}
-
 		}
 	}
 

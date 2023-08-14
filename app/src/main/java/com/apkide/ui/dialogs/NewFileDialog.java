@@ -18,8 +18,8 @@ import java.io.IOException;
 
 public class NewFileDialog extends MessageBox {
 
-	private String filePath;
-	private boolean isDirectory;
+	private final String filePath;
+	private final boolean isDirectory;
 
 	public NewFileDialog(@NonNull String filePath, boolean isDirectory) {
 		this.filePath = filePath;

@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.apkide.common.AppLog;
 import com.apkide.common.EntryListAdapter;
 import com.apkide.common.FileSystem;
 import com.apkide.common.MessageBox;
@@ -54,7 +53,6 @@ public class FileBrowser extends HeaderBrowserLayout implements FileBrowserServi
 
 	@Override
 	public void fileBrowserFolderChanged(@NonNull String folderPath) {
-		long startTime = System.currentTimeMillis();
 		List<String> files = FileSystem.getChildEntries(folderPath);
 
 		List<EntryListAdapter.Entry> entities = new ArrayList<>();
@@ -82,8 +80,6 @@ public class FileBrowser extends HeaderBrowserLayout implements FileBrowserServi
 		});
 
 		myAdapter.updateEntries(entities);
-		long endTime = System.currentTimeMillis();
-		AppLog.s(this, "Loading files done in " + (endTime - startTime) + " ms");
 	}
 
 	@Override
@@ -93,9 +89,8 @@ public class FileBrowser extends HeaderBrowserLayout implements FileBrowserServi
 				App.getFileBrowserService().openFolder(((FileEntry) entry).getFilePath());
 			} else if (((FileEntry) entry).isDirectory()) {
 				showOpenFolder((FileEntry) entry, view);
-
 			} else if (((FileEntry) entry).isFile()) {
-
+				showOpenFile((FileEntry) entry, view);
 			}
 		}
 	}
@@ -104,38 +99,34 @@ public class FileBrowser extends HeaderBrowserLayout implements FileBrowserServi
 		if (App.getProjectService().checkIsSupportedProjectRootPath(entry.getFilePath())) {
 			MessageBox.showInfo(App.getMainUI(),
 					"Open Project",
-					"This directory is a supported project structure,\n do I need to open this directory according to the project structure?",
-					false,
-					"Open Project", () -> {
+					"This directory is a supported project,\n" +
+							" do I need to open this directory according to the project?",
+					false,getContext().getString(android.R.string.ok),() -> {
 						if (App.getProjectService().openProject(entry.getFilePath())) {
 							//Do action
 						}
-						App.getFileBrowserService().openFolder(entry.getFilePath());
-					}, "Open Folder", () -> App.getFileBrowserService().openFolder(entry.getFilePath()));
-		} else {
-			App.getFileBrowserService().openFolder(entry.getFilePath());
+					},getContext().getString(android.R.string.cancel), () -> {
+
+					});
 		}
+		App.getFileBrowserService().openFolder(entry.getFilePath());
 	}
 
 	private void showOpenFile(FileEntry entry, View v) {
-		if (FileSystem.isBinary(entry.getFilePath())) {
-			AppLog.s(this, "showOpenFile: " + entry.getFilePath() + " is binary file.");
-			return;
+
+		App.getOpenFileService().openFile(entry.getFilePath());
+		if (App.getProjectService().checkIsSupportedProjectPath(entry.getFilePath())) {
+			MessageBox.showInfo(App.getMainUI(),
+					"Open Project",
+					"The current file is in the project file, open the project?",
+					false,getContext().getString(android.R.string.ok),() -> {
+						if (App.getProjectService().openProject(entry.getFilePath())) {
+							//Do action
+						}
+					},getContext().getString(android.R.string.cancel), () -> {
+
+					});
 		}
-		MessageBox.showInfo(App.getMainUI(),
-				"Open Project",
-				"The current file is in the project file, open the project?",
-				false,
-				"Open Project", () -> {
-					if (App.getProjectService().openProject(entry.getFilePath())) {
-						//Do action
-					}
-				},
-				"Open File",
-				() -> {
-
-				});
-
 	}
 
 	@Override
@@ -165,24 +156,35 @@ public class FileBrowser extends HeaderBrowserLayout implements FileBrowserServi
 			}
 
 			if (item.getItemId() == R.id.fileBrowserCommandShowHome) {
-				App.getFileBrowserService().openFolder(App.getFileBrowserService().getDefaultFolder());
+				App.getFileBrowserService().openFolder(
+						App.getFileBrowserService().getDefaultFolder());
 				return true;
 			}
 
 			if (item.getItemId() == R.id.fileBrowserCommandShowCurrent) {
-
+				if (App.getOpenFileService().isOpen()) {
+					String path = App.getOpenFileService().getCurrentFilePath();
+					if (path != null && (path = FileSystem.getParentDirPath(path)) != null) {
+						App.getFileBrowserService().openFolder(path);
+					}
+				} else {
+					App.getFileBrowserService().openFolder(
+							App.getFileBrowserService().getDefaultFolder());
+				}
 				return true;
 			}
 
 			if (item.getItemId() == R.id.fileBrowserCommandNewFile) {
 				String rootPath = App.getFileBrowserService().getCurrentFolder();
-				MessageBox.showDialog(App.getMainUI(), new NewFileDialog(rootPath, false));
+				MessageBox.showDialog(App.getMainUI(),
+						new NewFileDialog(rootPath, false));
 				return true;
 			}
 
 			if (item.getItemId() == R.id.fileBrowserCommandNewFolder) {
 				String rootPath = App.getFileBrowserService().getCurrentFolder();
-				MessageBox.showDialog(App.getMainUI(), new NewFileDialog(rootPath, true));
+				MessageBox.showDialog(App.getMainUI(),
+						new NewFileDialog(rootPath, true));
 				return true;
 			}
 
@@ -208,7 +210,8 @@ public class FileBrowser extends HeaderBrowserLayout implements FileBrowserServi
 			}
 
 			if (item.getItemId() == R.id.fileBrowserCommandDelete) {
-				MessageBox.showDialog(App.getMainUI(), new DeleteFileDialog(entry.getFilePath()));
+				MessageBox.showDialog(App.getMainUI(),
+						new DeleteFileDialog(entry.getFilePath()));
 				return true;
 			}
 			return false;

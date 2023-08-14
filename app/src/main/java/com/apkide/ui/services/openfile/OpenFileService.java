@@ -1,5 +1,7 @@
 package com.apkide.ui.services.openfile;
 
+import static java.util.Objects.requireNonNull;
+
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
@@ -24,6 +26,8 @@ public class OpenFileService implements IDEService {
 	private final HashMap<String, OpenFileModelFactory> myFactors = new HashMap<>();
 	private final List<OpenFileServiceListener> myListeners = new Vector<>();
 
+	private String myCurrentFilePath;
+
 	private SharedPreferences getPreferences() {
 		if (myPreferences == null)
 			myPreferences = App.getPreferences("OpenFileService");
@@ -32,7 +36,7 @@ public class OpenFileService implements IDEService {
 
 	@Override
 	public void initialize() {
-
+		addOpenFileModelFactory(new DefaultOpenFileModelFactory());
 	}
 
 	@Override
@@ -58,7 +62,11 @@ public class OpenFileService implements IDEService {
 	}
 
 	public void openFile(@NonNull String filePath) {
-		if (!isOpenFile(filePath)) {
+		if (isOpenFile(filePath)) {
+			myCurrentFilePath = filePath;
+			for (OpenFileServiceListener listener : myListeners) {
+				listener.fileOpened(filePath, requireNonNull(getOpenFile(filePath)));
+			}
 			return;
 		}
 		for (OpenFileModelFactory factory : myFactors.values()) {
@@ -66,6 +74,7 @@ public class OpenFileService implements IDEService {
 				try {
 					OpenFileModel fileModel = factory.createFileModel(filePath);
 					myOpenFileModels.put(filePath, fileModel);
+					myCurrentFilePath = filePath;
 					for (OpenFileServiceListener listener : myListeners) {
 						listener.fileOpened(filePath, fileModel);
 					}
@@ -79,6 +88,8 @@ public class OpenFileService implements IDEService {
 
 	public void closeFile(@NonNull String filePath) {
 		if (isOpenFile(filePath)) {
+			if (filePath.equals(myCurrentFilePath))
+				myCurrentFilePath = null;
 			OpenFileModel model = myOpenFileModels.get(filePath);
 
 			try {
@@ -106,6 +117,10 @@ public class OpenFileService implements IDEService {
 
 	public boolean isOpen() {
 		return !myOpenFileModels.isEmpty();
+	}
+
+	public String getCurrentFilePath() {
+		return myCurrentFilePath;
 	}
 
 	public boolean isOpenFile(@NonNull String filePath) {
