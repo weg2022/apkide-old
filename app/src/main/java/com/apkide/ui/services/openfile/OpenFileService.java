@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.apkide.ui.App;
-import com.apkide.ui.util.IDEService;
+import com.apkide.ui.services.IDEService;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class OpenFileService implements IDEService {
 
 	@Override
 	public void initialize() {
-		addOpenFileModelFactory(new DefaultOpenFileModelFactory());
+	
 	}
 
 	@Override
@@ -154,13 +154,31 @@ public class OpenFileService implements IDEService {
 		}
 		return null;
 	}
+	
+	@Nullable
+	public OpenFileModel getFileModel(@NonNull String filePath){
+		OpenFileModel model=getOpenFileModel(filePath);
+		if (model==null){
+			for (OpenFileModelFactory factory : myFactors.values()) {
+				if (factory.isSupportedFile(filePath)) {
+					try {
+						model = factory.createFileModel(filePath);
+					} catch (IOException ignored) {
+					
+					}
+					break;
+				}
+			}
+		}
+		return model;
+	}
 
 	public void saveFile(@NonNull String filePath) {
 
 		OpenFileModel fileModel = myOpenFileModels.get(filePath);
 		if (fileModel != null && !fileModel.isReadOnly()) {
 			File file = new File(fileModel.getFilePath());
-			if (file.lastModified() != file.lastModified()) {
+			if (fileModel.getLastModified() != file.lastModified()) {
 				try {
 					fileModel.save();
 				} catch (IOException e) {

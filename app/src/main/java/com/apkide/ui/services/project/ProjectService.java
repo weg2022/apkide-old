@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 
 import com.apkide.common.AppLog;
 import com.apkide.ui.App;
-import com.apkide.ui.util.IDEService;
+import com.apkide.ui.services.IDEService;
 
 import java.io.File;
 import java.io.IOException;

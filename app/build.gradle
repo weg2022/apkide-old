@@ -61,6 +61,9 @@ android {
         exclude 'smali.properties'
         exclude 'baksmali.properties'
         exclude 'resources/**.ser'
+        jniLibs{
+            useLegacyPackaging true
+        }
     }
 
     buildTypes {
@@ -93,7 +96,12 @@ dependencies {
     implementation libs.androidx.preference
     implementation libs.material
     implementation libs.interface.loader
+    implementation project(':apktool')
+    implementation project(':smali')
     implementation project(':common')
-    implementation project(':openapi')
     implementation project(':engine')
+    implementation project(':language:lang-api')
+    implementation project(':language:lang-java')
+    implementation project(':language:lang-smali')
+    implementation project(':language:lang-xml')
 }

@@ -39,10 +39,7 @@ dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     implementation libs.androidx.annotation
     implementation project(':common')
-    implementation project(':openapi')
-    implementation project(':language-smali')
-    implementation project(':language-java')
-    implementation project(':language-xml')
+    implementation project(':language:lang-api')
     implementation libs.interface.loader
     testImplementation libs.junit
 }
