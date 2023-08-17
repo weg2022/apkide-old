@@ -17,8 +17,8 @@
 package com.apkide.apktool.androlib.mod;
 
 import com.apkide.smali.dexlib2.writer.builder.DexBuilder;
-import com.apkide.smali.smali.smaliFlexLexer;
-import com.apkide.smali.smali.smaliParser;
+import com.apkide.smali.smali.SmaliFlexLexer;
+import com.apkide.smali.smali.SmaliParser;
 import com.apkide.smali.smali.smaliTreeWalker;
 
 import org.antlr.runtime.CommonTokenStream;
@@ -39,12 +39,12 @@ public class SmaliMod {
                                             boolean printTokens) throws IOException, RecognitionException {
 
         CommonTokenStream tokens;
-        smaliFlexLexer lexer;
+        SmaliFlexLexer lexer;
 
         InputStream is = Files.newInputStream(smaliFile.toPath());
         InputStreamReader reader = new InputStreamReader(is, StandardCharsets.UTF_8);
 
-        lexer = new smaliFlexLexer(reader, apiLevel);
+        lexer = new SmaliFlexLexer(reader, apiLevel);
         (lexer).setSourceFile(smaliFile);
         tokens = new CommonTokenStream(lexer);
 
@@ -53,19 +53,19 @@ public class SmaliMod {
 
             for (int i=0; i<tokens.size(); i++) {
                 Token token = tokens.get(i);
-                if (token.getChannel() == smaliParser.HIDDEN) {
+                if (token.getChannel() == SmaliParser.HIDDEN) {
                     continue;
                 }
 
-                System.out.println(smaliParser.tokenNames[token.getType()] + ": " + token.getText());
+                System.out.println(SmaliParser.tokenNames[token.getType()] + ": " + token.getText());
             }
         }
 
-        smaliParser parser = new smaliParser(tokens);
+        SmaliParser parser = new SmaliParser(tokens);
         parser.setApiLevel(apiLevel);
         parser.setVerboseErrors(verboseErrors);
 
-        smaliParser.smali_file_return result = parser.smali_file();
+        SmaliParser.smali_file_return result = parser.smali_file();
 
         if (parser.getNumberOfSyntaxErrors() > 0 || lexer.getNumberOfSyntaxErrors() > 0) {
             is.close();

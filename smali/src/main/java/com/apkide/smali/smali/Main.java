@@ -30,18 +30,15 @@
 
 package com.apkide.smali.smali;
 
-import com.beust.jcommander.JCommander;
-import com.beust.jcommander.Parameter;
-import com.google.common.collect.Lists;
 import com.apkide.smali.smali.HelpCommand.HlepCommand;
 import com.apkide.smali.util.jcommander.Command;
 import com.apkide.smali.util.jcommander.ExtendedCommands;
 import com.apkide.smali.util.jcommander.ExtendedParameters;
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.Parameter;
+import com.google.common.collect.Lists;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
-import java.util.Properties;
 
 @ExtendedParameters(
         includeParametersInUsage = true,
@@ -107,17 +104,6 @@ public class Main extends Command {
     }
 
     private static String loadVersion() {
-        InputStream propertiesStream = Main.class.getClassLoader().getResourceAsStream("smali.properties");
-        String version = "[unknown version]";
-        if (propertiesStream != null) {
-            Properties properties = new Properties();
-            try {
-                properties.load(propertiesStream);
-                version = properties.getProperty("application.version");
-            } catch (IOException ex) {
-                // ignore
-            }
-        }
-        return version;
+        return "3.0.2-dev";
     }
 }

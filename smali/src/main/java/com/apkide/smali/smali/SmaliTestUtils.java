@@ -61,15 +61,15 @@ public class SmaliTestUtils {
 
         Reader reader = new StringReader(smaliText);
 
-        lexer = new smaliFlexLexer(reader, apiLevel);
+        lexer = new SmaliFlexLexer(reader, apiLevel);
         tokens = new CommonTokenStream((TokenSource)lexer);
 
-        smaliParser parser = new smaliParser(tokens);
+        SmaliParser parser = new SmaliParser(tokens);
         parser.setVerboseErrors(true);
         parser.setAllowOdex(false);
         parser.setApiLevel(apiLevel);
 
-        smaliParser.smali_file_return result = parser.smali_file();
+        SmaliParser.smali_file_return result = parser.smali_file();
 
         if(parser.getNumberOfSyntaxErrors() > 0 || lexer.getNumberOfSyntaxErrors() > 0) {
             throw new RuntimeException("Error occurred while compiling text");

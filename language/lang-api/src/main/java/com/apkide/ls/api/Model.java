@@ -5,15 +5,15 @@ import androidx.annotation.NonNull;
 import com.apkide.common.StoreInputStream;
 import com.apkide.common.StoreOutputStream;
 import com.apkide.common.Storeable;
-import com.apkide.ls.api.callback.APISearcherCallback;
+import com.apkide.ls.api.callback.FindAPICallback;
 import com.apkide.ls.api.callback.CodeCompleterCallback;
 import com.apkide.ls.api.callback.HighlighterCallback;
 import com.apkide.ls.api.callback.InitializerCallback;
 import com.apkide.ls.api.callback.OpenFileCallback;
 import com.apkide.ls.api.callback.RefactoringCallback;
 import com.apkide.ls.api.callback.StopCallback;
-import com.apkide.ls.api.callback.SymbolSearcherCallback;
-import com.apkide.ls.api.callback.UsageSearcherCallback;
+import com.apkide.ls.api.callback.FindSymbolCallback;
+import com.apkide.ls.api.callback.FindUsagesCallback;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -25,35 +25,47 @@ public class Model implements Storeable, Closeable {
 	private final StopCallback myStopCallback;
 	private final HighlighterCallback myHighlighterCallback;
 	private final CodeCompleterCallback myCodeCompleterCallback;
-	private final APISearcherCallback myAPISearcherCallback;
-	private final SymbolSearcherCallback mySymbolSearcherCallback;
-	private final UsageSearcherCallback myUsageSearcherCallback;
+	private final FindAPICallback myFindAPICallback;
+	private final FindSymbolCallback myFindSymbolCallback;
+	private final FindUsagesCallback myFindUsagesCallback;
 	private final RefactoringCallback myRefactoringCallback;
 
-	private Assemble myAssemble;
+	private String myEncoding;
+	
+	public Model(){
+		this(null,null,null,null,null,null,null,null,null);
+	}
 
-	public Model(InitializerCallback initializerCallback, OpenFileCallback openFileCallback, StopCallback stopCallback, HighlighterCallback highlighterCallback, CodeCompleterCallback codeCompleterCallback, APISearcherCallback APISearcherCallback, SymbolSearcherCallback symbolSearcherCallback, UsageSearcherCallback usageSearcherCallback, RefactoringCallback refactoringCallback) {
+	public Model(@NonNull InitializerCallback initializerCallback,
+				 @NonNull OpenFileCallback openFileCallback,
+				 @NonNull StopCallback stopCallback,
+				 @NonNull HighlighterCallback highlighterCallback,
+				 @NonNull CodeCompleterCallback codeCompleterCallback,
+				 @NonNull FindAPICallback findAPICallback,
+				 @NonNull FindSymbolCallback findSymbolCallback,
+				 @NonNull FindUsagesCallback findUsagesCallback,
+				 @NonNull RefactoringCallback refactoringCallback) {
 		myInitializerCallback = initializerCallback;
 		myOpenFileCallback = openFileCallback;
 		myStopCallback = stopCallback;
 		myHighlighterCallback = highlighterCallback;
 		myCodeCompleterCallback = codeCompleterCallback;
-		myAPISearcherCallback = APISearcherCallback;
-		mySymbolSearcherCallback = symbolSearcherCallback;
-		myUsageSearcherCallback = usageSearcherCallback;
+		myFindAPICallback = findAPICallback;
+		myFindSymbolCallback = findSymbolCallback;
+		myFindUsagesCallback = findUsagesCallback;
 		myRefactoringCallback = refactoringCallback;
 		modelCount++;
 	}
 
-
-	public void configureAssemble(Assemble assemble){
-		myAssemble =assemble;
+	
+	public void configureEncoding(String encoding){
+		myEncoding =encoding;
 	}
-
-	public Assemble getAssemble() {
-		return myAssemble;
+	
+	public String getEncoding() {
+		return myEncoding;
 	}
-
+	
 	@Override
 	protected void finalize() throws Throwable {
 		--modelCount;
@@ -83,16 +95,16 @@ public class Model implements Storeable, Closeable {
 		return myCodeCompleterCallback;
 	}
 
-	public APISearcherCallback getAPISearcherCallback() {
-		return myAPISearcherCallback;
+	public FindAPICallback getAPISearcherCallback() {
+		return myFindAPICallback;
 	}
 
-	public SymbolSearcherCallback getSymbolSearcherCallback() {
-		return mySymbolSearcherCallback;
+	public FindSymbolCallback getSymbolSearcherCallback() {
+		return myFindSymbolCallback;
 	}
 
-	public UsageSearcherCallback getUsageSearcherCallback() {
-		return myUsageSearcherCallback;
+	public FindUsagesCallback getUsageSearcherCallback() {
+		return myFindUsagesCallback;
 	}
 
 	public RefactoringCallback getRefactoringCallback() {

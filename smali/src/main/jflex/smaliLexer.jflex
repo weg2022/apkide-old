@@ -7,7 +7,7 @@ import java.util.Stack;
 import org.antlr.runtime.*;
 import com.apkide.smali.smali.util.*;
 import com.apkide.smali.util.*;
-import static com.apkide.smali.smali.smaliParser.*;
+import static com.apkide.smali.smali.SmaliParser.*;
 
 %%
 

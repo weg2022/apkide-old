@@ -11,7 +11,7 @@ public class EditorModel extends TextModelImpl {
     
     
     
-
+    
     
     
     public int getStyle(int line,int column){
@@ -32,13 +32,5 @@ public class EditorModel extends TextModelImpl {
     
     public Diagnostic getDiagnostic(int line,int column){
         return null;
-    }
-    
-    public boolean isOverwriteMethod(int line){
-        return false;
-    }
-    
-    public boolean isOverwriteMethod(int line,int column){
-        return false;
     }
 }

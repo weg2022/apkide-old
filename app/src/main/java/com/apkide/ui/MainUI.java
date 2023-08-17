@@ -91,6 +91,7 @@ public class MainUI extends StyledUI implements
 		boolean isSplit = getPreferences().getBoolean("isSplit", false);
 		if (isSplit)
 			getSplitLayout().openSplit();
+		requestStorage();
 	}
 
 	public void shutdown() {

@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ICodeCompletionListener {
 
-	void codeCompleteCompleted(@NonNull String filePath,
+	void completionCompleted(@NonNull String filePath,
 	                           boolean isIncomplete,
 	                           @NonNull List<Completion> list);
 

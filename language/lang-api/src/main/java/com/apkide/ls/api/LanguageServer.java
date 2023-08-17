@@ -24,44 +24,35 @@ public interface LanguageServer {
 	void requestHighlighting(@NonNull String filePath);
 
 	void requestCompletion(@NonNull String filePath, @NonNull Position position);
-
-	void gotoDefinition(@NonNull String filePath, @NonNull Position position);
-
+	
 	void findSymbols(@NonNull String filePath);
 
 	void findAPI(@NonNull String filePath, @NonNull Position position);
 
 	void findUsages(@NonNull String filePath, @NonNull Position position, boolean includeDeclaration);
 
-	void prepareRename(@NonNull String filePath, @NonNull Position position, @NonNull String newText);
+	void prepareRename(@NonNull String filePath, @NonNull Position position, @NonNull String newName);
 
-	void rename(@NonNull String filePath, @NonNull Position position, @NonNull String newText);
+	void rename(@NonNull String filePath, @NonNull Position position, @NonNull String newName);
 
-	void prepareInlineVariable(@NonNull String filePath, @NonNull Position position);
+	void prepareInline(@NonNull String filePath, @NonNull Position position);
 
-	void inlineVariable(@NonNull String filePath, @NonNull Position position);
-
-	void prepareInlineMethod(@NonNull String filePath, @NonNull Position position);
-
-	void inlineMethod(@NonNull String filePath, @NonNull Position position);
-
+	void inline(@NonNull String filePath, @NonNull Position position);
+	
 	void safeDelete(@NonNull String filePath, @NonNull Position position);
-
-	void codeGeneration(@NonNull String filePath, @NonNull Position position);
 
 	void surroundWith(@NonNull String filePath, @NonNull Position position);
 
 	void indent(@NonNull String filePath, int tabSize, int indentationSize);
 
-	void indentLines(@NonNull String filePath, int tabSize, int indentationSize, @NonNull Range range);
+	void indent(@NonNull String filePath, int tabSize, int indentationSize, @NonNull Range range);
 
 	void format(@NonNull String filePath, int tabSize, int indentationSize);
 
-	void formatLines(@NonNull String filePath, int tabSize, int indentationSize, @NonNull Range range);
+	void format(@NonNull String filePath, int tabSize, int indentationSize, @NonNull Range range);
 
-	void outLineComment(@NonNull String filePath, @NonNull Range range);
+	void comment(@NonNull String filePath, @NonNull Range range);
 
-	void outDocComment(@NonNull String filePath, @NonNull Range range);
-
-	void unOutComment(@NonNull String filePath, @NonNull Range range);
+	void uncomment(@NonNull String filePath, @NonNull Range range);
+	
 }

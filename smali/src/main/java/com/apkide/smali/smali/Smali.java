@@ -199,8 +199,8 @@ public class Smali {
             fis = new FileInputStream(smaliFile);
             InputStreamReader reader = new InputStreamReader(fis, "UTF-8");
 
-            LexerErrorInterface lexer = new smaliFlexLexer(reader, options.apiLevel);
-            ((smaliFlexLexer)lexer).setSourceFile(smaliFile);
+            LexerErrorInterface lexer = new SmaliFlexLexer(reader, options.apiLevel);
+            ((SmaliFlexLexer)lexer).setSourceFile(smaliFile);
             CommonTokenStream tokens = new CommonTokenStream((TokenSource)lexer);
 
             if (options.printTokens) {
@@ -208,7 +208,7 @@ public class Smali {
 
                 for (int i=0; i<tokens.size(); i++) {
                     Token token = tokens.get(i);
-                    if (token.getChannel() == smaliParser.HIDDEN) {
+                    if (token.getChannel() == SmaliParser.HIDDEN) {
                         continue;
                     }
 
@@ -216,7 +216,7 @@ public class Smali {
                     if (token.getType() == -1) {
                         tokenName = "EOF";
                     } else {
-                        tokenName = smaliParser.tokenNames[token.getType()];
+                        tokenName = SmaliParser.tokenNames[token.getType()];
                     }
                     System.out.println(tokenName + ": " + token.getText());
                 }
@@ -224,12 +224,12 @@ public class Smali {
                 System.out.flush();
             }
 
-            smaliParser parser = new smaliParser(tokens);
+            SmaliParser parser = new SmaliParser(tokens);
             parser.setVerboseErrors(options.verboseErrors);
             parser.setAllowOdex(options.allowOdexOpcodes);
             parser.setApiLevel(options.apiLevel);
 
-            smaliParser.smali_file_return result = parser.smali_file();
+            SmaliParser.smali_file_return result = parser.smali_file();
 
             if (parser.getNumberOfSyntaxErrors() > 0 || lexer.getNumberOfSyntaxErrors() > 0) {
                 return false;
@@ -266,14 +266,14 @@ public class Smali {
             fis = new FileInputStream(smaliFile);
             InputStreamReader reader = new InputStreamReader(fis, "UTF-8");
 
-            LexerErrorInterface lexer = new smaliFlexLexer(reader, options.apiLevel);
-            ((smaliFlexLexer)lexer).setSourceFile(smaliFile);
+            LexerErrorInterface lexer = new SmaliFlexLexer(reader, options.apiLevel);
+            ((SmaliFlexLexer)lexer).setSourceFile(smaliFile);
             CommonTokenStream tokens = new CommonTokenStream((TokenSource)lexer);
             tokens.fill();
 
             for (int i=0; i<tokens.size(); i++) {
                 Token token = tokens.get(i);
-                if (token.getChannel() == smaliParser.HIDDEN) {
+                if (token.getChannel() == SmaliParser.HIDDEN) {
                     continue;
                 }
 
@@ -281,7 +281,7 @@ public class Smali {
                 if (token.getType() == -1) {
                     tokenName = "EOF";
                 } else {
-                    tokenName = smaliParser.tokenNames[token.getType()];
+                    tokenName = SmaliParser.tokenNames[token.getType()];
                 }
                 System.out.println(tokenName + "(\"" + StringUtils.escapeString(token.getText()) + "\")");
             }

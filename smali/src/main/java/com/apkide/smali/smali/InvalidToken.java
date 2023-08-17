@@ -33,15 +33,15 @@ public class InvalidToken extends CommonToken {
     private final String message;
 
     public InvalidToken(String message) {
-        super(smaliParser.INVALID_TOKEN);
+        super(SmaliParser.INVALID_TOKEN);
         this.message = message;
-        this.channel = smaliParser.ERROR_CHANNEL;
+        this.channel = SmaliParser.ERROR_CHANNEL;
     }
 
     public InvalidToken(String message, String text) {
-        super(smaliParser.INVALID_TOKEN, text);
+        super(SmaliParser.INVALID_TOKEN, text);
         this.message = message;
-        this.channel = smaliParser.ERROR_CHANNEL;
+        this.channel = SmaliParser.ERROR_CHANNEL;
     }
 
     public String getMessage() {

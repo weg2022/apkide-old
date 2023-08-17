@@ -1,6 +1,7 @@
 package com.apkide.ls.api;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.apkide.ls.api.util.KeyValue;
 import com.apkide.ls.api.util.TextEdit;
@@ -15,22 +16,39 @@ public class Completion implements Serializable, Comparable<Completion> {
 	public String label;
 	@NonNull
 	public SymbolKind kind;
+	@Nullable
 	public String details;
-	@NonNull
+	@Nullable
 	public KeyValue<String, String> documentation;
 	public boolean deprecated, preselect;
+	@Nullable
+	public String sortText;
+	@Nullable
+	public String  filterText;
 	@NonNull
-	public String sortText, filterText, insertText;
+	public String insertText;
 	@NonNull
 	public InsertTextFormat insertTextFormat;
-	@NonNull
+	@Nullable
 	public TextEdit textEdit;
-	@NonNull
+	@Nullable
 	public List<TextEdit> additionalTextEdits;
-	@NonNull
+	@Nullable
 	public List<Character> commitCharacters;
 
-	public Completion(@NonNull String label, @NonNull SymbolKind kind, String details, @NonNull KeyValue<String, String> documentation, boolean deprecated, boolean preselect, @NonNull String sortText, @NonNull String filterText, @NonNull String insertText, @NonNull InsertTextFormat insertTextFormat, @NonNull TextEdit textEdit, @NonNull List<TextEdit> additionalTextEdits, @NonNull List<Character> commitCharacters) {
+	public Completion(@NonNull String label,
+					  @NonNull SymbolKind kind,
+					  @Nullable String details,
+					  @NonNull KeyValue<String, String> documentation,
+					  boolean deprecated,
+					  boolean preselect,
+					  @Nullable String sortText,
+					  @Nullable String filterText,
+					  @NonNull String insertText,
+					  @NonNull InsertTextFormat insertTextFormat,
+					  @Nullable TextEdit textEdit,
+					  @Nullable List<TextEdit> additionalTextEdits,
+					  @Nullable List<Character> commitCharacters) {
 		this.label = label;
 		this.kind = kind;
 		this.details = details;
@@ -51,5 +69,9 @@ public class Completion implements Serializable, Comparable<Completion> {
 		//TODO: compare implementation
 		return 0;
 	}
-
+    
+    public enum InsertTextFormat {
+        Plain,
+        Snippet
+    }
 }

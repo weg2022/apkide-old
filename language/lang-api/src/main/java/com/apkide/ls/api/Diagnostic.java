@@ -12,11 +12,11 @@ public class Diagnostic implements Serializable {
 	@NonNull
 	public Range range;
 	@NonNull
-	public DiagnosticSeverity severity;
+	public Severity severity;
 	@NonNull
 	public String code,source,message;
 
-	public Diagnostic(@NonNull Range range, @NonNull DiagnosticSeverity severity, @NonNull String code, @NonNull String source, @NonNull String message) {
+	public Diagnostic(@NonNull Range range, @NonNull Severity severity, @NonNull String code, @NonNull String source, @NonNull String message) {
 		this.range = range;
 		this.severity = severity;
 		this.code = code;
@@ -47,4 +47,11 @@ public class Diagnostic implements Serializable {
 		result = 31 * result + message.hashCode();
 		return result;
 	}
+    
+    public enum Severity {
+        Information,
+        Hint,
+        Warning,
+        Error
+    }
 }

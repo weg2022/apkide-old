@@ -21,7 +21,7 @@ import java.util.Stack;
 
 
 @SuppressWarnings("fallthrough")
-public class smaliFlexLexer implements TokenSource, LexerErrorInterface {
+public class SmaliFlexLexer implements TokenSource, LexerErrorInterface {
 
   /** This character denotes the end of file. */
   public static final int YYEOF = -1;
@@ -2415,7 +2415,7 @@ public class smaliFlexLexer implements TokenSource, LexerErrorInterface {
         }
         catch (IOException e) {
             System.err.println("shouldn't happen: " + e.getMessage());
-            return newToken(smaliParser.EOF);
+            return newToken(SmaliParser.EOF);
         }
     }
 
@@ -2584,7 +2584,7 @@ public class smaliFlexLexer implements TokenSource, LexerErrorInterface {
    *
    * @param   in  the java.io.Reader to read input from.
    */
-  public smaliFlexLexer(Reader in, int apiLevel) {
+  public SmaliFlexLexer(Reader in, int apiLevel) {
       this.apiLevel = apiLevel;
     this.zzReader = in;
   }
@@ -2990,7 +2990,7 @@ public class smaliFlexLexer implements TokenSource, LexerErrorInterface {
         zzAtEOF = true;
             switch (zzLexicalState) {
             case YYINITIAL: {
-              return newToken(smaliParser.EOF);
+              return newToken(SmaliParser.EOF);
             }  // fall though
             case 1345: break;
             case PARAM_LIST_OR_ID: {
@@ -3025,7 +3025,7 @@ public class smaliFlexLexer implements TokenSource, LexerErrorInterface {
           // fall through
           case 158: break;
           case 2:
-            { return newToken(smaliParser.WHITE_SPACE, true);
+            { return newToken(SmaliParser.WHITE_SPACE, true);
             }
           // fall through
           case 159: break;
@@ -3035,12 +3035,12 @@ public class smaliFlexLexer implements TokenSource, LexerErrorInterface {
           // fall through
           case 160: break;
           case 4:
-            { return newToken(smaliParser.LINE_COMMENT, true);
+            { return newToken(SmaliParser.LINE_COMMENT, true);
             }
           // fall through
           case 161: break;
           case 5:
-            { return newToken(smaliParser.SIMPLE_NAME, yytext());
+            { return newToken(SmaliParser.SIMPLE_NAME, yytext());
             }
           // fall through
           case 162: break;
@@ -3050,17 +3050,17 @@ public class smaliFlexLexer implements TokenSource, LexerErrorInterface {
           // fall through
           case 163: break;
           case 7:
-            { return newToken(smaliParser.OPEN_PAREN);
+            { return newToken(SmaliParser.OPEN_PAREN);
             }
           // fall through
           case 164: break;
           case 8:
-            { return newToken(smaliParser.CLOSE_PAREN);
+            { return newToken(SmaliParser.CLOSE_PAREN);
             }
           // fall through
           case 165: break;
           case 9:
-            { return newToken(smaliParser.COMMA);
+            { return newToken(SmaliParser.COMMA);
             }
           // fall through
           case 166: break;
@@ -3070,48 +3070,48 @@ public class smaliFlexLexer implements TokenSource, LexerErrorInterface {
           // fall through
           case 167: break;
           case 11:
-            { return newToken(smaliParser.POSITIVE_INTEGER_LITERAL);
+            { return newToken(SmaliParser.POSITIVE_INTEGER_LITERAL);
             }
           // fall through
           case 168: break;
           case 12:
-            { return newToken(smaliParser.COLON);
+            { return newToken(SmaliParser.COLON);
             }
           // fall through
           case 169: break;
           case 13:
-            { return newToken(smaliParser.EQUAL);
+            { return newToken(SmaliParser.EQUAL);
             }
           // fall through
           case 170: break;
           case 14:
-            { return newToken(smaliParser.AT);
+            { return newToken(SmaliParser.AT);
             }
           // fall through
           case 171: break;
           case 15:
-            { return newToken(smaliParser.PRIMITIVE_TYPE);
+            { return newToken(SmaliParser.PRIMITIVE_TYPE);
             }
           // fall through
           case 172: break;
           case 16:
-            { return newToken(smaliParser.VOID_TYPE);
+            { return newToken(SmaliParser.VOID_TYPE);
             }
           // fall through
           case 173: break;
           case 17:
             { yybegin(ARRAY_DESCRIPTOR);
-      return newToken(smaliParser.ARRAY_TYPE_PREFIX);
+      return newToken(SmaliParser.ARRAY_TYPE_PREFIX);
             }
           // fall through
           case 174: break;
           case 18:
-            { return newToken(smaliParser.OPEN_BRACE);
+            { return newToken(SmaliParser.OPEN_BRACE);
             }
           // fall through
           case 175: break;
           case 19:
-            { return newToken(smaliParser.CLOSE_BRACE);
+            { return newToken(SmaliParser.CLOSE_BRACE);
             }
           // fall through
           case 176: break;
@@ -3121,17 +3121,17 @@ public class smaliFlexLexer implements TokenSource, LexerErrorInterface {
           // fall through
           case 177: break;
           case 21:
-            { return newToken(smaliParser.PARAM_LIST_OR_ID_PRIMITIVE_TYPE);
+            { return newToken(SmaliParser.PARAM_LIST_OR_ID_PRIMITIVE_TYPE);
             }
           // fall through
           case 178: break;
           case 22:
-            { return newToken(smaliParser.ARRAY_TYPE_PREFIX);
+            { return newToken(SmaliParser.ARRAY_TYPE_PREFIX);
             }
           // fall through
           case 179: break;
           case 23:
-            { yybegin(YYINITIAL); return newToken(smaliParser.PRIMITIVE_TYPE);
+            { yybegin(YYINITIAL); return newToken(SmaliParser.PRIMITIVE_TYPE);
             }
           // fall through
           case 180: break;
@@ -3146,7 +3146,7 @@ public class smaliFlexLexer implements TokenSource, LexerErrorInterface {
           // fall through
           case 182: break;
           case 26:
-            { sb.append('"'); return endStateBasedToken(smaliParser.STRING_LITERAL);
+            { sb.append('"'); return endStateBasedToken(SmaliParser.STRING_LITERAL);
             }
           // fall through
           case 183: break;
@@ -3163,58 +3163,58 @@ public class smaliFlexLexer implements TokenSource, LexerErrorInterface {
             return invalidStateBasedToken("Character literal with multiple chars");
         }
 
-        return endStateBasedToken(smaliParser.CHAR_LITERAL);
+        return endStateBasedToken(SmaliParser.CHAR_LITERAL);
             }
           // fall through
           case 185: break;
           case 29:
             { sb.append(yytext());
-        return endStateBasedToken(smaliParser.CLASS_DESCRIPTOR);
+        return endStateBasedToken(SmaliParser.CLASS_DESCRIPTOR);
             }
           // fall through
           case 186: break;
           case 30:
-            { return newToken(smaliParser.NEGATIVE_INTEGER_LITERAL);
+            { return newToken(SmaliParser.NEGATIVE_INTEGER_LITERAL);
             }
           // fall through
           case 187: break;
           case 31:
-            { return newToken(smaliParser.ARROW);
+            { return newToken(SmaliParser.ARROW);
             }
           // fall through
           case 188: break;
           case 32:
-            { return newToken(smaliParser.DOTDOT);
+            { return newToken(SmaliParser.DOTDOT);
             }
           // fall through
           case 189: break;
           case 33:
-            { return newToken(smaliParser.DOUBLE_LITERAL);
+            { return newToken(SmaliParser.DOUBLE_LITERAL);
             }
           // fall through
           case 190: break;
           case 34:
-            { return newToken(smaliParser.DOUBLE_LITERAL_OR_ID);
+            { return newToken(SmaliParser.DOUBLE_LITERAL_OR_ID);
             }
           // fall through
           case 191: break;
           case 35:
-            { return newToken(smaliParser.FLOAT_LITERAL_OR_ID);
+            { return newToken(SmaliParser.FLOAT_LITERAL_OR_ID);
             }
           // fall through
           case 192: break;
           case 36:
-            { return newToken(smaliParser.LONG_LITERAL);
+            { return newToken(SmaliParser.LONG_LITERAL);
             }
           // fall through
           case 193: break;
           case 37:
-            { return newToken(smaliParser.SHORT_LITERAL);
+            { return newToken(SmaliParser.SHORT_LITERAL);
             }
           // fall through
           case 194: break;
           case 38:
-            { return newToken(smaliParser.BYTE_LITERAL);
+            { return newToken(SmaliParser.BYTE_LITERAL);
             }
           // fall through
           case 195: break;
@@ -3226,7 +3226,7 @@ public class smaliFlexLexer implements TokenSource, LexerErrorInterface {
           // fall through
           case 196: break;
           case 40:
-            { return newToken(smaliParser.REGISTER);
+            { return newToken(SmaliParser.REGISTER);
             }
           // fall through
           case 197: break;
@@ -3295,12 +3295,12 @@ public class smaliFlexLexer implements TokenSource, LexerErrorInterface {
           // fall through
           case 209: break;
           case 53:
-            { return newToken(smaliParser.FLOAT_LITERAL);
+            { return newToken(SmaliParser.FLOAT_LITERAL);
             }
           // fall through
           case 210: break;
           case 54:
-            { return newToken(smaliParser.MEMBER_NAME);
+            { return newToken(SmaliParser.MEMBER_NAME);
             }
           // fall through
           case 211: break;
@@ -3318,17 +3318,17 @@ public class smaliFlexLexer implements TokenSource, LexerErrorInterface {
           // fall through
           case 213: break;
           case 57:
-            { return newToken(smaliParser.SIMPLE_NAME, processQuotedSimpleNameWithSpaces(yytext()));
+            { return newToken(SmaliParser.SIMPLE_NAME, processQuotedSimpleNameWithSpaces(yytext()));
             }
           // fall through
           case 214: break;
           case 58:
-            { return newToken(smaliParser.SIMPLE_NAME, processQuotedSimpleName(yytext()));
+            { return newToken(SmaliParser.SIMPLE_NAME, processQuotedSimpleName(yytext()));
             }
           // fall through
           case 215: break;
           case 59:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT10x);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT10x);
             }
           // fall through
           case 216: break;
@@ -3340,42 +3340,42 @@ public class smaliFlexLexer implements TokenSource, LexerErrorInterface {
           // fall through
           case 217: break;
           case 61:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT23x);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT23x);
             }
           // fall through
           case 218: break;
           case 62:
-            { return newToken(smaliParser.ACCESS_SPEC);
+            { return newToken(SmaliParser.ACCESS_SPEC);
             }
           // fall through
           case 219: break;
           case 63:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT10t);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT10t);
             }
           // fall through
           case 220: break;
           case 64:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT22c_FIELD);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT22c_FIELD);
             }
           // fall through
           case 221: break;
           case 65:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT12x_OR_ID);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT12x_OR_ID);
             }
           // fall through
           case 222: break;
           case 66:
-            { return newToken(smaliParser.NULL_LITERAL);
+            { return newToken(SmaliParser.NULL_LITERAL);
             }
           // fall through
           case 223: break;
           case 67:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT21c_FIELD);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT21c_FIELD);
             }
           // fall through
           case 224: break;
           case 68:
-            { return newToken(smaliParser.BOOL_LITERAL);
+            { return newToken(SmaliParser.BOOL_LITERAL);
             }
           // fall through
           case 225: break;
@@ -3406,67 +3406,67 @@ public class smaliFlexLexer implements TokenSource, LexerErrorInterface {
           // fall through
           case 229: break;
           case 73:
-            { return newToken(smaliParser.ENUM_DIRECTIVE);
+            { return newToken(SmaliParser.ENUM_DIRECTIVE);
             }
           // fall through
           case 230: break;
           case 74:
-            { return newToken(smaliParser.LINE_DIRECTIVE);
+            { return newToken(SmaliParser.LINE_DIRECTIVE);
             }
           // fall through
           case 231: break;
           case 75:
-            { return newToken(smaliParser.ANNOTATION_VISIBILITY);
+            { return newToken(SmaliParser.ANNOTATION_VISIBILITY);
             }
           // fall through
           case 232: break;
           case 76:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT31i_OR_ID);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT31i_OR_ID);
             }
           // fall through
           case 233: break;
           case 77:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT22t);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT22t);
             }
           // fall through
           case 234: break;
           case 78:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT11x);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT11x);
             }
           // fall through
           case 235: break;
           case 79:
-            { return newToken(smaliParser.CATCH_DIRECTIVE);
+            { return newToken(SmaliParser.CATCH_DIRECTIVE);
             }
           // fall through
           case 236: break;
           case 80:
-            { return newToken(smaliParser.CLASS_DIRECTIVE);
+            { return newToken(SmaliParser.CLASS_DIRECTIVE);
             }
           // fall through
           case 237: break;
           case 81:
-            { return newToken(smaliParser.FIELD_DIRECTIVE);
+            { return newToken(SmaliParser.FIELD_DIRECTIVE);
             }
           // fall through
           case 238: break;
           case 82:
-            { return newToken(smaliParser.LOCAL_DIRECTIVE);
+            { return newToken(SmaliParser.LOCAL_DIRECTIVE);
             }
           // fall through
           case 239: break;
           case 83:
-            { return newToken(smaliParser.PARAMETER_DIRECTIVE);
+            { return newToken(SmaliParser.PARAMETER_DIRECTIVE);
             }
           // fall through
           case 240: break;
           case 84:
-            { return newToken(smaliParser.SUPER_DIRECTIVE);
+            { return newToken(SmaliParser.SUPER_DIRECTIVE);
             }
           // fall through
           case 241: break;
           case 85:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT21t);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT21t);
             }
           // fall through
           case 242: break;
@@ -3476,357 +3476,357 @@ public class smaliFlexLexer implements TokenSource, LexerErrorInterface {
           // fall through
           case 243: break;
           case 87:
-            { return newToken(smaliParser.LOCALS_DIRECTIVE);
+            { return newToken(SmaliParser.LOCALS_DIRECTIVE);
             }
           // fall through
           case 244: break;
           case 88:
-            { return newToken(smaliParser.METHOD_DIRECTIVE);
+            { return newToken(SmaliParser.METHOD_DIRECTIVE);
             }
           // fall through
           case 245: break;
           case 89:
-            { return newToken(smaliParser.SOURCE_DIRECTIVE);
+            { return newToken(SmaliParser.SOURCE_DIRECTIVE);
             }
           // fall through
           case 246: break;
           case 90:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT11n);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT11n);
             }
           // fall through
           case 247: break;
           case 91:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT20t);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT20t);
             }
           // fall through
           case 248: break;
           case 92:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT30t);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT30t);
             }
           // fall through
           case 249: break;
           case 93:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT32x);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT32x);
             }
           // fall through
           case 250: break;
           case 94:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT21s);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT21s);
             }
           // fall through
           case 251: break;
           case 95:
-            { return newToken(smaliParser.HIDDENAPI_RESTRICTION);
+            { return newToken(SmaliParser.HIDDENAPI_RESTRICTION);
             }
           // fall through
           case 252: break;
           case 96:
-            { return newToken(smaliParser.VERIFICATION_ERROR_TYPE);
+            { return newToken(SmaliParser.VERIFICATION_ERROR_TYPE);
             }
           // fall through
           case 253: break;
           case 97:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT22s_OR_ID);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT22s_OR_ID);
             }
           // fall through
           case 254: break;
           case 98:
-            { return newToken(smaliParser.CATCHALL_DIRECTIVE);
+            { return newToken(SmaliParser.CATCHALL_DIRECTIVE);
             }
           // fall through
           case 255: break;
           case 99:
-            { return newToken(smaliParser.EPILOGUE_DIRECTIVE);
+            { return newToken(SmaliParser.EPILOGUE_DIRECTIVE);
             }
           // fall through
           case 256: break;
           case 100:
-            { return newToken(smaliParser.PROLOGUE_DIRECTIVE);
+            { return newToken(SmaliParser.PROLOGUE_DIRECTIVE);
             }
           // fall through
           case 257: break;
           case 101:
-            { return newToken(smaliParser.FIELD_OFFSET);
+            { return newToken(SmaliParser.FIELD_OFFSET);
             }
           // fall through
           case 258: break;
           case 102:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT22c_TYPE);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT22c_TYPE);
             }
           // fall through
           case 259: break;
           case 103:
-            { return newToken(smaliParser.END_FIELD_DIRECTIVE);
+            { return newToken(SmaliParser.END_FIELD_DIRECTIVE);
             }
           // fall through
           case 260: break;
           case 104:
-            { return newToken(smaliParser.END_LOCAL_DIRECTIVE);
+            { return newToken(SmaliParser.END_LOCAL_DIRECTIVE);
             }
           // fall through
           case 261: break;
           case 105:
-            { return newToken(smaliParser.END_PARAMETER_DIRECTIVE);
+            { return newToken(SmaliParser.END_PARAMETER_DIRECTIVE);
             }
           // fall through
           case 262: break;
           case 106:
-            { return newToken(smaliParser.REGISTERS_DIRECTIVE);
+            { return newToken(SmaliParser.REGISTERS_DIRECTIVE);
             }
           // fall through
           case 263: break;
           case 107:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT21c_TYPE);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT21c_TYPE);
             }
           // fall through
           case 264: break;
           case 108:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT51l);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT51l);
             }
           // fall through
           case 265: break;
           case 109:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT22cs_FIELD);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT22cs_FIELD);
             }
           // fall through
           case 266: break;
           case 110:
-            { return newToken(smaliParser.INLINE_INDEX);
+            { return newToken(SmaliParser.INLINE_INDEX);
             }
           // fall through
           case 267: break;
           case 111:
-            { return newToken(smaliParser.METHOD_HANDLE_TYPE_FIELD);
+            { return newToken(SmaliParser.METHOD_HANDLE_TYPE_FIELD);
             }
           // fall through
           case 268: break;
           case 112:
-            { return newToken(smaliParser.VTABLE_INDEX);
+            { return newToken(SmaliParser.VTABLE_INDEX);
             }
           // fall through
           case 269: break;
           case 113:
-            { return newToken(smaliParser.ANNOTATION_DIRECTIVE);
+            { return newToken(SmaliParser.ANNOTATION_DIRECTIVE);
             }
           // fall through
           case 270: break;
           case 114:
-            { return newToken(smaliParser.ARRAY_DATA_DIRECTIVE);
+            { return newToken(SmaliParser.ARRAY_DATA_DIRECTIVE);
             }
           // fall through
           case 271: break;
           case 115:
-            { return newToken(smaliParser.END_METHOD_DIRECTIVE);
+            { return newToken(SmaliParser.END_METHOD_DIRECTIVE);
             }
           // fall through
           case 272: break;
           case 116:
-            { return newToken(smaliParser.IMPLEMENTS_DIRECTIVE);
+            { return newToken(SmaliParser.IMPLEMENTS_DIRECTIVE);
             }
           // fall through
           case 273: break;
           case 117:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT22x);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT22x);
             }
           // fall through
           case 274: break;
           case 118:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT22b);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT22b);
             }
           // fall through
           case 275: break;
           case 119:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT21c_STRING);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT21c_STRING);
             }
           // fall through
           case 276: break;
           case 120:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT21ih);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT21ih);
             }
           // fall through
           case 277: break;
           case 121:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT35c_METHOD);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT35c_METHOD);
             }
           // fall through
           case 278: break;
           case 122:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT12x);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT12x);
             }
           // fall through
           case 279: break;
           case 123:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT22s);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT22s);
             }
           // fall through
           case 280: break;
           case 124:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT31i);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT31i);
             }
           // fall through
           case 281: break;
           case 125:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT22c_FIELD_ODEX);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT22c_FIELD_ODEX);
             }
           // fall through
           case 282: break;
           case 126:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT35c_CALL_SITE);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT35c_CALL_SITE);
             }
           // fall through
           case 283: break;
           case 127:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT35c_METHOD_OR_METHOD_HANDLE_TYPE);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT35c_METHOD_OR_METHOD_HANDLE_TYPE);
             }
           // fall through
           case 284: break;
           case 128:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT31t);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT31t);
             }
           // fall through
           case 285: break;
           case 129:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT21c_FIELD_ODEX);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT21c_FIELD_ODEX);
             }
           // fall through
           case 286: break;
           case 130:
-            { return newToken(smaliParser.PACKED_SWITCH_DIRECTIVE);
+            { return newToken(SmaliParser.PACKED_SWITCH_DIRECTIVE);
             }
           // fall through
           case 287: break;
           case 131:
-            { return newToken(smaliParser.RESTART_LOCAL_DIRECTIVE);
+            { return newToken(SmaliParser.RESTART_LOCAL_DIRECTIVE);
             }
           // fall through
           case 288: break;
           case 132:
-            { return newToken(smaliParser.SPARSE_SWITCH_DIRECTIVE);
+            { return newToken(SmaliParser.SPARSE_SWITCH_DIRECTIVE);
             }
           // fall through
           case 289: break;
           case 133:
-            { return newToken(smaliParser.SUBANNOTATION_DIRECTIVE);
+            { return newToken(SmaliParser.SUBANNOTATION_DIRECTIVE);
             }
           // fall through
           case 290: break;
           case 134:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT35mi_METHOD);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT35mi_METHOD);
             }
           // fall through
           case 291: break;
           case 135:
-            { return newToken(smaliParser.END_ANNOTATION_DIRECTIVE);
+            { return newToken(SmaliParser.END_ANNOTATION_DIRECTIVE);
             }
           // fall through
           case 292: break;
           case 136:
-            { return newToken(smaliParser.END_ARRAY_DATA_DIRECTIVE);
+            { return newToken(SmaliParser.END_ARRAY_DATA_DIRECTIVE);
             }
           // fall through
           case 293: break;
           case 137:
-            { return newToken(smaliParser.METHOD_HANDLE_TYPE_METHOD);
+            { return newToken(SmaliParser.METHOD_HANDLE_TYPE_METHOD);
             }
           // fall through
           case 294: break;
           case 138:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT35c_TYPE);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT35c_TYPE);
             }
           // fall through
           case 295: break;
           case 139:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT21c_METHOD_TYPE);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT21c_METHOD_TYPE);
             }
           // fall through
           case 296: break;
           case 140:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT21lh);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT21lh);
             }
           // fall through
           case 297: break;
           case 141:
-            { return newToken(smaliParser.END_PACKED_SWITCH_DIRECTIVE);
+            { return newToken(SmaliParser.END_PACKED_SWITCH_DIRECTIVE);
             }
           // fall through
           case 298: break;
           case 142:
-            { return newToken(smaliParser.END_SPARSE_SWITCH_DIRECTIVE);
+            { return newToken(SmaliParser.END_SPARSE_SWITCH_DIRECTIVE);
             }
           // fall through
           case 299: break;
           case 143:
-            { return newToken(smaliParser.END_SUBANNOTATION_DIRECTIVE);
+            { return newToken(SmaliParser.END_SUBANNOTATION_DIRECTIVE);
             }
           // fall through
           case 300: break;
           case 144:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT31c);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT31c);
             }
           // fall through
           case 301: break;
           case 145:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT45cc_METHOD);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT45cc_METHOD);
             }
           // fall through
           case 302: break;
           case 146:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT35ms_METHOD);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT35ms_METHOD);
             }
           // fall through
           case 303: break;
           case 147:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT3rc_METHOD);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT3rc_METHOD);
             }
           // fall through
           case 304: break;
           case 148:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT21c_METHOD_HANDLE);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT21c_METHOD_HANDLE);
             }
           // fall through
           case 305: break;
           case 149:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT3rc_CALL_SITE);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT3rc_CALL_SITE);
             }
           // fall through
           case 306: break;
           case 150:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT35c_METHOD_ODEX);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT35c_METHOD_ODEX);
             }
           // fall through
           case 307: break;
           case 151:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT10x_ODEX);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT10x_ODEX);
             }
           // fall through
           case 308: break;
           case 152:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT3rmi_METHOD);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT3rmi_METHOD);
             }
           // fall through
           case 309: break;
           case 153:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT3rc_TYPE);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT3rc_TYPE);
             }
           // fall through
           case 310: break;
           case 154:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT3rc_METHOD_ODEX);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT3rc_METHOD_ODEX);
             }
           // fall through
           case 311: break;
           case 155:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT4rcc_METHOD);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT4rcc_METHOD);
             }
           // fall through
           case 312: break;
           case 156:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT3rms_METHOD);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT3rms_METHOD);
             }
           // fall through
           case 313: break;
           case 157:
-            { return newToken(smaliParser.INSTRUCTION_FORMAT20bc);
+            { return newToken(SmaliParser.INSTRUCTION_FORMAT20bc);
             }
           // fall through
           case 314: break;
