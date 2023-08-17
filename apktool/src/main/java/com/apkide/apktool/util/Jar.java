@@ -16,20 +16,14 @@
  */
 package com.apkide.apktool.util;
 
-
 import com.apkide.apktool.common.BrutException;
 import com.apkide.common.IoUtils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
-
 
 public abstract class Jar {
     private static final Map<String, File> mExtracted = new HashMap<>();
@@ -59,7 +53,7 @@ public abstract class Jar {
             fileOut.deleteOnExit();
 
             OutputStream out = Files.newOutputStream(fileOut.toPath());
-            IoUtils.copyAllBytes(in,out);
+            IoUtils.copyAllBytes(in, out);
             in.close();
             out.close();
 

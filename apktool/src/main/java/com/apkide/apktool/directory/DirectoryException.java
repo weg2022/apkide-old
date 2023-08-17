@@ -16,7 +16,6 @@
  */
 package com.apkide.apktool.directory;
 
-
 import com.apkide.apktool.common.BrutException;
 
 public class DirectoryException extends BrutException {

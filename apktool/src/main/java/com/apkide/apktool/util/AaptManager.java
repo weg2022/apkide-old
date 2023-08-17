@@ -17,11 +17,11 @@
 package com.apkide.apktool.util;
 
 import com.apkide.apktool.common.BrutException;
+import com.apkide.common.Application;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class AaptManager {
 
@@ -36,28 +36,9 @@ public class AaptManager {
     private static File getAapt(Integer version) throws BrutException {
         File aaptBinary;
         String aaptVersion = getAaptBinaryName(version);
-
-        if (! OSDetection.is64Bit() && OSDetection.isMacOSX()) {
-            throw new BrutException("32 bit OS detected. No 32 bit binaries available.");
-        }
-
-        // Set the 64 bit flag
-        aaptVersion += OSDetection.is64Bit() ? "_64" : "";
-
-        try {
-            if (OSDetection.isMacOSX()) {
-                aaptBinary = Jar.getResourceAsFile("/prebuilt/macosx/" + aaptVersion, AaptManager.class);
-            } else if (OSDetection.isUnix()) {
-                aaptBinary = Jar.getResourceAsFile("/prebuilt/linux/" + aaptVersion, AaptManager.class);
-            } else if (OSDetection.isWindows()) {
-                aaptBinary = Jar.getResourceAsFile("/prebuilt/windows/" + aaptVersion + ".exe", AaptManager.class);
-            } else {
-                throw new BrutException("Could not identify platform: " + OSDetection.returnOS());
-            }
-        } catch (BrutException ex) {
-            throw new BrutException(ex);
-        }
-
+        
+        aaptBinary = Application.get().foundBinary(aaptVersion);
+    
         if (aaptBinary.setExecutable(true)) {
             return aaptBinary;
         }

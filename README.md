@@ -1,4 +1,4 @@
-# Dev-A - APK-IDE
+# APK-IDE
 
 APK-IDE是一款用于反编译；编译；逆向；修改APK的安卓软件。
 编译与反编译核心使用的是 APK-Tool 开源项目
@@ -15,13 +15,20 @@ APK-IDE是一款用于反编译；编译；逆向；修改APK的安卓软件。
 
 ### 使用的库与资源
 
-* [Androidx](https://github.com/androidx/androidx)
-* [Material-Components](https://github.com/material-components/material-components-android)
-* [Apktool](https://github.com/iBotPeaches/Apktool)
-* [Smali](https://github.com/google/smali)
-* [Fernflower](https://github.com/fesh0r/fernflower)
-* [R8](https://r8.googlesource.com/r8)
-* [InterfaceLoader](https://github.com/JeremyLiao/InterfaceLoader)
+* [androidx](https://github.com/androidx/androidx)
+* [material-components](https://github.com/material-components/material-components-android)
+* [apktool](https://github.com/iBotPeaches/Apktool)
+* [smali](https://github.com/google/smali)
+* [guava](https://github.com/google/guava)
+* [commons-text](https://commons.apache.org/proper/commons-text)
+* [snakeyaml](https://bitbucket.org/snakeyaml/snakeyaml)
+* [xpp3](https://github.com/codelibs/xpp3)
+* [jcommander](http://jcommander.org/)
+* [fernflower](https://github.com/fesh0r/fernflower)
+* [r8](https://r8.googlesource.com/r8)
+* [interface-loader](https://github.com/JeremyLiao/InterfaceLoader)
+* [antlr-runtime](https://github.com/antlr/antl3)
+* [antlr4-runtime](https://github.com/antlr/antlr4)
 
 ## License
 

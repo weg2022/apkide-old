@@ -14,7 +14,7 @@ public class Color implements Serializable {
 		if (hexColor.charAt(0) == '#') {
 			long color = Long.parseLong(hexColor.substring(1), 16);
 			if (hexColor.length() == 7) {
-				color |= 0xffff_ffff_ff00_0000L;
+				color |= 0xffffffffff000000L;
 			} else if (hexColor.length() != 9) {
 				throw new IllegalArgumentException("Unknown color");
 			}

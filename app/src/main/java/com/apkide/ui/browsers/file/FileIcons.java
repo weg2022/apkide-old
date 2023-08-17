@@ -7,7 +7,7 @@ import com.apkide.ui.R;
 
 public class FileIcons {
 	public static int getIcon(@NonNull String filePath){
-		String ext= FileSystem.getExtension(filePath).toLowerCase();
+		String ext= FileSystem.getExtensionName(filePath).toLowerCase();
 		switch (ext){
 			case ".java":
 				return R.drawable.file_type_java;

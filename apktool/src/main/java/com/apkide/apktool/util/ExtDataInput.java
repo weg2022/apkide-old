@@ -16,10 +16,7 @@
  */
 package com.apkide.apktool.util;
 
-import java.io.DataInput;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 public class ExtDataInput extends DataInputDelegate {
     public ExtDataInput(InputStream in) {

@@ -16,13 +16,7 @@
  */
 package com.apkide.apktool.directory;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLDecoder;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;

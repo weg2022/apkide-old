@@ -16,7 +16,6 @@
  */
 package com.apkide.apktool.directory;
 
-
 import com.apkide.apktool.common.BrutException;
 import com.apkide.apktool.util.BrutIO;
 import com.apkide.common.FileUtils;
@@ -31,7 +30,6 @@ import java.util.Collection;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 
 public class ZipUtils {
 
