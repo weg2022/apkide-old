@@ -24,6 +24,7 @@ import com.apkide.apktool.androlib.res.data.arsc.FlagsOffset;
 import com.apkide.apktool.androlib.res.decoder.ARSCDecoder;
 import com.apkide.common.Application;
 import com.apkide.common.IoUtils;
+import com.apkide.common.Logger;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -34,7 +35,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.util.Objects;
-import java.util.logging.Logger;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -117,7 +117,7 @@ public class Framework {
     public void listFrameworkDirectory() throws AndrolibException {
         File dir = getFrameworkDirectory();
         if (dir == null) {
-            LOGGER.severe("No framework directory found. Nothing to list.");
+            LOGGER.error("No framework directory found. Nothing to list.");
             return;
         }
 
@@ -180,7 +180,7 @@ public class Framework {
         if (! dir.exists()) {
             if (! dir.mkdirs()) {
                 if (config.frameworkDirectory != null) {
-                    LOGGER.severe("Can't create Framework directory: " + dir);
+                    LOGGER.error("Can't create Framework directory: " + dir);
                 }
                 throw new AndrolibException(String.format(
                     "Can't create directory: (%s). Pass a writable path with --frame-path {DIR}. ", dir
@@ -190,9 +190,9 @@ public class Framework {
 
         if (config.frameworkDirectory == null) {
             if (! dir.canWrite()) {
-                LOGGER.severe(String.format("WARNING: Could not write to (%1$s), using %2$s instead...",
+                LOGGER.error(String.format("WARNING: Could not write to (%1$s), using %2$s instead...",
                     dir.getAbsolutePath(), Application.get().getTempDir()));
-                LOGGER.severe("Please be aware this is a volatile directory and frameworks could go missing, " +
+                LOGGER.error("Please be aware this is a volatile directory and frameworks could go missing, " +
                     "please utilize --frame-path if the default storage directory is unavailable");
 
                 dir = Application.get().getTempDir();

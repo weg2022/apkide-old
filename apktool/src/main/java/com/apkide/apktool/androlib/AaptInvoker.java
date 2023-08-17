@@ -17,10 +17,11 @@
 package com.apkide.apktool.androlib;
 
 import com.apkide.apktool.androlib.apk.ApkInfo;
+import com.apkide.apktool.androlib.exceptions.AndrolibException;
 import com.apkide.apktool.common.BrutException;
 import com.apkide.apktool.util.AaptManager;
 import com.apkide.apktool.util.OS;
-import com.apkide.apktool.androlib.exceptions.AndrolibException;
+import com.apkide.common.Logger;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -29,7 +30,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Logger;
 
 public class AaptInvoker {
     private final Config mConfig;
@@ -119,8 +119,8 @@ public class AaptInvoker {
 
             try {
                 OS.exec(cmd.toArray(new String[0]));
-                LOGGER.fine("aapt2 compile command ran: ");
-                LOGGER.fine(cmd.toString());
+                LOGGER.verbose("aapt2 compile command ran: ");
+                LOGGER.verbose(cmd.toString());
             } catch (BrutException ex) {
                 throw new AndrolibException(ex);
             }
@@ -239,8 +239,8 @@ public class AaptInvoker {
 
         try {
             OS.exec(cmd.toArray(new String[0]));
-            LOGGER.fine("aapt2 link command ran: ");
-            LOGGER.fine(cmd.toString());
+            LOGGER.verbose("aapt2 link command ran: ");
+            LOGGER.verbose(cmd.toString());
         } catch (BrutException ex) {
             throw new AndrolibException(ex);
         }
@@ -355,8 +355,8 @@ public class AaptInvoker {
         }
         try {
             OS.exec(cmd.toArray(new String[0]));
-            LOGGER.fine("command ran: ");
-            LOGGER.fine(cmd.toString());
+            LOGGER.verbose("command ran: ");
+            LOGGER.verbose(cmd.toString());
         } catch (BrutException ex) {
             throw new AndrolibException(ex);
         }

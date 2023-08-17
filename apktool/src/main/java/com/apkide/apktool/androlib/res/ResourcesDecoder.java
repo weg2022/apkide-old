@@ -42,6 +42,7 @@ import com.apkide.apktool.directory.ExtFile;
 import com.apkide.apktool.directory.FileDirectory;
 import com.apkide.apktool.ext.org.xmlpull.v1.XmlSerializer;
 import com.apkide.apktool.util.Duo;
+import com.apkide.common.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,7 +50,6 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 public class ResourcesDecoder {
     private final static Logger LOGGER = Logger.getLogger(ResourcesDecoder.class.getName());

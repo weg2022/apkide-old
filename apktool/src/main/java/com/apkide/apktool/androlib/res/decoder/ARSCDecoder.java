@@ -40,6 +40,7 @@ import com.apkide.apktool.androlib.res.data.value.ResValueFactory;
 import com.apkide.apktool.ext.android.util.TypedValue;
 import com.apkide.apktool.util.Duo;
 import com.apkide.apktool.util.ExtDataInput;
+import com.apkide.common.Logger;
 import com.google.common.io.CountingInputStream;
 import com.google.common.io.LittleEndianDataInputStream;
 
@@ -53,7 +54,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 
 public class ARSCDecoder {
     public static ARSCData decode(InputStream arscStream, boolean findFlagsOffsets, boolean keepBroken)
@@ -135,7 +135,7 @@ public class ARSCDecoder {
                     break;
                 default:
                     if (mHeader.type != ARSCHeader.RES_NONE_TYPE) {
-                        LOGGER.severe(String.format("Unknown chunk type: %04x", mHeader.type));
+                        LOGGER.error(String.format("Unknown chunk type: %04x", mHeader.type));
                     }
                     break chunkLoop;
             }
@@ -230,7 +230,7 @@ public class ARSCDecoder {
         int count = mIn.readInt();
         
         for (int i = 0; i < count; i++) {
-            LOGGER.fine(String.format("Skipping staged alias stagedId (%h) finalId: %h", mIn.readInt(), mIn.readInt()));
+            LOGGER.verbose(String.format("Skipping staged alias stagedId (%h) finalId: %h", mIn.readInt(), mIn.readInt()));
         }
     }
     
@@ -238,7 +238,7 @@ public class ARSCDecoder {
         checkChunkType(ARSCHeader.XML_TYPE_OVERLAY);
         String name = mIn.readNullEndedString(256, true);
         String actor = mIn.readNullEndedString(256, true);
-        LOGGER.fine(String.format("Overlay name: \"%s\", actor: \"%s\")", name, actor));
+        LOGGER.verbose(String.format("Overlay name: \"%s\", actor: \"%s\")", name, actor));
     }
     
     private void readOverlayPolicySpec() throws AndrolibException, IOException {
@@ -247,7 +247,7 @@ public class ARSCDecoder {
         int count = mIn.readInt();
         
         for (int i = 0; i < count; i++) {
-            LOGGER.fine(String.format("Skipping overlay (%h)", mIn.readInt()));
+            LOGGER.verbose(String.format("Skipping overlay (%h)", mIn.readInt()));
         }
     }
     
@@ -294,7 +294,7 @@ public class ARSCDecoder {
         }
         
         if ((typeFlags & 0x01) != 0) {
-            LOGGER.fine("Sparse type flags detected: " + mTypeSpec.getName());
+            LOGGER.verbose("Sparse type flags detected: " + mTypeSpec.getName());
         }
         
         HashMap<Integer, Integer> entryOffsetMap = new LinkedHashMap<>();
@@ -547,7 +547,7 @@ public class ARSCDecoder {
             BigInteger exceedingBI = new BigInteger(1, buf);
             
             if (exceedingBI.equals(BigInteger.ZERO)) {
-                LOGGER.fine(String
+                LOGGER.verbose(String
                         .format("Config flags size > %d, but exceeding bytes are all zero, so it should be ok.",
                                 KNOWN_CONFIG_BYTES));
             } else {

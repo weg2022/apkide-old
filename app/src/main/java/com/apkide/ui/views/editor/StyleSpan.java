@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import java.util.Arrays;
 
-public class Styles {
+public class StyleSpan {
     private byte[][] myLines = new byte[100][5];
     
     private int getSize(int line) {

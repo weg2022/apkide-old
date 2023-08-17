@@ -7,7 +7,18 @@ import java.io.Serializable;
 public class Color implements Serializable {
 
 	private static final long serialVersionUID = -8789388831000526893L;
-
+	public static final Color White=new Color(255,255,255);
+	public static final Color Black=new Color(0,0,0);
+	public static final Color Red=new Color(255,0,0);
+	public static final Color Lime=new Color(0,255,0);
+	public static final Color Blue=new Color(0,0,255);
+	public static final Color Yellow=new Color(255,255,0);
+	public static final Color Silver=new Color(192,192,192);
+	public static final Color Gray=new Color(128,128,128);
+	public static final Color Maroon=new Color(128,0,0);
+	public static final Color Olive=new Color(128,128,0);
+	public static final Color Green=new Color(0,128,0);
+	
 	public final int value;
 
 	public Color(@NonNull String hexColor){

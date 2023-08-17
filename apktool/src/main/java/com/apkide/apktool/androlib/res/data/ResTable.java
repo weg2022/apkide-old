@@ -18,10 +18,10 @@ package com.apkide.apktool.androlib.res.data;
 
 import com.apkide.apktool.androlib.ApkDecoder;
 import com.apkide.apktool.androlib.Config;
-import com.apkide.apktool.androlib.exceptions.AndrolibException;
-import com.apkide.apktool.androlib.exceptions.UndefinedResObjectException;
 import com.apkide.apktool.androlib.apk.ApkInfo;
 import com.apkide.apktool.androlib.apk.UsesFramework;
+import com.apkide.apktool.androlib.exceptions.AndrolibException;
+import com.apkide.apktool.androlib.exceptions.UndefinedResObjectException;
 import com.apkide.apktool.androlib.res.Framework;
 import com.apkide.apktool.androlib.res.data.value.ResValue;
 import com.apkide.apktool.androlib.res.decoder.ARSCDecoder;
@@ -29,13 +29,18 @@ import com.apkide.apktool.androlib.res.xml.ResXmlPatcher;
 import com.apkide.apktool.directory.Directory;
 import com.apkide.apktool.directory.DirectoryException;
 import com.apkide.apktool.directory.ExtFile;
+import com.apkide.common.Logger;
 import com.google.common.base.Strings;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
-import java.util.logging.Logger;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+
 
 public class ResTable {
     private final static Logger LOGGER = Logger.getLogger(ApkDecoder.class.getName());

@@ -16,10 +16,10 @@
  */
 package com.apkide.apktool.androlib.res.data.arsc;
 
-import com.apkide.apktool.androlib.res.data.ResPackage;
 import com.apkide.apktool.androlib.exceptions.AndrolibException;
+import com.apkide.apktool.androlib.res.data.ResPackage;
+import com.apkide.common.Logger;
 
-import java.util.logging.Logger;
 
 public class ARSCData {
     private final ResPackage[] mPackages;

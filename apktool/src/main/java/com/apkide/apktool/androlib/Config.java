@@ -18,8 +18,7 @@ package com.apkide.apktool.androlib;
 
 import com.apkide.apktool.androlib.exceptions.AndrolibException;
 import com.apkide.common.Application;
-
-import java.util.logging.Logger;
+import com.apkide.common.Logger;
 
 public class Config {
     private final static Logger LOGGER = Logger.getLogger(Config.class.getName());

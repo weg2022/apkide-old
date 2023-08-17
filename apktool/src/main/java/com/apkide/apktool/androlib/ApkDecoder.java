@@ -29,6 +29,7 @@ import com.apkide.apktool.directory.DirectoryException;
 import com.apkide.apktool.directory.ExtFile;
 import com.apkide.apktool.util.OS;
 import com.apkide.common.FileUtils;
+import com.apkide.common.Logger;
 import com.apkide.smali.dexlib2.iface.DexFile;
 
 import java.io.File;
@@ -37,7 +38,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 public class ApkDecoder {

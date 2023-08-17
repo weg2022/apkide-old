@@ -25,14 +25,13 @@ import com.apkide.apktool.ext.android.content.res.XmlResourceParser;
 import com.apkide.apktool.ext.android.util.TypedValue;
 import com.apkide.apktool.ext.org.xmlpull.v1.XmlPullParserException;
 import com.apkide.apktool.util.ExtDataInput;
+import com.apkide.common.Logger;
 import com.google.common.io.LittleEndianDataInputStream;
 
 import java.io.DataInput;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Binary xml files parser.
@@ -421,7 +420,7 @@ public class AXmlResourceParser implements XmlResourceParser {
                 );
             } catch (AndrolibException ex) {
                 setFirstError(ex);
-                LOGGER.log(Level.WARNING, String.format("Could not decode attr value, using undecoded value "
+                LOGGER.log(Logger.Level.Warning, String.format("Could not decode attr value, using undecoded value "
                                 + "instead: ns=%s, name=%s, value=0x%08x",
                         getAttributePrefix(index),
                         getAttributeName(index),
@@ -745,7 +744,7 @@ public class AXmlResourceParser implements XmlResourceParser {
                 if (byteAttrSizeRead < byteAttrSizeReported) {
                     int bytesToSkip = byteAttrSizeReported - byteAttrSizeRead;
                     mIn.skipBytes(bytesToSkip);
-                    LOGGER.fine("Skipping " + bytesToSkip + " unknown bytes in attributes area.");
+                    LOGGER.verbose("Skipping " + bytesToSkip + " unknown bytes in attributes area.");
                 }
 
                 mNamespaces.increaseDepth();

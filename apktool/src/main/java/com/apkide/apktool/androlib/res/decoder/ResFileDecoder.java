@@ -16,6 +16,8 @@
  */
 package com.apkide.apktool.androlib.res.decoder;
 
+import static com.apkide.common.Logger.*;
+
 import com.apkide.apktool.androlib.exceptions.AndrolibException;
 import com.apkide.apktool.androlib.exceptions.CantFind9PatchChunkException;
 import com.apkide.apktool.androlib.exceptions.RawXmlEncounteredException;
@@ -25,11 +27,13 @@ import com.apkide.apktool.androlib.res.data.value.ResFileValue;
 import com.apkide.apktool.directory.DirUtil;
 import com.apkide.apktool.directory.Directory;
 import com.apkide.apktool.directory.DirectoryException;
+import com.apkide.common.Logger;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 public class ResFileDecoder {
     private final ResStreamDecoderContainer mDecoders;
@@ -62,7 +66,7 @@ public class ResFileDecoder {
             resFileMapping.put(inFilePath, outFilePath);
         }
 
-        LOGGER.fine("Decoding file: " + inFilePath + " to: " + outFilePath);
+        LOGGER.verbose("Decoding file: " + inFilePath + " to: " + outFilePath);
 
         try {
             if (typeName.equals("raw")) {
@@ -100,7 +104,7 @@ public class ResFileDecoder {
                         decode(inDir, inFilePath, outDir, outFileName, "9patch");
                         return;
                     } catch (CantFind9PatchChunkException ex) {
-                        LOGGER.log(Level.WARNING, String.format(
+                        LOGGER.log(Level.Warning, String.format(
                             "Cant find 9patch chunk in file: \"%s\". Renaming it to *.png.", inFileName
                         ), ex);
                         outDir.removeFile(outFileName);
@@ -129,7 +133,7 @@ public class ResFileDecoder {
             // XSD files are AXML`d on aapt1, but left in plaintext in aapt2.
             decode(inDir, inFilePath, outDir, outFileName, "raw");
         } catch (AndrolibException ex) {
-            LOGGER.log(Level.SEVERE, String.format(
+            LOGGER.log(Level.Error, String.format(
                 "Could not decode file, replacing by FALSE value: %s",
             inFileName), ex);
             res.replace(new ResBoolValue(false, 0, null));
@@ -169,7 +173,7 @@ public class ResFileDecoder {
         }
     }
 
-    private final static Logger LOGGER = Logger.getLogger(ResFileDecoder.class.getName());
+    private final static Logger LOGGER = getLogger(ResFileDecoder.class.getName());
 
     private final static String[] RAW_IMAGE_EXTENSIONS = new String[] {
         "m4a", // apple

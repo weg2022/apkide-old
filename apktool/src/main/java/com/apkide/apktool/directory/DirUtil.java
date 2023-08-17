@@ -22,12 +22,14 @@ import com.apkide.apktool.common.RootUnknownFileException;
 import com.apkide.apktool.common.TraversalUnknownFileException;
 import com.apkide.apktool.util.BrutIO;
 import com.apkide.apktool.util.OS;
-import java.io.*;
+import com.apkide.common.Logger;
+
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
-import java.util.logging.Logger;
 
 public class DirUtil {
-    private static final Logger LOGGER = Logger.getLogger("");
+    private static final Logger LOGGER = Logger.getLogger(DirUtil.class.getName());
 
     private DirUtil() {
         // Private constructor for utility class

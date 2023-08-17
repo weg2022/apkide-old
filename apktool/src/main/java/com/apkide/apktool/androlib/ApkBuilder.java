@@ -35,6 +35,7 @@ import com.apkide.apktool.util.BrutIO;
 import com.apkide.apktool.util.OS;
 import com.apkide.common.FileSystem;
 import com.apkide.common.IoUtils;
+import com.apkide.common.Logger;
 
 import org.xml.sax.SAXException;
 
@@ -48,7 +49,6 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -520,7 +520,7 @@ public class ApkBuilder {
 
             ZipEntry newEntry = new ZipEntry(unknownFileInfo.getKey());
             int method = Integer.parseInt(unknownFileInfo.getValue());
-            LOGGER.fine(String.format("Copying unknown file %s with method %d", unknownFileInfo.getKey(), method));
+            LOGGER.verbose(String.format("Copying unknown file %s with method %d", unknownFileInfo.getKey(), method));
             if (method == ZipEntry.STORED) {
                 newEntry.setMethod(ZipEntry.STORED);
                 newEntry.setSize(inputFile.length());

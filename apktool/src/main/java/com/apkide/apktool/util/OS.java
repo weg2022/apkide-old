@@ -18,18 +18,23 @@ package com.apkide.apktool.util;
 
 import com.apkide.apktool.common.BrutException;
 import com.apkide.common.IoUtils;
+import com.apkide.common.Logger;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 public class OS {
 
-    private static final Logger LOGGER = Logger.getLogger("");
+    private static final Logger LOGGER = Logger.getLogger(OS.class.getName());
 
     public static void rmdir(File dir) throws BrutException {
         if (! dir.exists()) {

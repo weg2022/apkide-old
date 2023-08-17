@@ -22,9 +22,9 @@ import com.apkide.apktool.androlib.res.data.ResResource;
 import com.apkide.apktool.androlib.res.xml.ResValuesXmlSerializable;
 import com.apkide.apktool.ext.org.xmlpull.v1.XmlSerializer;
 import com.apkide.apktool.util.Duo;
+import com.apkide.common.Logger;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
 public class ResStyleValue extends ResBagValue implements
         ResValuesXmlSerializable {
@@ -53,7 +53,7 @@ public class ResStyleValue extends ResBagValue implements
             ResResSpec spec = mItem.m1.getReferent();
 
             if (spec == null) {
-                LOGGER.fine(String.format("null reference: m1=0x%08x(%s), m2=0x%08x(%s)",
+                LOGGER.verbose(String.format("null reference: m1=0x%08x(%s), m2=0x%08x(%s)",
                     mItem.m1.getRawIntValue(), mItem.m1.getType(), mItem.m2.getRawIntValue(), mItem.m2.getType()));
                 continue;
             }

@@ -22,8 +22,17 @@ import com.apkide.apktool.androlib.res.data.value.ResFileValue;
 import com.apkide.apktool.androlib.res.data.value.ResValueFactory;
 import com.apkide.apktool.androlib.res.xml.ResValuesXmlSerializable;
 import com.apkide.apktool.util.Duo;
-import java.util.*;
-import java.util.logging.Logger;
+import com.apkide.common.Logger;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 public class ResPackage {
     private final ResTable mResTable;

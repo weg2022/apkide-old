@@ -30,7 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.util.logging.Logger;
+import com.apkide.common.Logger;
 
 public class SmaliBuilder {
 
