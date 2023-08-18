@@ -15,6 +15,10 @@
         android:title="Copy File Name"/>
 
     <item
+        android:id="@+id/fileBrowserCommandRename"
+        android:title="Rename"/>
+
+    <item
         android:id="@+id/fileBrowserCommandDelete"
         android:title="Delete"/>
 </menu>

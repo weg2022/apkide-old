@@ -99,7 +99,6 @@ public abstract class EntryListAdapter extends RecyclerView.Adapter<RecyclerView
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         holder.itemView.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
-
         Entry entry = entries.get(position);
         if (clickListener != null) {
             holder.itemView.setOnClickListener(v -> clickListener.onEntryClicked(entry, v, position));

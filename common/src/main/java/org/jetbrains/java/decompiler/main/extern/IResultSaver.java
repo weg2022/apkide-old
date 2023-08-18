@@ -4,19 +4,33 @@ package org.jetbrains.java.decompiler.main.extern;
 import java.util.jar.Manifest;
 
 public interface IResultSaver {
-  void saveFolder(String path);
-
-  void copyFile(String source, String path, String entryName);
-
+  default void saveFolder(String path) {
+  
+  }
+  
+  default void copyFile(String source, String path, String entryName) {
+  
+  }
+  
   void saveClassFile(String path, String qualifiedName, String entryName, String content, int[] mapping);
-
-  void createArchive(String path, String archiveName, Manifest manifest);
-
-  void saveDirEntry(String path, String archiveName, String entryName);
-
-  void copyEntry(String source, String path, String archiveName, String entry);
-
-  void saveClassEntry(String path, String archiveName, String qualifiedName, String entryName, String content);
-
-  void closeArchive(String path, String archiveName);
+  
+  default void createArchive(String path, String archiveName, Manifest manifest) {
+  
+  }
+  
+  default void saveDirEntry(String path, String archiveName, String entryName) {
+  
+  }
+  
+  default void copyEntry(String source, String path, String archiveName, String entry) {
+  
+  }
+  
+  default void saveClassEntry(String path, String archiveName, String qualifiedName, String entryName, String content) {
+  
+  }
+  
+  default void closeArchive(String path, String archiveName) {
+  
+  }
 }

@@ -20,9 +20,11 @@ import androidx.multidex.MultiDexApplication;
 
 import com.apkide.common.AppLog;
 import com.apkide.common.Application;
+import com.apkide.common.FileSystem;
 import com.apkide.common.FileUtils;
 import com.apkide.common.Logger;
 import com.apkide.common.SafeRunner;
+import com.apkide.ui.util.FileArchiveReaderImpl;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -195,5 +197,10 @@ public class IDEApplication extends MultiDexApplication {
 				}
             }
         });
+    
+        FileSystem.setArchiveReaders(new FileSystem.FileArchiveReader[]{
+                new FileArchiveReaderImpl(),
+        });
+      
     }
 }

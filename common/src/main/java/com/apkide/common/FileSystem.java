@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.io.Closeable;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,7 +45,7 @@ public class FileSystem {
     
     public static void closeArchives() throws IOException {
         for (FileArchiveReader reader : getArchiveReaders()) {
-            reader.closeArchive();
+            reader.close();
         }
     }
     
@@ -62,7 +63,7 @@ public class FileSystem {
     }
     
     public static boolean isBinary(@NonNull String filePath) {
-        if (isArchiveFileEntry(filePath))
+        if (isArchiveFile(filePath) || isArchiveFileEntry(filePath))
             return false;
         
         long fileLength = new File(filePath).length();
@@ -163,7 +164,7 @@ public class FileSystem {
             for (FileArchiveReader archiveReader : getArchiveReaders()) {
                 for (String filePattern : archiveReader.getSupportArchiveFilePatterns()) {
                     if (FileNameMatcher.get().match(getName(archivePath), filePattern)) {
-                        archiveReader.closeArchive();
+                        archiveReader.close();
                     }
                 }
             }
@@ -238,9 +239,7 @@ public class FileSystem {
     }
     
     public static boolean exists(@NonNull String path) {
-        return new File(path).exists() ||
-                isArchiveFileEntry(path) ||
-                isArchiveDirectoryEntry(path);
+        return new File(path).exists() || isArchiveEntry(path);
     }
     
     public static boolean isArchiveEntry(@NonNull String path) {
@@ -262,6 +261,7 @@ public class FileSystem {
         String archivePath = getEnclosingArchivePath(path);
         if (archivePath == null)
             return false;
+        
         String entryName = getArchiveFileEntryRelativePath(path);
         for (FileArchiveReader archiveReader : getArchiveReaders()) {
             for (String filePattern : archiveReader.getSupportArchiveFilePatterns()) {
@@ -288,7 +288,8 @@ public class FileSystem {
     }
     
     public static boolean isDirectory(@NonNull String path) {
-        return isNormalDirectory(path) || isArchiveDirectoryEntry(path);
+        return isNormalDirectory(path) ||
+                isArchiveDirectoryEntry(path);
     }
     
     public static boolean isNormalDirectory(@Nullable String path) {
@@ -301,15 +302,15 @@ public class FileSystem {
     }
     
     public static boolean isFile(@NonNull String path) {
-        return (isNormalFile(path) || isArchiveFile(path) || isArchiveFileEntry(path));
+        return (isNormalFile(path) || isArchiveFileEntry(path));
     }
     
     @NonNull
-    public static List<String> getChildEntries(String dirPath) {
-        if (isArchiveEntry(dirPath)) {
+    public static List<String> getChildEntries(@NonNull String dirPath) {
+        if (isArchiveFile(dirPath) || isArchiveDirectoryEntry(dirPath)) {
             String archivePath = getEnclosingArchivePath(dirPath);
-            String entryPath = getArchiveFileEntryRelativePath(dirPath);
             if (archivePath != null) {
+                String entryPath = getArchiveFileEntryRelativePath(dirPath);
                 for (FileArchiveReader archiveReader : getArchiveReaders()) {
                     for (String filePattern : archiveReader.getSupportArchiveFilePatterns()) {
                         if (FileNameMatcher.get().match(getName(archivePath), filePattern)) {
@@ -418,11 +419,43 @@ public class FileSystem {
     }
     
     public static long getLastModified(@NonNull String filePath) {
-        return new File(filePath).lastModified();
+        if (!isNormalFile(filePath) && isArchiveEntry(filePath)) {
+            String archivePath = getEnclosingArchivePath(filePath);
+            String entryName = getArchiveFileEntryRelativePath(filePath);
+            if (archivePath != null) {
+                for (FileArchiveReader reader : getArchiveReaders()) {
+                    for (String pattern : reader.getSupportArchiveFilePatterns()) {
+                        if (FileNameMatcher.get().match(getName(filePath), pattern)) {
+                            return reader.getLastModified(archivePath, entryName);
+                        }
+                    }
+                }
+            }
+        }
+        File file = new File(filePath);
+        if (file.exists())
+            return file.lastModified();
+        return -1;
     }
     
     public static long getLength(@NonNull String filePath) {
-        return new File(filePath).length();
+        if (!isNormalFile(filePath) && isArchiveEntry(filePath)) {
+            String archivePath = getEnclosingArchivePath(filePath);
+            String entryName = getArchiveFileEntryRelativePath(filePath);
+            if (archivePath != null) {
+                for (FileArchiveReader reader : getArchiveReaders()) {
+                    for (String pattern : reader.getSupportArchiveFilePatterns()) {
+                        if (FileNameMatcher.get().match(getName(filePath), pattern)) {
+                            return reader.getSize(archivePath, entryName);
+                        }
+                    }
+                }
+            }
+        }
+        File file = new File(filePath);
+        if (file.exists())
+            return file.length();
+        return -1;
     }
     
     @NonNull
@@ -554,7 +587,7 @@ public class FileSystem {
         }
     }
     
-    public interface FileArchiveReader {
+    public interface FileArchiveReader extends Closeable {
         
         @NonNull
         String[] getSupportArchiveFilePatterns();
@@ -571,6 +604,14 @@ public class FileSystem {
         
         long getArchiveVersion(@NonNull String archivePath);
         
-        void closeArchive() throws IOException;
+        long getLastModified(@NonNull String archivePath, @NonNull String entryName);
+        
+        long getSize(@NonNull String archivePath, @NonNull String entryName);
+        
+        boolean isOpenedArchive(@NonNull String archivePath);
+        
+        void close(@NonNull String archivePath) throws IOException;
+        
+        void close() throws IOException;
     }
 }

@@ -25,7 +25,7 @@ public abstract class FileNameMatcher {
     public static class DefaultFileNameMatcher extends FileNameMatcher {
         @Override
         public boolean match(@NonNull String fileName, @NonNull String pattern) {
-            if (pattern.startsWith("*")) {
+            if (pattern.startsWith("*.")) {
                 return fileName.toLowerCase().endsWith(pattern.substring(1).toLowerCase());
             }
             return fileName.equalsIgnoreCase(pattern)||fileName.toLowerCase().endsWith(pattern.toLowerCase());

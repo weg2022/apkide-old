@@ -8,25 +8,33 @@ import com.apkide.ls.api.Model;
 import com.apkide.ls.api.callback.HighlighterCallback;
 
 public final class Engine {
-    
+    protected static int modelCount = 0;
     private final Object myLock = new Object();
+    private boolean myDestroyed;
     private boolean myShutdown;
     private final Thread myThread;
     private final LanguageServer[] myLanguageServers;
     private final Model myModel;
     private final HighlighterCallbackImpl myHighlighterCallback = new HighlighterCallbackImpl();
-    
     private HighlightingListener myHighlightingListener;
     
     public Engine() {
         myModel = new Model();
         
-        myLanguageServers = LanguageServerProvider.get().createServers(myModel);
+        myLanguageServers = LanguageServerProvider.get().getLanguageServers();
         
         myThread = new Thread(null, new Runnable() {
             @Override
             public void run() {
-            
+                synchronized (myLock) {
+                    while (!myDestroyed) {
+                        
+                        if (!myShutdown) {
+                        
+                        
+                        }
+                    }
+                }
             }
         }, "Engine", 2000000L);
         myThread.setPriority(Thread.MIN_PRIORITY + 1);
@@ -34,9 +42,27 @@ public final class Engine {
     }
     
     
+    public void openFile(@NonNull String filePath){
+    
+    }
+    
     public void setHighlightingListener(HighlightingListener highlightingListener) {
         synchronized (myLock) {
             myHighlightingListener = highlightingListener;
+        }
+    }
+    
+    public void begin() {
+        synchronized (myLock) {
+            modelCount++;
+        }
+    }
+    
+    @Override
+    protected void finalize() {
+        synchronized (myLock) {
+            if (modelCount > 0)
+                modelCount--;
         }
     }
     
@@ -50,13 +76,20 @@ public final class Engine {
     public void shutdown() {
         synchronized (myLock) {
             myShutdown = true;
-            myLock.notify();
+            // myLock.notify();
         }
     }
     
     public boolean isShutdown() {
         synchronized (myLock) {
             return myShutdown;
+        }
+    }
+    
+    public void destroy() {
+        synchronized (myLock) {
+            myDestroyed = true;
+            myLock.notify();
         }
     }
     

@@ -8,9 +8,6 @@
         android:id="@+id/fileBrowserCommandShowHome"
         android:title="Show Home Folder" />
     <item
-        android:id="@+id/fileBrowserCommandShowCurrent"
-        android:title="Show Current Folder" />
-    <item
         android:title="New..."
         android:id="@+id/fileBrowserCommandNew">
         <menu>

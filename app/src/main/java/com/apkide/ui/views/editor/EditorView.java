@@ -26,6 +26,7 @@ public class EditorView extends View implements TextModel.TextModelListener {
     }
     
     private EditorModel myModel;
+    private EditorTheme myTheme;
     
     private void initView() {
         

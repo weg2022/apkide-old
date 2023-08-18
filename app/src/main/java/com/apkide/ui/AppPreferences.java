@@ -7,6 +7,10 @@ import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 
+import org.jetbrains.java.decompiler.main.extern.IFernflowerPreferences;
+
+import java.util.Map;
+
 
 public final class AppPreferences {
 
@@ -43,5 +47,9 @@ public final class AppPreferences {
 		return getPreferences().getBoolean("app.theme.followSystem", true);
 	}
 
+	public static Map<String,Object> getJavaBinaryReaderDefaultOptions(){
+		//TODO: use sharedPreferences
+		return IFernflowerPreferences.getDefaults();
+	}
 
 }

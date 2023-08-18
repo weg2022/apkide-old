@@ -27,9 +27,7 @@ public interface OpenFileModel {
 
 	@NonNull
 	String getFilePath();
-
-	long getOpenTimestamps();
-
+	
 	long getLastModified();
 
 	long getFileSize();

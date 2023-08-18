@@ -3,7 +3,6 @@ package com.apkide.engine;
 import androidx.annotation.NonNull;
 
 import com.apkide.ls.api.LanguageServer;
-import com.apkide.ls.api.Model;
 
 public abstract class LanguageServerProvider {
     
@@ -24,6 +23,6 @@ public abstract class LanguageServerProvider {
     }
     
     @NonNull
-    public abstract LanguageServer[] createServers(@NonNull Model model);
+    public abstract LanguageServer[] getLanguageServers();
     
 }

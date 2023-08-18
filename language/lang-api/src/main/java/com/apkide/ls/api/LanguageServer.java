@@ -9,8 +9,10 @@ import java.util.Map;
 
 public interface LanguageServer {
 
-	void initialize(int processId, @NonNull String rootPath,
-	                @NonNull Map<String, Object> options,
+	void configure(@NonNull Model model);
+	
+	void initialize(@NonNull String rootPath,
+					@NonNull Map<String, Object> options,
 	                @NonNull Map<String, String> workspacePaths);
 
 	void shutdown();
