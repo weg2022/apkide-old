@@ -3,7 +3,7 @@ package com.apkide.ui.services.openfile;
 import androidx.annotation.NonNull;
 
 import com.apkide.common.LineIterator;
-import com.apkide.engine.FileHighlighting;
+import com.apkide.codeanalysis.FileHighlighting;
 
 import java.io.IOException;
 

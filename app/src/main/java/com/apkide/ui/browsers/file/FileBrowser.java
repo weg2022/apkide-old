@@ -15,6 +15,7 @@ import com.apkide.ui.App;
 import com.apkide.ui.R;
 import com.apkide.ui.browsers.HeaderBrowserLayout;
 import com.apkide.ui.databinding.BrowserFileBinding;
+import com.apkide.ui.dialogs.ApkDecompileDialog;
 import com.apkide.ui.dialogs.DeleteFileDialog;
 import com.apkide.ui.dialogs.NewFileDialog;
 import com.apkide.ui.dialogs.RenameFileDialog;
@@ -67,7 +68,7 @@ public class FileBrowser extends HeaderBrowserLayout implements FileBrowserServi
                             for (String filePath : files) {
                                 String name = FileSystem.getName(filePath);
                                 boolean isDir = FileSystem.isDirectory(filePath);
-                                entities.add(new FileEntry(filePath, name, isDir));
+                                entities.add(new FileEntry(filePath, name, isDir,App.getProjectService().checkIsSupportedProjectRootPath(filePath)));
                             }
                             entities.sort((o1, o2) -> {
                                 if (o1 instanceof FileEntry && o2 instanceof FileEntry) {
@@ -249,8 +250,13 @@ public class FileBrowser extends HeaderBrowserLayout implements FileBrowserServi
         if (FileSystem.isArchiveEntry(entry.getFilePath())) {
             popupMenu.getMenu().findItem(R.id.fileBrowserCommandRename).setVisible(false);
             popupMenu.getMenu().findItem(R.id.fileBrowserCommandDelete).setVisible(false);
+            popupMenu.getMenu().findItem(R.id.fileBrowserCommandDecompile).setVisible(entry.isFile()&&entry.getFilePath().endsWith(".apk"));
         }
         popupMenu.setOnMenuItemClickListener(item -> {
+            if (item.getItemId()==R.id.fileBrowserCommandDecompile){
+                MessageBox.showDialog(App.getMainUI(),new ApkDecompileDialog(entry.getFilePath()));
+                return true;
+            }
             if (item.getItemId() == R.id.fileBrowserCommandSyncWithDisk) {
                 App.getFileBrowserService().sync();
                 return true;

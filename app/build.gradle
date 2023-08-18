@@ -97,7 +97,7 @@ dependencies {
     implementation libs.material
     implementation libs.interface.loader
     implementation project(':common')
-    implementation project(':engine')
+    implementation project(':codeanalysis')
     implementation project(':language:lang-api')
     implementation project(':language:lang-java')
     implementation project(':language:lang-smali')

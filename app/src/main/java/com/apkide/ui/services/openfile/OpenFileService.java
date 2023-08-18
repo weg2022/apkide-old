@@ -8,10 +8,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.apkide.engine.FileHighlighting;
-import com.apkide.engine.service.IHighlightingListener;
+import com.apkide.codeanalysis.FileHighlighting;
+import com.apkide.codeanalysis.service.IHighlightingListener;
 import com.apkide.ui.App;
-import com.apkide.ui.services.IDEService;
+import com.apkide.ui.services.IService;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
-public class OpenFileService implements IDEService {
+public class OpenFileService implements IService {
     
     private SharedPreferences myPreferences;
     

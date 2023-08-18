@@ -24,9 +24,9 @@ import com.apkide.common.FileSystem;
 import com.apkide.common.FileUtils;
 import com.apkide.common.Logger;
 import com.apkide.common.SafeRunner;
-import com.apkide.engine.LanguageServerProvider;
+import com.apkide.codeanalysis.LanguageServerProvider;
 import com.apkide.ls.api.LanguageServer;
-import com.apkide.ui.util.FileArchiveReaderImpl;
+import com.apkide.ui.util.JarFileArchiveReader;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -181,29 +181,35 @@ public class IDEApplication extends MultiDexApplication {
         Logger.setFactory(name -> new Logger(name) {
             @Override
             protected void onLogging(@NonNull Level level, @NonNull String msg) {
-				if (BuildConfig.DEBUG) {
-					switch (level) {
-						case Debug:
-							Log.d(getName(), msg);
-						case Information:
-							Log.i(getName(), msg);
-						case Verbose:
-							Log.v(getName(), msg);
-						case Warning:
-							Log.w(getName(), msg);
-						case Error:
-							Log.e(getName(), msg);
-						default:
-							break;
-					}
-				}
+                if (BuildConfig.DEBUG) {
+                    switch (level) {
+                        case Debug:
+                            Log.d(getName(), msg);
+                            break;
+                        case Information:
+                            Log.i(getName(), msg);
+                            break;
+                        case Verbose:
+                            Log.v(getName(), msg);
+                            break;
+                        case Warning:
+                            Log.w(getName(), msg);
+                            break;
+                        case Error:
+                            Log.e(getName(), msg);
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
         });
-    
+        
         FileSystem.setArchiveReaders(new FileSystem.FileArchiveReader[]{
-                new FileArchiveReaderImpl(),
+                new JarFileArchiveReader(),
+                //TODO: zip & apk support
         });
-    
+        
         LanguageServerProvider.set(new LanguageServerProvider() {
             @NonNull
             @Override

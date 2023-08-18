@@ -6,7 +6,7 @@ import com.apkide.common.FileSystem;
 import com.apkide.common.IoUtils;
 import com.apkide.common.LineIterator;
 import com.apkide.common.TextModel;
-import com.apkide.engine.FileHighlighting;
+import com.apkide.codeanalysis.FileHighlighting;
 import com.apkide.ui.services.openfile.OpenFileModel;
 import com.apkide.ui.views.CodeEditTextModel;
 import com.apkide.ui.views.editor.StyleSpan;

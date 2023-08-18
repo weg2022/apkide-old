@@ -32,14 +32,14 @@ public class FileEntry implements EntryListAdapter.Entry, Comparable<FileEntry> 
         this.isHidden = false;
     }
     
-    public FileEntry(@NonNull String filePath, @NonNull String label, boolean isDirectory) {
+    public FileEntry(@NonNull String filePath, @NonNull String label, boolean isDirectory,boolean isProjectRoot) {
         this.filePath = filePath;
         this.label = label;
         this.isDirectory = isDirectory;
         this.isPrev = false;
         if (isDirectory) {
             this.isHidden = isHidden(filePath);
-            icon = isHidden ? R.drawable.folder_hidden : R.drawable.folder;
+            icon =isProjectRoot?R.drawable.folder_open: isHidden ? R.drawable.folder_hidden : R.drawable.folder;
         } else {
             this.isHidden = false;
             icon = FileIcons.getIcon(filePath);

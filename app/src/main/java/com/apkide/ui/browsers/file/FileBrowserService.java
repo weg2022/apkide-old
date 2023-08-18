@@ -6,12 +6,12 @@ import androidx.annotation.NonNull;
 
 import com.apkide.common.FileSystem;
 import com.apkide.ui.App;
-import com.apkide.ui.services.IDEService;
+import com.apkide.ui.services.IService;
 
 import java.io.File;
 import java.io.IOException;
 
-public class FileBrowserService implements IDEService {
+public class FileBrowserService implements IService {
     
     public interface FileBrowserServiceListener {
         void fileBrowserFolderChanged(@NonNull String folderPath);

@@ -8,14 +8,15 @@ import android.os.IBinder;
 
 import androidx.annotation.NonNull;
 
+import com.apkide.codeanalysis.service.IDiagnosticListener;
 import com.apkide.common.AppLog;
-import com.apkide.engine.service.CodeAnalysisService;
-import com.apkide.engine.service.ICodeAnalysisService;
-import com.apkide.engine.service.IHighlightingListener;
+import com.apkide.codeanalysis.service.CodeAnalysisService;
+import com.apkide.codeanalysis.service.ICodeAnalysisService;
+import com.apkide.codeanalysis.service.IHighlightingListener;
 import com.apkide.ui.App;
 import com.jeremyliao.android.service.loader.InterfaceLoader;
 
-public class EngineService implements IDEService{
+public class EngineService implements IService {
     private final ServiceConnection myConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -42,6 +43,11 @@ public class EngineService implements IDEService{
     public void setHighlightingListener(IHighlightingListener listener){
         if (!isConnected())return;
         myService.setHighlightingListener(listener);
+    }
+    
+    public void setDiagnosticListener(IDiagnosticListener listener){
+        if (!isConnected())return;
+        myService.setDiagnosticListener(listener);
     }
     
     public void restart(){

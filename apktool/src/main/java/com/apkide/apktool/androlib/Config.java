@@ -75,7 +75,7 @@ public class Config {
     }
 
     private void setDefaultFrameworkDirectory() {
-        frameworkDirectory = Application.get().foundFile("android.jar").getAbsolutePath();
+        frameworkDirectory = Application.get().foundFile("android.jar").getParentFile().getAbsolutePath();
     }
 
     public void setDecodeSources(short mode) throws AndrolibException {

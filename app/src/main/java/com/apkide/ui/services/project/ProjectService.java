@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 
 import com.apkide.common.AppLog;
 import com.apkide.ui.App;
-import com.apkide.ui.services.IDEService;
+import com.apkide.ui.services.IService;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
-public class ProjectService implements IDEService {
+public class ProjectService implements IService {
 	private final HashMap<String, ProjectManager> myProjectManagerMap = new HashMap<>();
 	private ProjectManager myProjectManager;
 	private SharedPreferences myPreferences;
@@ -26,7 +26,7 @@ public class ProjectService implements IDEService {
 
 	@Override
 	public void initialize() {
-		addProjectManager(new IDEProjectManager());
+		addProjectManager(new ProjectManagerImpl());
 	}
 
 	@Override
@@ -129,6 +129,7 @@ public class ProjectService implements IDEService {
 			for (ProjectServiceListener listener : myListeners) {
 				listener.projectClosed(requireNonNull(rootPath));
 			}
+			App.getFileBrowserService().sync();
 		}
 	}
 
