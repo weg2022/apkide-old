@@ -587,6 +587,38 @@ public class FileSystem {
         }
     }
     
+    @NonNull
+    public static InputStream getInputStream(@NonNull String filePath)throws IOException {
+        if (isNormalFile(filePath)) {
+            String parent = getParentDirPath(filePath);
+            if (parent == null)
+                throw new IOException("parent dir is null.");
+            for (FileArchiveReader archiveReader : getArchiveReaders()) {
+                for (String filePattern : archiveReader.getSupportArchiveFilePatterns()) {
+                    if (FileNameMatcher.get().match(getName(parent), filePattern)) {
+                       return archiveReader.getStream(parent, getName(filePath));
+                    }
+                }
+            }
+            return new FileInputStream(filePath);
+        } else if (isArchiveFileEntry(filePath)) {
+            String archivePath = getEnclosingArchivePath(filePath);
+            String entryPath = getArchiveFileEntryRelativePath(filePath);
+            if (archivePath == null) {
+                throw new IOException("archive file is null.");
+            }
+            for (FileArchiveReader archiveReader : getArchiveReaders()) {
+                for (String filePattern : archiveReader.getSupportArchiveFilePatterns()) {
+                    if (FileNameMatcher.get().match(getName(archivePath), filePattern)) {
+                        return archiveReader.getStream(archivePath,entryPath);
+                    }
+                }
+            }
+            throw new IOException("Not archive Input stream.");
+        }
+        throw new IOException();
+    }
+    
     public interface FileArchiveReader extends Closeable {
         
         @NonNull
@@ -604,6 +636,7 @@ public class FileSystem {
         
         long getArchiveVersion(@NonNull String archivePath);
         
+        InputStream getStream(@NonNull String archivePath,@NonNull String entryName) throws IOException;
         long getLastModified(@NonNull String archivePath, @NonNull String entryName);
         
         long getSize(@NonNull String archivePath, @NonNull String entryName);

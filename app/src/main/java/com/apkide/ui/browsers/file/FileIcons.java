@@ -1,11 +1,44 @@
 package com.apkide.ui.browsers.file;
 
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+
 import androidx.annotation.NonNull;
 
 import com.apkide.common.FileSystem;
 import com.apkide.ui.R;
 
+import java.io.IOException;
+
 public class FileIcons {
+    
+    public static Drawable getIconDrawable(@NonNull String filePath) {
+        try {
+            String ext = FileSystem.getExtensionName(filePath).toLowerCase();
+            switch (ext) {
+                case ".jpg":
+                case ".png":
+                case ".gif":
+                case ".webp":
+                    return BitmapDrawable.createFromStream(FileSystem.getInputStream(filePath), null);
+                case ".xml":
+                    String parent=FileSystem.getParentDirPath(filePath);
+                    if (parent!=null){
+                        parent = FileSystem.getName(parent);
+                        if (parent.startsWith("drawable"))
+                            return BitmapDrawable.createFromStream(FileSystem.getInputStream(filePath), null);
+                    }
+                case ".apk":
+                    //TODO: apk icon preview
+                default:
+                    break;
+            }
+        } catch (IOException ignored) {
+        
+        }
+        return null;
+    }
+    
     public static int getIcon(@NonNull String filePath) {
         String ext = FileSystem.getExtensionName(filePath).toLowerCase();
         switch (ext) {

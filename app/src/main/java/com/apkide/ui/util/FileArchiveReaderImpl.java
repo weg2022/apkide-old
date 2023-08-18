@@ -11,6 +11,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
@@ -38,7 +39,8 @@ public class FileArchiveReaderImpl implements FileSystem.FileArchiveReader {
     public Reader getArchiveEntryReader(@NonNull String archivePath, @NonNull String entryName, @Nullable String encoding) throws IOException {
         if (new File(archivePath).isDirectory()) {
             if (entryName.endsWith(".class")) {
-                return myJavaBinaryReader.getFileReader(archivePath + File.separator + entryName, encoding);
+                return new InputStreamReader(myJavaBinaryReader.getFileReader(
+                                archivePath + File.separator + entryName, encoding));
             }
             FileInputStream inputStream = new FileInputStream(archivePath + File.separator + entryName);
             return encoding == null ?
@@ -53,7 +55,8 @@ public class FileArchiveReaderImpl implements FileSystem.FileArchiveReader {
                     throw new IOException(archivePath + " is not exists..");
                 }
                 
-                return myJavaBinaryReader.getArchiveFileReader(archivePath, entryName, encoding);
+                return new InputStreamReader(
+                        myJavaBinaryReader.getArchiveFileReader(archivePath, entryName, encoding));
             }
         }
         openFile(archivePath);
@@ -63,9 +66,7 @@ public class FileArchiveReaderImpl implements FileSystem.FileArchiveReader {
             throw new IOException(archivePath + " is not exists..");
         }
         
-        ZipEntry entry = archiveFile.getEntry(entryName);
-        if (entry == null) entry = archiveFile.getEntry("src/" + entryName);
-        if (entry == null) entry = archiveFile.getEntry("src\\" + entryName);
+        ZipEntry entry = getEntry(archivePath,entryName);
         if (entry == null) {
             throw new IOException(archivePath + ":" + entryName + " is not exists..");
         }
@@ -154,6 +155,42 @@ public class FileArchiveReaderImpl implements FileSystem.FileArchiveReader {
         }
         
         return -1;
+    }
+    
+    @Override
+    public InputStream getStream(@NonNull String archivePath, @NonNull String entryName) throws IOException {
+        if (new File(archivePath).isDirectory()) {
+            if (entryName.endsWith(".class")) {
+                return myJavaBinaryReader.getFileReader(
+                        archivePath + File.separator + entryName, null);
+            }
+            return new FileInputStream(archivePath + File.separator + entryName);
+        } else {
+            if (entryName.endsWith(".class")) {
+                openFile(archivePath);
+                ZipFile archiveFile = getZipFile(archivePath);
+            
+                if (archiveFile == null) {
+                    throw new IOException(archivePath + " is not exists..");
+                }
+            
+                return
+                        myJavaBinaryReader.getArchiveFileReader(archivePath, entryName, null);
+            }
+        }
+        openFile(archivePath);
+        ZipFile archiveFile = getZipFile(archivePath);
+    
+        if (archiveFile == null) {
+            throw new IOException(archivePath + " is not exists..");
+        }
+    
+        ZipEntry entry = getEntry(archivePath,entryName);
+        if (entry == null) {
+            throw new IOException(archivePath + ":" + entryName + " is not exists..");
+        }
+        byte[] bytes = IoUtils.readAllBytes(archiveFile.getInputStream(entry));
+        return new ByteArrayInputStream(bytes);
     }
     
     @Override

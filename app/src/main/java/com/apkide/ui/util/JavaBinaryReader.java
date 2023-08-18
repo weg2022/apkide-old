@@ -20,8 +20,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -32,7 +30,7 @@ public class JavaBinaryReader implements Closeable {
     private final Logger LOGGER = Logger.getLogger(JavaBinaryReader.class.getName());
     
     //TODO: encoding support, *$*.class support
-    public Reader getFileReader(@NonNull String filePath, @Nullable String encoding) throws IOException {
+    public InputStream getFileReader(@NonNull String filePath, @Nullable String encoding) throws IOException {
         byte[] cached = getContents(filePath);
         if (cached == null) {
             File file = new File(filePath);
@@ -92,12 +90,12 @@ public class JavaBinaryReader implements Closeable {
             myCaches.put(filePath, entity);
             cached = entity.contents;
         }
-        return new InputStreamReader(new ByteArrayInputStream(cached));
+        return new ByteArrayInputStream(cached);
     }
     
     
     //TODO: encoding support, *$*.class support
-    public Reader getArchiveFileReader(@NonNull String archivePath, @NonNull String entryName, @Nullable String encoding) throws IOException {
+    public InputStream getArchiveFileReader(@NonNull String archivePath, @NonNull String entryName, @Nullable String encoding) throws IOException {
         byte[] cached = getContents(archivePath, entryName);
         if (cached == null) {
             File file = new File(archivePath);
@@ -185,7 +183,7 @@ public class JavaBinaryReader implements Closeable {
             myCaches.put(archivePath + File.separator + entryName, entity);
             cached = entity.contents;
         }
-        return new InputStreamReader(new ByteArrayInputStream(cached));
+        return new ByteArrayInputStream(cached);
     }
     
     public void close(@NonNull String filePath) {

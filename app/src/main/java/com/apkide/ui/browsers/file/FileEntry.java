@@ -3,6 +3,8 @@ package com.apkide.ui.browsers.file;
 import static com.apkide.common.FileSystem.getEnclosingParent;
 import static com.apkide.common.FileSystem.getName;
 
+import android.graphics.drawable.Drawable;
+
 import androidx.annotation.NonNull;
 
 import com.apkide.common.EntryListAdapter;
@@ -16,6 +18,7 @@ public class FileEntry implements EntryListAdapter.Entry, Comparable<FileEntry> 
     private final String filePath;
     private final String label;
     private final int icon;
+    private Drawable iconDrawable;
     private final boolean isPrev;
     private final boolean isDirectory;
     private final boolean isHidden;
@@ -41,6 +44,7 @@ public class FileEntry implements EntryListAdapter.Entry, Comparable<FileEntry> 
             this.isHidden = false;
             icon = FileIcons.getIcon(filePath);
         }
+        iconDrawable=FileIcons.getIconDrawable(filePath);
     }
     
     public static boolean isHidden(String filePath) {
@@ -58,6 +62,10 @@ public class FileEntry implements EntryListAdapter.Entry, Comparable<FileEntry> 
     
     public int getIcon() {
         return icon;
+    }
+    
+    public Drawable getIconDrawable() {
+        return iconDrawable;
     }
     
     @NonNull
