@@ -4,8 +4,8 @@ import com.apkide.common.Color;
 import com.apkide.common.TextModelImpl;
 import com.apkide.ls.api.Diagnostic;
 
-public class EditorModel extends TextModelImpl {
-    public EditorModel() {
+public class Model extends TextModelImpl {
+    public Model() {
         super();
     }
     

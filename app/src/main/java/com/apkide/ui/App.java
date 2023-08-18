@@ -13,6 +13,7 @@ import androidx.annotation.StringRes;
 
 import com.apkide.common.Application;
 import com.apkide.ui.browsers.file.FileBrowserService;
+import com.apkide.ui.services.EngineService;
 import com.apkide.ui.services.openfile.OpenFileService;
 import com.apkide.ui.services.project.ProjectService;
 
@@ -29,7 +30,12 @@ public final class App {
 	private  final FileBrowserService myFileBrowserService=new FileBrowserService();
 	private final OpenFileService myOpenFileService=new OpenFileService();
 	private final ProjectService myProjectService=new ProjectService();
+	private final EngineService myEngineService=new EngineService();
 	private App() {
+	}
+	
+	public static EngineService getEngineService(){
+		return sApp.myEngineService;
 	}
 
 	public static FileBrowserService getFileBrowserService(){
@@ -48,6 +54,7 @@ public final class App {
 		sApp = new App();
 		sHandler = new Handler(requireNonNull(Looper.myLooper()));
 		sMainUI = mainUI;
+		sApp.myEngineService.initialize();
 		sApp.myFileBrowserService.initialize();
 		sApp.myOpenFileService.initialize();
 		sApp.myProjectService.initialize();
@@ -56,10 +63,11 @@ public final class App {
 
 	public static void shutdown() {
 		if (sApp != null) {
-
-			sApp.myFileBrowserService.shutdown();
-			sApp.myOpenFileService.shutdown();
+			
+			sApp.myEngineService.shutdown();
 			sApp.myProjectService.shutdown();
+			sApp.myOpenFileService.shutdown();
+			sApp.myFileBrowserService.shutdown();
 			sActivities.clear();
 			sMainUI = null;
 			sHandler = null;

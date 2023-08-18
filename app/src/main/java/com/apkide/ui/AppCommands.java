@@ -121,7 +121,7 @@ public final class AppCommands {
 		});
 		//END Main
 
-		//Editor
+		//EditorView
 
 		addAll(new Command[]{
 				new PickColorCommand(),
@@ -130,7 +130,7 @@ public final class AppCommands {
 				new PasteCommand(),
 				new SelectAllCommand()
 		});
-		//END Editor
+		//END EditorView
 	}
 
 

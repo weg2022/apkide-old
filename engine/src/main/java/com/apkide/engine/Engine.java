@@ -26,6 +26,7 @@ public final class Engine {
         myThread = new Thread(null, new Runnable() {
             @Override
             public void run() {
+                try {
                 synchronized (myLock) {
                     while (!myDestroyed) {
                         
@@ -33,7 +34,12 @@ public final class Engine {
                         
                         
                         }
+                    
+                        myLock.wait();
                     }
+                }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }, "Engine", 2000000L);

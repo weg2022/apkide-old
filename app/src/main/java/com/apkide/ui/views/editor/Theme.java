@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-public class EditorTheme {
+public class Theme {
     
     public interface Colors {
         int FontColor = 0;
@@ -71,8 +71,8 @@ public class EditorTheme {
         void registerStyles(@NonNull Map<Integer, TextStyle> styles);
     }
     
-    public interface EditorThemeListener {
-        void themeColorSchemeChanged(@NonNull EditorTheme theme);
+    public interface ThemeListener {
+        void themeColorSchemeChanged(@NonNull Theme theme);
         
         void themeColorChanged(int colorId);
         
@@ -123,22 +123,23 @@ public class EditorTheme {
     private ColorScheme myScheme;
     private final Map<Integer, TextStyle> myTextStyles = new HashMap<>();
     private final SparseArray<Color> myColors = new SparseArray<>();
-    private final List<EditorThemeListener> myListeners = new Vector<>(1);
+    private final List<ThemeListener> myListeners = new Vector<>(1);
     
-    public EditorTheme() {
+    public Theme() {
         this(new DefaultColorScheme(false));
     }
     
-    public EditorTheme(@NonNull ColorScheme scheme) {
+    public Theme(@NonNull ColorScheme scheme) {
         myScheme = scheme;
+        resetDefaults();
     }
     
-    public void addListener(@NonNull EditorThemeListener listener) {
+    public void addListener(@NonNull ThemeListener listener) {
         if (!myListeners.contains(listener))
             myListeners.add(listener);
     }
     
-    public void removeListener(@NonNull EditorThemeListener listener) {
+    public void removeListener(@NonNull ThemeListener listener) {
         myListeners.remove(listener);
     }
     
@@ -226,7 +227,7 @@ public class EditorTheme {
     public void applyScheme(@NonNull ColorScheme scheme) {
         myScheme = scheme;
         resetDefaults();
-        for (EditorThemeListener listener : myListeners) {
+        for (ThemeListener listener : myListeners) {
             listener.themeColorSchemeChanged(this);
         }
     }
@@ -238,7 +239,7 @@ public class EditorTheme {
     
     public void setTextStyle(int styleId, @NonNull TextStyle style) {
         myTextStyles.put(styleId, style);
-        for (EditorThemeListener listener : myListeners) {
+        for (ThemeListener listener : myListeners) {
             listener.themeStyleChanged(styleId);
         }
     }
@@ -250,7 +251,7 @@ public class EditorTheme {
     
     public void setColor(int colorId, Color colorValue) {
         myColors.put(colorId, colorValue);
-        for (EditorThemeListener listener : myListeners) {
+        for (ThemeListener listener : myListeners) {
             listener.themeColorChanged(colorId);
         }
     }

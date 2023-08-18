@@ -1,5 +1,5 @@
 <resources>
-	<string name="app_name">Dev-A</string>
+	<string name="app_name">APK-IDE</string>
     <string name="request_permission_label">缺少权限</string>
     <string name="request_permission_message">: 需要获得访问文件和媒体的权限</string>
     <string name="ui_label_settings">设置</string>

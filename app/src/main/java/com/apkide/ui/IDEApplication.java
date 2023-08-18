@@ -24,6 +24,8 @@ import com.apkide.common.FileSystem;
 import com.apkide.common.FileUtils;
 import com.apkide.common.Logger;
 import com.apkide.common.SafeRunner;
+import com.apkide.engine.LanguageServerProvider;
+import com.apkide.ls.api.LanguageServer;
 import com.apkide.ui.util.FileArchiveReaderImpl;
 
 import java.io.File;
@@ -201,6 +203,15 @@ public class IDEApplication extends MultiDexApplication {
         FileSystem.setArchiveReaders(new FileSystem.FileArchiveReader[]{
                 new FileArchiveReaderImpl(),
         });
-      
+    
+        LanguageServerProvider.set(new LanguageServerProvider() {
+            @NonNull
+            @Override
+            public LanguageServer[] getLanguageServers() {
+                return new LanguageServer[]{
+                
+                };
+            }
+        });
     }
 }

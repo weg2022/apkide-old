@@ -6,7 +6,7 @@ android {
     applicationVariants.configureEach { variant ->
         variant.outputs.configureEach { output ->
             if (variant.buildType.name.equalsIgnoreCase("release")) {
-                def appFileName = "Dev-A-" + variant.versionName + ".apk"
+                def appFileName = "APK-IDE-" + variant.versionName + ".apk"
                 outputFileName = appFileName
             }
         }

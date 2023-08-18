@@ -38,7 +38,6 @@ public class CodeEditText extends ViewGroup {
     private void initView() {
         removeAllViews();
         addView(new EditorView(getContext()));
-        setModel(new CodeEditTextModel());
     }
     
     public void setModel(@NonNull CodeEditTextModel model) {
@@ -72,7 +71,7 @@ public class CodeEditText extends ViewGroup {
     }
     
     @NonNull
-    protected EditorView getEditorView() {
+    public EditorView getEditorView() {
         return (EditorView) getChildAt(0);
     }
     
