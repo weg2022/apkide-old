@@ -91,8 +91,10 @@ APK-IDE是一款用于反编译；编译；逆向；修改APK的安卓软件。
         - [ ] 语义
 ## Screenshot
 
-<img src="https://github.com/weg2022/apkide/tree/main/images/1.png">
-<img src="https://github.com/weg2022/apkide/tree/main/images/2.png">
+![ui1](/images/1.png)
+
+![ui2](/images/2.png)
+
 
 ### 使用的库与资源
 
