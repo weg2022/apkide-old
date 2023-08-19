@@ -19,7 +19,6 @@ public class SplitLayout extends ViewGroup {
 	private int dragPosition;
 	private boolean isDragging;
 	private boolean isSplit;
-	private boolean isSwipeEnabled;
 	private OnSplitChangeListener listener;
 
 	public SplitLayout(Context context) {
@@ -60,20 +59,7 @@ public class SplitLayout extends ViewGroup {
 	}
 
 	private boolean getDragStartOrientation(MotionEvent e) {
-		float density = getResources().getDisplayMetrics().density;
-		float densityEx = density * 50.0f;
-		float densityEx2 = density * 150.0f;
-		boolean isDown = e.getAction() == MotionEvent.ACTION_DOWN;
-		boolean singlePointer = e.getPointerCount() == 1;
-		return isSwipeEnabled && !isSplit && isDown && singlePointer &&
-				e.getY() > getHeight() - (dividerTouchSize * density) &&
-				getHeight() > densityEx2 ||
-				isSwipeEnabled && isSplit &&
-						isDown && singlePointer &&
-						!(e.getX() >= getWidth() - (densityEx)) &&
-						!(e.getX() <= densityEx)
-						&& !(Math.abs(e.getY() - (getHeight() * verticalSplitRatio))
-						>= dividerTouchSize * density);
+		return false;
 	}
 
 	private void startDragging(MotionEvent event) {
@@ -204,14 +190,7 @@ public class SplitLayout extends ViewGroup {
 	public void setOnSplitChangeListener(OnSplitChangeListener listener) {
 		this.listener = listener;
 	}
-
-	public boolean isSwipeEnabled() {
-		return isSwipeEnabled;
-	}
-
-	public void setSwipeEnabled(boolean swipeEnabled) {
-		this.isSwipeEnabled = swipeEnabled;
-	}
+	
 
 	public void toggleSplit(Runnable closeRun) {
 		if (isSplit())
