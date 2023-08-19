@@ -21,13 +21,6 @@ public class FileIcons {
                 case ".gif":
                 case ".webp":
                     return BitmapDrawable.createFromStream(FileSystem.getInputStream(filePath), null);
-                case ".xml":
-                    String parent=FileSystem.getParentDirPath(filePath);
-                    if (parent!=null){
-                        parent = FileSystem.getName(parent);
-                        if (parent.startsWith("drawable"))
-                            return BitmapDrawable.createFromStream(FileSystem.getInputStream(filePath), null);
-                    }
                 case ".apk":
                     //TODO: apk icon preview
                 default:

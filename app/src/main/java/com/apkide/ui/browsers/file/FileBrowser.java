@@ -110,7 +110,7 @@ public class FileBrowser extends HeaderBrowserLayout implements FileBrowserServi
                                     myBinding.fileListScrollView.requestLayout();
                                     myBinding.fileListView.requestFocus();
                                 }
-                            }, 50L);
+                            }, 80L);
                         }
                     
                         try {
