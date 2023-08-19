@@ -48,7 +48,7 @@ public class OpenFileService implements IService {
     }
     
     public void register(){
-        App.getEngineService().setHighlightingListener(new IHighlightingListener() {
+        App.getCodeEngineService().setHighlightingListener(new IHighlightingListener() {
             @Override
             public void highlightingCompleted(@NonNull FileHighlighting highlighting) {
                 for (String filePath : myOpenFileModels.keySet()) {
@@ -96,7 +96,7 @@ public class OpenFileService implements IService {
             for (OpenFileServiceListener listener : myListeners) {
                 listener.fileOpened(filePath, requireNonNull(getOpenFileModel(filePath)));
             }
-            App.getEngineService().openFile(filePath);
+            App.getCodeEngineService().openFile(filePath);
             return;
         }
         for (OpenFileModelFactory factory : myFactors.values()) {
@@ -108,7 +108,7 @@ public class OpenFileService implements IService {
                     for (OpenFileServiceListener listener : myListeners) {
                         listener.fileOpened(filePath, fileModel);
                     }
-                    App.getEngineService().openFile(filePath);
+                    App.getCodeEngineService().openFile(filePath);
                 } catch (IOException e) {
                     e.printStackTrace();
                     Toast.makeText(App.getUI(), e.getMessage(), Toast.LENGTH_SHORT).show();

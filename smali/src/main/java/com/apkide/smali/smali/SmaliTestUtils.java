@@ -80,7 +80,7 @@ public class SmaliTestUtils {
         CommonTreeNodeStream treeStream = new CommonTreeNodeStream(t);
         treeStream.setTokenStream(tokens);
 
-        smaliTreeWalker dexGen = new smaliTreeWalker(treeStream);
+        SmaliTreeWalker dexGen = new SmaliTreeWalker(treeStream);
         dexGen.setApiLevel(apiLevel);
         dexGen.setVerboseErrors(true);
         dexGen.setDexBuilder(dexBuilder);

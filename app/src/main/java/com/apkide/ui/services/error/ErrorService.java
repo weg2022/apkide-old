@@ -19,7 +19,7 @@ public class ErrorService implements IService {
     
     @Override
     public void initialize() {
-        App.getEngineService().setDiagnosticListener(new IDiagnosticListener() {
+        App.getCodeEngineService().setDiagnosticListener(new IDiagnosticListener() {
             @Override
             public void reportDiagnostics(@NonNull List<Diagnostic> diagnostics) {
             

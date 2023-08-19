@@ -48,7 +48,6 @@
                 <data android:scheme="file" />
                 <data android:mimeType="*/*" />
                 <data android:pathPattern=".*\\.apk" />
-                <data android:pathPattern=".*\\.imi.dev" />
                 <data android:pathPattern=".*\\.apktool.yml" />
                 <data android:host="*" />
             </intent-filter>

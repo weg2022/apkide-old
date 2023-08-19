@@ -45,11 +45,9 @@ import java.io.OutputStreamWriter;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 public class Baksmali {
     public static boolean disassembleDexFile(DexFile dexFile, File outputDir, int jobs, final BaksmaliOptions options) {
@@ -67,7 +65,7 @@ public class Baksmali {
 
         final ClassFileNameHandler fileNameHandler = new ClassFileNameHandler(outputDir, ".smali");
 
-        ExecutorService executor = Executors.newFixedThreadPool(jobs);
+        //ExecutorService executor = Executors.newFixedThreadPool(jobs);
         List<Future<Boolean>> tasks = Lists.newArrayList();
 
         Set<String> classSet = null;
@@ -79,11 +77,14 @@ public class Baksmali {
             if (classSet != null && !classSet.contains(classDef.getType())) {
                 continue;
             }
-            tasks.add(executor.submit(new Callable<Boolean>() {
+           /* tasks.add(executor.submit(new Callable<Boolean>() {
                 @Override public Boolean call() throws Exception {
                     return disassembleClass(classDef, fileNameHandler, options);
                 }
-            }));
+            }));*/
+            FutureTask<Boolean> task=new FutureTask<>(() -> disassembleClass(classDef, fileNameHandler, options));
+            task.run();
+            tasks.add(task);
         }
 
         boolean errorOccurred = false;
@@ -103,7 +104,7 @@ public class Baksmali {
                 }
             }
         } finally {
-            executor.shutdown();
+          //  executor.shutdown();
         }
         return !errorOccurred;
     }

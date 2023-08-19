@@ -61,7 +61,7 @@ android {
         exclude 'smali.properties'
         exclude 'baksmali.properties'
         exclude 'resources/**.ser'
-        jniLibs{
+        jniLibs {
             useLegacyPackaging true
         }
     }
@@ -96,16 +96,19 @@ dependencies {
     implementation libs.androidx.preference
     implementation libs.material
 
-    implementation("com.github.7hens.okbinder:okbinder2:2.0")
-    annotationProcessor("com.github.7hens.okbinder:okbinder2-compiler:2.0")
+    implementation libs.okbinder2
+    annotationProcessor libs.okbinder2.compiler
 
     implementation project(':common')
-    implementation project(':codeanalysis')
-    implementation project(':language:lang-api')
-    implementation project(':language:lang-java')
-    implementation project(':language:lang-smali')
-    implementation project(':language:lang-xml')
 
-    implementation project(':apktool')
+    runtimeOnly project(':apktool:core')
+    implementation project(':apktool:service')
+
+    implementation project(':language-server:service')
+    implementation project(':language-server:api')
+    implementation project(':language-server:impl-java')
+    implementation project(':language-server:impl-smali')
+    implementation project(':language-server:impl-xml')
+
     implementation project(':smali')
 }

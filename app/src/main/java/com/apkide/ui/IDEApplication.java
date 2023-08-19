@@ -12,9 +12,13 @@ import static java.util.Objects.requireNonNull;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.multidex.MultiDexApplication;
 
@@ -27,6 +31,7 @@ import com.apkide.common.Logger;
 import com.apkide.common.SafeRunner;
 import com.apkide.ls.api.LanguageServer;
 import com.apkide.ls.java.JavaLanguageServer;
+import com.apkide.ls.smali.SmaliLanguageServer;
 import com.apkide.ls.xml.XmlLanguageServer;
 import com.apkide.ui.util.JarFileArchiveReader;
 
@@ -35,6 +40,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class IDEApplication extends MultiDexApplication {
@@ -166,8 +173,38 @@ public class IDEApplication extends MultiDexApplication {
             
             @NonNull
             @Override
+            public File getExternalStorageDir() {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    return Environment.getExternalStorageDirectory();
+                } else {
+                    return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                }
+            }
+            
+            @NonNull
+            @Override
             public Context getContext() {
                 return getApplicationContext();
+            }
+            
+            private final Handler myHandler = new Handler(requireNonNull(Looper.myLooper()));
+            private final ExecutorService myService = Executors.newFixedThreadPool(8);
+      
+            @Override
+            public boolean postExec(@NonNull Runnable runnable, long delayMillis) {
+                if (delayMillis <= 0) {
+                    return myHandler.post(runnable);
+                }
+                return myHandler.postDelayed(runnable, delayMillis);
+            }
+            
+            @Override
+            public void syncExec(@NonNull Runnable workRun, @Nullable Runnable doneRun) {
+                myService.execute(() -> {
+                    workRun.run();
+                    if (doneRun != null)
+                        postExec(doneRun);
+                });
             }
         });
         
@@ -217,6 +254,7 @@ public class IDEApplication extends MultiDexApplication {
             @Override
             public LanguageServer[] getLanguageServers() {
                 return new LanguageServer[]{
+                        new SmaliLanguageServer(),
                         new JavaLanguageServer(),
                         new XmlLanguageServer(),
                 };

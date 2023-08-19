@@ -6,15 +6,12 @@ import android.app.Dialog;
 
 import androidx.annotation.NonNull;
 
-import com.apkide.apktool.androlib.ApkDecoder;
-import com.apkide.apktool.directory.ExtFile;
 import com.apkide.common.FileSystem;
 import com.apkide.common.MessageBox;
-import com.apkide.common.SafeRunner;
 import com.apkide.ui.App;
 
 import java.io.File;
-import java.io.IOException;
+
 //for testing only
 public class ApkDecompileDialog extends MessageBox {
     private final String filePath;
@@ -34,48 +31,8 @@ public class ApkDecompileDialog extends MessageBox {
         builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
             dialog.dismiss();
             if (parent == null) return;
-            MessageBox.showDialog(App.getMainUI(),new ProgressDialog("APK Decompile", "Decompiling..."));
-            App.runOnBackground(() -> {
-                ApkDecoder decoder = new ApkDecoder(new ExtFile(filePath));
-                File destDir = new File(parent, name.replace(FileSystem.getExtensionName(name), ""));
-                SafeRunner.run(new SafeRunner.SafeRunnable() {
-                    @Override
-                    public void run() throws Exception {
-                        if (destDir.exists())
-                            FileSystem.delete(destDir.getAbsolutePath());
-    
-                    }
-    
-                    @Override
-                    public void handleException(@NonNull Throwable e) {
-                        e.printStackTrace();
-                    }
-                });
-    
-    
-                SafeRunner.run(new SafeRunner.SafeRunnable() {
-                    @Override
-                    public void run() throws Exception {
-                        decoder.decode(destDir);
-                    }
-        
-                    @Override
-                    public void handleException(@NonNull Throwable e) {
-                        try {
-                            FileSystem.delete(destDir.getAbsolutePath());
-                        } catch (IOException ignored) {
-    
-                        }
-                        e.printStackTrace();
-                    }
-                });
-            }, new Runnable() {
-                @Override
-                public void run() {
-                    MessageBox.hide();
-                    App.getFileBrowserService().sync();
-                }
-            });
+            File destDir = new File(parent, name.replace(FileSystem.getExtensionName(name), ""));
+            App.getApkEngineService().decodeApk(filePath, destDir.getAbsolutePath());
         });
         builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> {
             dialog.dismiss();

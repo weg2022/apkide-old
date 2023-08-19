@@ -2,6 +2,7 @@ package com.apkide.ui.commands.actionbar;
 
 import androidx.annotation.IdRes;
 
+import com.apkide.ui.App;
 import com.apkide.ui.R;
 import com.apkide.ui.util.MenuCommand;
 
@@ -14,16 +15,17 @@ public class RunCommand implements MenuCommand {
 
 	@Override
 	public boolean isVisible() {
-		return true;
+		return App.getProjectService().isProjectOpened();
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return false;
+		return App.getProjectService().isProjectOpened();
 	}
 
 	@Override
 	public boolean run() {
+		
 		return false;
 	}
 }

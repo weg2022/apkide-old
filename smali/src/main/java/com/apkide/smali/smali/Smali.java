@@ -52,11 +52,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 public class Smali {
 
@@ -99,15 +97,18 @@ public class Smali {
 
         final DexBuilder dexBuilder = new DexBuilder(Opcodes.forApi(options.apiLevel));
 
-        ExecutorService executor = Executors.newFixedThreadPool(options.jobs);
+        //ExecutorService executor = Executors.newFixedThreadPool(options.jobs);
         List<Future<Boolean>> tasks = Lists.newArrayList();
 
         for (final File file: filesToProcessSet) {
-            tasks.add(executor.submit(new Callable<Boolean>() {
+            /*tasks.add(executor.submit(new Callable<Boolean>() {
                 @Override public Boolean call() throws Exception {
                     return assembleSmaliFile(file, dexBuilder, options);
                 }
-            }));
+            }));*/
+            FutureTask<Boolean> task=new FutureTask<>(() -> assembleSmaliFile(file, dexBuilder, options));
+            task.run();
+            tasks.add(task);
         }
 
         for (Future<Boolean> task: tasks) {
@@ -127,7 +128,7 @@ public class Smali {
             }
         }
 
-        executor.shutdown();
+       // executor.shutdown();
 
         if (errors) {
             return false;
@@ -244,7 +245,7 @@ public class Smali {
                 System.out.println(t.toStringTree());
             }
 
-            smaliTreeWalker dexGen = new smaliTreeWalker(treeStream);
+            SmaliTreeWalker dexGen = new SmaliTreeWalker(treeStream);
             dexGen.setApiLevel(options.apiLevel);
 
             dexGen.setVerboseErrors(options.verboseErrors);

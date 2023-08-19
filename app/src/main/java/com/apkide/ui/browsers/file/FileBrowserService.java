@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 
+import com.apkide.common.Application;
 import com.apkide.common.FileSystem;
 import com.apkide.ui.App;
 import com.apkide.ui.services.IService;
@@ -48,8 +49,8 @@ public class FileBrowserService implements IService {
         if ((FileSystem.isArchiveFile(folder) || FileSystem.isDirectory(folder))
                 && !getCurrentFolder().equals(folder)) {
             getPreferences().edit().putString("open.folder", folder).apply();
-                if (myListener != null)
-                    myListener.fileBrowserFolderChanged(folder);
+            if (myListener != null)
+                myListener.fileBrowserFolderChanged(folder);
         }
     }
     
@@ -61,8 +62,7 @@ public class FileBrowserService implements IService {
     
     @NonNull
     public String getDefaultFolder() {
-        File file = App.getContext().getExternalFilesDir(null);
-        assert file != null;
+        File file = Application.get().getExternalStorageDir();
         if (!file.exists() || !file.isDirectory()) {
             try {
                 FileSystem.mkdir(file.getAbsolutePath());

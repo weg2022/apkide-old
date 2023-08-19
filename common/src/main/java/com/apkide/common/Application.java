@@ -3,6 +3,7 @@ package com.apkide.common;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.io.File;
 
@@ -22,10 +23,25 @@ public abstract class Application {
 
 	@NonNull
 	public abstract File getTempDir();
-
-	@NonNull
+    
+    @NonNull
+    public abstract File getExternalStorageDir();
+    
+    @NonNull
 	public abstract Context getContext();
-
+	
+	public boolean postExec(@NonNull Runnable runnable) {
+		return postExec(runnable,-1);
+	}
+	
+	public abstract boolean postExec(@NonNull Runnable runnable,long delayMillis);
+	
+	public void syncExec(@NonNull Runnable workRun) {
+		syncExec(workRun,null);
+	}
+	
+	public abstract void syncExec(@NonNull Runnable workRun,@Nullable Runnable doneRun);
+	
 	private static final Object lock = new Object();
 
 	private static Application sApplication;

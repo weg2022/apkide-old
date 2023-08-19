@@ -12,11 +12,12 @@ multidex = "2.0.1"
 #noinspection GradleDependency
 annotation = "1.2.0"
 #noinspection GradleDependency
+okbinder2-compiler = "2.0"
+okbinder2 = "2.0"
 preference = "1.1.0"
 #noinspection GradleDependency
 material = "1.5.0"
 
-interface-loader = "0.0.1"
 snakeyaml = "2.1"
 
 [libraries]
@@ -30,9 +31,10 @@ material = { module = "com.google.android.material:material", version.ref = "mat
 gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
 desugar_jdk_libs_nio = { module = "com.android.tools:desugar_jdk_libs_nio", version.ref = "desugar_jdk_libs_nio" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+okbinder2-compiler = { module = "com.github.7hens.okbinder:okbinder2-compiler", version.ref = "okbinder2-compiler" }
+okbinder2 = { module = "com.github.7hens.okbinder:okbinder2", version.ref = "okbinder2" }
 snakeyaml = { module = "org.yaml:snakeyaml", version.ref = "snakeyaml" }
 tools-r8 = { module = "com.android.tools:r8", version.ref = "android-r8" }
-interface-loader = { module = "com.jeremyliao:interface-loader", version.ref = "interface-loader" }
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 
