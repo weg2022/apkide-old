@@ -30,7 +30,7 @@ public class FileHighlighter {
                 highlights.highlight(style, startLine, startColumn, line, column);
                 style = token;
                 startColumn = column;
-                startLine = column;
+                startLine = line;
                 if (token == -1) break;
             }
         } catch (IOException ignored) {
