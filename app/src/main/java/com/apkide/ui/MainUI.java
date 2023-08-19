@@ -23,8 +23,10 @@ import androidx.lifecycle.ViewModelProvider;
 import com.apkide.common.Command;
 import com.apkide.ui.browsers.BrowserPager;
 import com.apkide.ui.databinding.MainBinding;
+import com.apkide.ui.editors.EditorPager;
 import com.apkide.ui.util.MenuCommand;
 import com.apkide.ui.views.SplitLayout;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.HashMap;
 import java.util.List;
@@ -88,6 +90,8 @@ public class MainUI extends StyledUI implements
 				}
 			}
 		});
+		
+		getEditorTabLayout().setupWithViewPager(getEditorPager());
 		boolean isSplit = getPreferences().getBoolean("isSplit", false);
 		if (isSplit)
 			getSplitLayout().openSplit();
@@ -96,6 +100,14 @@ public class MainUI extends StyledUI implements
 
 	public void shutdown() {
 		finish();
+	}
+	
+	
+	public EditorPager getEditorPager(){
+		return myUiBinding.mainEditorPager;
+	}
+	public TabLayout getEditorTabLayout(){
+		return myUiBinding.mainEditorTabLayout;
 	}
 
 	public SplitLayout getSplitLayout() {

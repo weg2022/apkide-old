@@ -56,11 +56,24 @@
                     android:id="@+id/mainEditorFrame"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-
-                    <com.apkide.ui.editors.EditorPager
-                        android:id="@+id/mainEditorPager"
+                    <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <com.google.android.material.tabs.TabLayout
+                            android:id="@+id/mainEditorTabLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:tabMode="scrollable"
+                            app:tabGravity="start"/>
+
+                        <com.apkide.ui.editors.EditorPager
+                            android:id="@+id/mainEditorPager"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"/>
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
 
                 </FrameLayout>
             </FrameLayout>

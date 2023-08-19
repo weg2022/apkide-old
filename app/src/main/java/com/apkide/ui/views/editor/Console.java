@@ -54,20 +54,20 @@ public class Console extends View implements TextModel.TextModelListener, Theme.
     private boolean myOverwriteMode;
     private Caret myCaret;
     private boolean myCaretVisibility;
-    private int myCaretLine;
-    private int myCaretColumn;
+    private int myCaretLine = 0;
+    private int myCaretColumn = 0;
     private boolean mySelectionVisibility;
-    private int mySelectionAnchorLine;
-    private int mySelectionAnchorColumn;
-    private int mySelectionPointLine;
-    private int mySelectionPointColumn;
-    private int myFirstSelectedLine;
-    private int myFirstSelectedColumn;
-    private int myLastSelectedLine;
-    private int myLastSelectedColumn;
-    private int myMaxColumn;
-    private int myMaxColumnLine;
-    private float mySidebarX;
+    private int mySelectionAnchorLine = 0;
+    private int mySelectionAnchorColumn = 0;
+    private int mySelectionPointLine = 0;
+    private int mySelectionPointColumn = 0;
+    private int myFirstSelectedLine = 0;
+    private int myFirstSelectedColumn = 0;
+    private int myLastSelectedLine = 0;
+    private int myLastSelectedColumn = 0;
+    private int myMaxColumn = 0;
+    private int myMaxColumnLine = 0;
+    private float mySidebarX = 0;
     private SyncRunner myComputeMaxColumnRunner;
     private SyncRunner myLayoutUpdateRunner;
     
@@ -236,11 +236,7 @@ public class Console extends View implements TextModel.TextModelListener, Theme.
         int maxColumnLine = 0;
         int maxColumn = 0;
         for (int line = 0; line < lineCount; line++) {
-            int length = myModel.getLineLength(line);
-            int lineMaxColumn = 0;
-            for (int column = 0; column < length; column++) {
-                lineMaxColumn += myModel.getChar(line, column) == '\t' ? myTabSize - (lineMaxColumn % myTabSize) : 1;
-            }
+            int lineMaxColumn = getLineMaxColumn(line);
             if (lineMaxColumn > maxColumn) {
                 maxColumn = lineMaxColumn;
                 maxColumnLine = line;
@@ -250,7 +246,7 @@ public class Console extends View implements TextModel.TextModelListener, Theme.
         myMaxColumnLine = maxColumnLine;
     }
     
-    private int getLineMaxColumn(int line) {
+    public int getLineMaxColumn(int line) {
         int length = myModel.getLineLength(line);
         int maxColumn = 0;
         for (int column = 0; column < length; column++) {
@@ -270,8 +266,10 @@ public class Console extends View implements TextModel.TextModelListener, Theme.
     
     public void setCaretVisibility(boolean caretVisibility) {
         if (myCaretVisibility != caretVisibility) {
-            if (caretVisibility) myCaret.schedule();
-            else myCaret.cancel();
+            if (caretVisibility)
+                myCaret.schedule();
+            else
+                myCaret.cancel();
             
             myCaretVisibility = caretVisibility;
             invalidate();
@@ -300,10 +298,12 @@ public class Console extends View implements TextModel.TextModelListener, Theme.
     
     private void moveCaret(int line, int column, boolean isTyping) {
         if (line < 0) line = 0;
-        if (line >= myModel.getLineCount()) line = myModel.getLineCount() - 1;
+        if (line >= myModel.getLineCount())
+            line = myModel.getLineCount() - 1;
         
         if (column < 0) column = 0;
-        if (column >= myModel.getLineLength(line)) column = myModel.getLineLength(line);
+        if (column > myModel.getLineLength(line))
+            column = myModel.getLineLength(line);
         
         if (myCaretLine == line && myCaretColumn == column) return;
         
@@ -346,13 +346,13 @@ public class Console extends View implements TextModel.TextModelListener, Theme.
         if (startLine >= myModel.getLineCount())
             startLine = myModel.getLineCount() - 1;
         
-        if (startColumn >= myModel.getLineLength(startLine))
+        if (startColumn > myModel.getLineLength(startLine))
             startColumn = myModel.getLineLength(startLine);
         
         if (endLine >= myModel.getLineCount())
             endLine = myModel.getLineCount() - 1;
         
-        if (endColumn >= myModel.getLineLength(endLine))
+        if (endColumn > myModel.getLineLength(endLine))
             endColumn = myModel.getLineLength(endLine);
         
         moveCaret(startLine, startColumn);
@@ -364,11 +364,11 @@ public class Console extends View implements TextModel.TextModelListener, Theme.
     public void setSelectionAnchor(int line, int column) {
         if (line < 0) line = 0;
         
-        if (line >= myModel.getLineCount()) line = myModel.getLineCount() - 1;
+        if (line > myModel.getLineCount()) line = myModel.getLineCount() - 1;
         
         if (column < 0) column = 0;
         
-        if (column >= myModel.getLineLength(line)) column = myModel.getLineLength(line);
+        if (column > myModel.getLineLength(line)) column = myModel.getLineLength(line);
         
         mySelectionAnchorLine = line;
         mySelectionAnchorColumn = column;
@@ -378,11 +378,11 @@ public class Console extends View implements TextModel.TextModelListener, Theme.
     public void setSelectionPoint(int line, int column) {
         if (line < 0) line = 0;
         
-        if (line >= myModel.getLineCount()) line = myModel.getLineCount() - 1;
+        if (line > myModel.getLineCount()) line = myModel.getLineCount() - 1;
         
         if (column < 0) column = 0;
         
-        if (column >= myModel.getLineLength(line)) column = myModel.getLineLength(line);
+        if (column > myModel.getLineLength(line)) column = myModel.getLineLength(line);
         
         mySelectionPointLine = line;
         mySelectionPointColumn = column;
@@ -390,13 +390,22 @@ public class Console extends View implements TextModel.TextModelListener, Theme.
     }
     
     protected void updateSelection() {
-        int count = computeDiffCount(mySelectionAnchorLine, mySelectionAnchorColumn, mySelectionPointLine, mySelectionPointColumn);
+        int count = computeDiffCount(mySelectionAnchorLine,
+                mySelectionAnchorColumn,
+                mySelectionPointLine,
+                mySelectionPointColumn);
         if (count < 0) {
             setSelectionVisibility(true);
-            updateSelection(mySelectionAnchorLine, mySelectionAnchorColumn, mySelectionPointLine, mySelectionPointColumn);
+            updateSelection(mySelectionAnchorLine,
+                    mySelectionAnchorColumn,
+                    mySelectionPointLine,
+                    mySelectionPointColumn);
         } else if (count > 0) {
             setSelectionVisibility(true);
-            updateSelection(mySelectionPointLine, mySelectionPointColumn, mySelectionAnchorLine, mySelectionAnchorColumn);
+            updateSelection(mySelectionPointLine,
+                    mySelectionPointColumn,
+                    mySelectionAnchorLine,
+                    mySelectionAnchorColumn);
         } else {
             myFirstSelectedLine = myLastSelectedLine = myCaretLine;
             myFirstSelectedColumn = myLastSelectedColumn = myCaretColumn;
@@ -475,7 +484,8 @@ public class Console extends View implements TextModel.TextModelListener, Theme.
             if (startLine == endLine) {
                 moveCaret(myCaretLine, ((myCaretColumn + endColumn) - startColumn) + 1, true);
             } else {
-                moveCaret((myCaretLine + endLine) - startLine, ((myCaretColumn + endColumn) - startColumn) + 1, true);
+                moveCaret((myCaretLine + endLine) - startLine,
+                        ((myCaretColumn + endColumn) - startColumn) + 1, true);
             }
         }
         
@@ -522,9 +532,12 @@ public class Console extends View implements TextModel.TextModelListener, Theme.
         invalidate();
         if (startLine == endLine) {
             if (endLine == myCaretLine && startColumn < myCaretColumn) {
-                moveCaret(myCaretLine, max(startColumn, myCaretColumn - ((endColumn - startColumn) + 1)), true);
+                moveCaret(myCaretLine, max(startColumn,
+                        myCaretColumn - ((endColumn - startColumn) + 1)), true);
             }
-        } else if ((myCaretLine == startLine && startColumn < myCaretColumn) || (myCaretLine > startLine && myCaretLine < endLine) || (myCaretLine == endLine && myCaretColumn < endColumn)) {
+        } else if ((myCaretLine == startLine && startColumn < myCaretColumn) ||
+                (myCaretLine > startLine && myCaretLine < endLine) ||
+                (myCaretLine == endLine && myCaretColumn < endColumn)) {
             moveCaret(startLine, startColumn, true);
         } else if (myCaretLine == endLine) {
             moveCaret(startLine, ((myCaretColumn + startColumn) - endColumn) - 1, true);
@@ -554,7 +567,8 @@ public class Console extends View implements TextModel.TextModelListener, Theme.
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         setMeasuredDimension(
                 (int) (((myMaxColumn + 1) * mySpaceCharWidth) + mySidebarX),
-                myModel == null ? 0 : (int) (myModel.getLineCount() * myFontHeight));
+                myModel == null ? 0 :
+                        (int) ((myModel.getLineCount() + 1) * myFontHeight));
     }
     
     
@@ -565,7 +579,13 @@ public class Console extends View implements TextModel.TextModelListener, Theme.
     @NonNull
     public Point computeLocation(int line, int column) {
         if (line < 0) line = 0;
-        if (line >= getModel().getLineCount()) line = getModel().getLineCount() - 1;
+        
+        if (line >= getModel().getLineCount())
+            line = getModel().getLineCount() - 1;
+        
+        if (column > getModel().getLineLength(line))
+            column = getModel().getLineLength(line);
+        
         float y = computeLocationY(line);
         float x = computeLocationX(line, column);
         return new Point((int) x, (int) y);
@@ -593,14 +613,15 @@ public class Console extends View implements TextModel.TextModelListener, Theme.
     
     public int computeColumn(int line, float x) {
         if (line < 0) line = 0;
-        if (line >= getModel().getLineCount()) line = getModel().getLineCount() - 1;
-        int length = getModel().getLineLength(line);
+        if (line >= getModel().getLineCount())
+            line = getModel().getLineCount() - 1;
+        int maxColumn = getModel().getLineLength(line);
         float columnX = mySidebarX;
-        if (length == 0) return 0;
+        if (maxColumn == 0) return 0;
         int column = 0;
-        float[] buffer = Buffers.floats(length);
-        getLineWidths(line, 0, length, buffer);
-        for (int i = 0; i < length; i++) {
+        float[] buffer = Buffers.floats(maxColumn);
+        getLineWidths(line, 0, maxColumn, buffer);
+        for (int i = 0; i < maxColumn; i++) {
             if (columnX >= x) break;
             columnX += buffer[i];
             column++;
@@ -611,7 +632,8 @@ public class Console extends View implements TextModel.TextModelListener, Theme.
     
     public float computeLocationX(int line, int column) {
         if (line < 0) line = 0;
-        if (line >= getModel().getLineCount()) line = getModel().getLineCount() - 1;
+        if (line >= getModel().getLineCount())
+            line = getModel().getLineCount() - 1;
         int length = getModel().getLineLength(line);
         if (column < 0) column = 0;
         if (column > length) column = length;
@@ -623,20 +645,19 @@ public class Console extends View implements TextModel.TextModelListener, Theme.
     }
     
     
-    public float measureLine(int line, int column, int length) {
-        return nativeMeasureLine(line, column, length);
+    public float measureLine(int line, int startColumn, int endColumn) {
+        return nativeMeasureLine(line, startColumn, endColumn);
     }
     
-    public void getLineWidths(int line, int column, int length, float[] widths) {
-        nativeGetLineWidths(line, column, length, widths);
+    public void getLineWidths(int line, int startColumn, int endColumn, float[] widths) {
+        nativeGetLineWidths(line, startColumn, endColumn, widths);
     }
     
     
-    protected float nativeMeasureLine(int line, int column, int length) {
-        int end = column + length;
-        float w = myModel.measureLine(line, column, length, myPaint);
+    protected float nativeMeasureLine(int line, int startColumn, int endColumn) {
+        float w = myModel.measureLine(line, startColumn, endColumn, myPaint);
         float tabAdvance = myPaint.measureText("\t");
-        for (int i = column; i < end; i++) {
+        for (int i = startColumn; i < endColumn; i++) {
             char c = myModel.getChar(line, i);
             if (c == '\t') {
                 w -= tabAdvance;
@@ -646,30 +667,29 @@ public class Console extends View implements TextModel.TextModelListener, Theme.
         return w;
     }
     
-    protected void nativeGetLineWidths(int line, int column, int length, float[] widths) {
-        int end = column + length;
-        myModel.getLineWidths(line, column, length, widths, myPaint);
-        for (int i = column; i < end; i++) {
+    protected void nativeGetLineWidths(int line, int startColumn, int endColumn, float[] widths) {
+        myModel.getLineWidths(line, startColumn, endColumn, widths, myPaint);
+        for (int i = startColumn; i < endColumn; i++) {
             char c = myModel.getChar(line, i);
-            if (c == '\t') widths[i] = myTabCharWidth;
+            if (c == '\t')
+                widths[i] = myTabCharWidth;
         }
     }
     
-    protected float drawText(Canvas canvas, int line, int column, int length, float x, float y) {
-        int end = column + length;
-        int begin = column;
-        for (int i = column; i < end; i++) {
+    protected float drawText(Canvas canvas, int line, int startColumn, int endColumn, float x, float y) {
+        int begin = startColumn;
+        for (int i = startColumn; i < endColumn; i++) {
             if (myModel.getChar(line, i) == '\t') {
                 if (myPaint.getColor() != 0)
-                    myModel.drawLine(line, begin, i - begin, x, y, canvas, myPaint);
-                x += measureLine(line, begin, i - begin + 1);
+                    myModel.drawLine(line, begin, i, x, y, canvas, myPaint);
+                x += measureLine(line, begin, i + 1);
                 begin = i + 1;
             }
         }
-        if (begin < end) {
+        if (begin < endColumn) {
             if (myPaint.getColor() != 0)
-                myModel.drawLine(line, begin, end - begin, x, y, canvas, myPaint);
-            x += measureLine(line, begin, end - begin);
+                myModel.drawLine(line, begin, endColumn, x, y, canvas, myPaint);
+            x += measureLine(line, begin, endColumn);
         }
         return x;
     }
@@ -682,9 +702,9 @@ public class Console extends View implements TextModel.TextModelListener, Theme.
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
         Color color = myTheme.getColor(Theme.Colors.BackgroundColor);
-        if (color != null &&color.value!=0) {
+        if (color != null && color.value != 0)
             canvas.drawColor(color.value);
-        }
+        
         if (myRect.isEmpty()) return;
         
         int firstLine = computeLine(myRect.top);
@@ -706,7 +726,12 @@ public class Console extends View implements TextModel.TextModelListener, Theme.
             redrawCaretLine(canvas, i, length, x, y);
             redrawLineNumber(canvas, i, length, x, y);
             redrawSelection(canvas, i, length, x, y);
+            redrawFindMatch(canvas, i, length, x, y);
             redrawText(canvas, i, length, x, y);
+            redrawColor(canvas, i, length, x, y);
+            redrawTyping(canvas, i, length, x, y);
+            redrawHyperlink(canvas, i, length, x, y);
+            redrawProblem(canvas, i, length, x, y);
             redrawCaret(canvas, i, length, x, y);
             y += myFontHeight;
         }
@@ -727,7 +752,7 @@ public class Console extends View implements TextModel.TextModelListener, Theme.
     
     protected void redrawCaretLine(Canvas canvas, int line, int length, float x, float y) {
         Color color = myTheme.getColor(Theme.Colors.CaretLineColor);
-        if (color != null && color.value != 0  && !mySelectionVisibility && myCaretLine == line) {
+        if (color != null && color.value != 0 && !mySelectionVisibility && myCaretLine == line) {
             myPaint.setColor(color.value);
             canvas.drawRect(x, y - myFontTop, myRect.right, y + myFontBottom, myPaint);
         }
@@ -746,94 +771,144 @@ public class Console extends View implements TextModel.TextModelListener, Theme.
                 float density = getContext().getResources().getDisplayMetrics().density;
                 if (myCaretColumn > 0) caretX += measureLine(line, 0, myCaretColumn);
                 
-                canvas.drawRect(caretX, y - myFontTop, caretX + density, y + myFontBottom, myPaint);
+                canvas.drawRect(caretX,
+                        y - myFontTop,
+                        caretX + density,
+                        y + myFontBottom, myPaint);
             }
         }
     }
     
     protected void redrawSelection(Canvas canvas, int line, int length, float x, float y) {
-
         if (!mySelectionVisibility || line < myFirstSelectedLine || line > myLastSelectedLine)
             return;
         Color color = myTheme.getColor(Theme.Colors.SelectionColor);
-        if (color==null ||color.value==0)return;
+        if (color == null || color.value == 0) return;
         myPaint.setColor(color.value);
         float spaceWidth = mySpaceCharWidth;
         if (myFirstSelectedLine == myLastSelectedLine) {
-            float firstX = length == 0 ? x + spaceWidth : x + measureLine(line, 0, myFirstSelectedColumn);
-            float lastX = length == 0 ? x + spaceWidth : x + measureLine(line, 0, myLastSelectedColumn);
+            float firstX = length == 0 ? x + spaceWidth :
+                    x + measureLine(line, 0, myFirstSelectedColumn);
+            float lastX = length == 0 ? x + spaceWidth :
+                    x + measureLine(line, 0, myLastSelectedColumn);
             canvas.drawRect(firstX, y - myFontTop, lastX, y + myFontBottom, myPaint);
         } else {
             if (line == myFirstSelectedLine) {
                 float width = measureLine(line, 0, length);
-                float cX = length == 0 ? x + spaceWidth : x + measureLine(line, 0, myFirstSelectedColumn);
-                canvas.drawRect(cX, y - myFontTop, x + width, y + myFontBottom, myPaint);
+                float cX = length == 0 ? x + spaceWidth :
+                        x + measureLine(line, 0, myFirstSelectedColumn);
+                canvas.drawRect(cX, y - myFontTop,
+                        x + width, y + myFontBottom, myPaint);
             } else if (line == myLastSelectedLine) {
-                float cX = length == 0 ? x + spaceWidth : x + measureLine(line, 0, myLastSelectedColumn);
+                float cX = length == 0 ? x + spaceWidth :
+                        x + measureLine(line, 0, myLastSelectedColumn);
                 canvas.drawRect(x, y - myFontTop, cX, y + myFontBottom, myPaint);
             } else {
-                float width = length == 0 ? spaceWidth : measureLine(line, 0, length);
+                float width = length == 0 ? spaceWidth :
+                        measureLine(line, 0, length);
                 canvas.drawRect(x, y - myFontTop, x + width, y + myFontBottom, myPaint);
             }
         }
     }
     
-    protected void redrawText(Canvas canvas, int line, int length, float x, float y) {
-        if (length == 0) return;
+    protected void redrawFindMatch(Canvas canvas, int line, int maxColumn, float x, float y) {
+        if (maxColumn == 0) return;
         
-        int fontColor=0xff212121;
-        Color color=myTheme.getColor(Theme.Colors.FontColor);
-        if (color!=null){
+    }
+    
+    protected void redrawProblem(Canvas canvas, int line, int maxColumn, float x, float y) {
+        if (maxColumn == 0) return;
+        
+    }
+    
+    protected void redrawHyperlink(Canvas canvas, int line, int maxColumn, float x, float y) {
+        if (maxColumn == 0) return;
+        
+        int fontColor = 0xff212121;
+        Color color = myTheme.getColor(Theme.Colors.FontColor);
+        if (color != null) {
+            fontColor = color.value;
+        }
+        
+    }
+    
+    protected void redrawColor(Canvas canvas, int line, int maxColumn, float x, float y) {
+        if (maxColumn == 0) return;
+        
+    }
+    
+    protected void redrawTyping(Canvas canvas, int line, int maxColumn, float x, float y) {
+        if (maxColumn == 0) return;
+        
+        int fontColor = 0xff212121;
+        Color color = myTheme.getColor(Theme.Colors.FontColor);
+        if (color != null) {
+            fontColor = color.value;
+        }
+        
+    }
+    
+    protected void redrawText(Canvas canvas, int line, int maxColumn, float x, float y) {
+        if (maxColumn == 0) return;
+        
+        int fontColor = 0xff212121;
+        Color color = myTheme.getColor(Theme.Colors.FontColor);
+        if (color != null) {
             fontColor = color.value;
         }
         int lastStyle = getModel().getStyle(line, 0);
         TextStyle textStyle = myTheme.getTextStyle(lastStyle);
-        if (textStyle != null) applyFontStyle(textStyle.fontStyle);
-        else applyFontStyle(Typeface.NORMAL);
+        if (textStyle != null)
+            applyFontStyle(textStyle.fontStyle);
+        else
+            applyFontStyle(Typeface.NORMAL);
         
         int column = 0;
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < maxColumn; i++) {
             int style = getModel().getStyle(line, i);
             if (style != lastStyle) {
                 if (textStyle != null) {
-                    if (textStyle.backgroundColor!=null &&textStyle.backgroundColor.value!=0) {
+                    if (textStyle.backgroundColor != null && textStyle.backgroundColor.value != 0) {
                         myPaint.setColor(textStyle.backgroundColor.value);
-                        float advance = nativeMeasureLine(line, column, i - column);
+                        float advance = nativeMeasureLine(line, column, i);
                         canvas.drawRect(x, y - myFontTop, x + advance, y + myFontBottom, myPaint);
                     }
-                    if (textStyle.fontColor!=null &&textStyle.fontColor.value!=0)
-                      myPaint.setColor(textStyle.fontColor.value);
-                    else
-                      myPaint.setColor(fontColor);
+                    applyFontColor(textStyle, fontColor);
                 } else {
                     myPaint.setColor(fontColor);
                 }
                 
-                x = drawText(canvas, line, column, i - column, x, y);
+                x = drawText(canvas, line, column, i, x, y);
                 column = i;
                 lastStyle = style;
                 textStyle = myTheme.getTextStyle(lastStyle);
-                if (textStyle != null) applyFontStyle(textStyle.fontStyle);
+                if (textStyle != null)
+                    applyFontStyle(textStyle.fontStyle);
                 else applyFontStyle(Typeface.NORMAL);
             }
         }
         
-        if (column < length) {
+        if (column < maxColumn) {
             if (textStyle != null) {
+                applyFontColor(textStyle, fontColor);
                 applyFontStyle(textStyle.fontStyle);
-                if (textStyle.fontColor!=null &&textStyle.fontColor.value!=0)
-                    myPaint.setColor(textStyle.fontColor.value);
-                else
-                    myPaint.setColor(fontColor);
             } else {
                 applyFontStyle(Typeface.NORMAL);
                 myPaint.setColor(fontColor);
             }
-            drawText(canvas, line, column, length - column, x, y);
+            drawText(canvas, line, column, maxColumn, x, y);
         }
         
         applyFontStyle(Typeface.NORMAL);
         myPaint.setColor(fontColor);
+    }
+    
+    protected void applyFontColor(TextStyle style, int fontColor) {
+        if (style.fontColor != null && style.fontColor.value != 0) {
+            myPaint.setColor(style.fontColor.value);
+        } else {
+            myPaint.setColor(fontColor);
+        }
     }
     
     protected void applyFontStyle(int fontStyle) {

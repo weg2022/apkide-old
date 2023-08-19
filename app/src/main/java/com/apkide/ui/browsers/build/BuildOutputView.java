@@ -33,7 +33,7 @@ public class BuildOutputView extends CodeEditText {
     
     @NonNull
     @Override
-    public BuildOutputModel getModel() {
-        return (BuildOutputModel) super.getModel();
+    public BuildOutputModel getCodeEditTextModel() {
+        return (BuildOutputModel) super.getCodeEditTextModel();
     }
 }

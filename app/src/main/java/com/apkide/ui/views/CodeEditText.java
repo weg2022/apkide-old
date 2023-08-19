@@ -2,20 +2,13 @@ package com.apkide.ui.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputConnection;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
-import com.apkide.common.ActionRunnable;
-import com.apkide.common.KeyStroke;
 import com.apkide.ui.views.editor.EditorView;
-
-import java.util.Hashtable;
 
 public class CodeEditText extends ViewGroup {
     public CodeEditText(Context context) {
@@ -32,12 +25,72 @@ public class CodeEditText extends ViewGroup {
         super(context, attrs, defStyle);
         initView();
     }
-    
-    private final Hashtable<KeyStroke, ActionRunnable> myKeymap = new Hashtable<>();
-    
+
     private void initView() {
         removeAllViews();
         addView(new EditorView(getContext()));
+    }
+    
+    public void insertChar(char c) {
+        getEditorView().insertChar(c);
+    }
+    
+    public void focus() {
+        if (getEditorView().hasFocus()) return;
+        
+        getEditorView().requestFocus();
+    }
+    
+    public void showDragHandle(){
+        getScrollView().showDragHandle();
+    }
+    
+    public void select(int startLine, int startColumn, int endLine, int endColumn) {
+        getScrollView().selection(startLine, startColumn, endLine, endColumn);
+    }
+    
+    public int getSelectionStartLine() {
+        if (getEditorView().getSelectionVisibility()) {
+            return getEditorView().getFirstSelectedLine();
+        }
+        return getEditorView().getCaretLine();
+    }
+    
+    public int getSelectionStartColumn() {
+        if (getEditorView().getSelectionVisibility()) {
+            return getEditorView().getFirstSelectedColumn();
+        }
+        return getEditorView().getCaretColumn();
+    }
+    
+    public int getSelectionEndLine() {
+        if (getEditorView().getSelectionVisibility()) {
+            return getEditorView().getLastSelectedLine();
+        }
+        return getEditorView().getCaretLine();
+    }
+    
+    public int getSelectionEndColumn() {
+        if (getEditorView().getSelectionVisibility()) {
+            return getEditorView().getLastSelectedColumn();
+        }
+        return getEditorView().getCaretColumn();
+    }
+    
+    public int getLineCount() {
+        return getEditorView().getEditorModel().getLineCount();
+    }
+    
+    public int getTabSize() {
+        return getEditorView().getTabSize();
+    }
+    
+    public CodeEditTextScrollView getScrollView() {
+        return (CodeEditTextScrollView) getParent().getParent();
+    }
+    
+    public boolean isTouchEventInsideHandle(MotionEvent event) {
+        return getScrollView().isTouchEventInsideHandle(event);
     }
     
     public void setModel(@NonNull CodeEditTextModel model) {
@@ -45,29 +98,8 @@ public class CodeEditText extends ViewGroup {
     }
     
     @NonNull
-    public CodeEditTextModel getModel() {
-        return (CodeEditTextModel) getEditorView().getModel();
-    }
-    
-    
-    public void boundKeyAction(@NonNull KeyStroke key, @Nullable ActionRunnable runnable) {
-        myKeymap.put(key, runnable);
-    }
-    
-    public void unboundKeyAction(@NonNull KeyStroke key) {
-        myKeymap.remove(key);
-    }
-    
-    public boolean isBoundKey(@NonNull KeyStroke key){
-        return myKeymap.contains(key);
-    }
-    
-    @Nullable
-    public ActionRunnable getKeyAction(@NonNull KeyStroke key) {
-        if (myKeymap.contains(key)) {
-            return myKeymap.get(key);
-        }
-        return null;
+    public CodeEditTextModel getCodeEditTextModel() {
+        return (CodeEditTextModel) getEditorView().getEditorModel();
     }
     
     @NonNull
@@ -85,27 +117,5 @@ public class CodeEditText extends ViewGroup {
         View view = getChildAt(0);
         view.measure(widthMeasureSpec, heightMeasureSpec);
         setMeasuredDimension(view.getMeasuredWidth(), view.getMeasuredHeight());
-    }
-    
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        return super.onKeyDown(keyCode, event);
-    }
-    
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        
-        
-        return super.onKeyUp(keyCode, event);
-    }
-    
-    @Override
-    public boolean onCheckIsTextEditor() {
-        return true;
-    }
-    
-    @Override
-    public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
-        return super.onCreateInputConnection(outAttrs);
     }
 }
