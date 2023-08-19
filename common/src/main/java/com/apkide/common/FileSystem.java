@@ -234,7 +234,8 @@ public class FileSystem {
     }
     
     @NonNull
-    public static String getName(String path) {
+    public static String getName(@Nullable String path) {
+        if (path==null)return "";
         return path.substring(path.lastIndexOf('/') + 1);
     }
     

@@ -25,6 +25,7 @@ public class IDEEditorModel extends CodeEditTextModel implements OpenFileModel {
     public IDEEditorModel(@NonNull String filePath) {
         super();
         myFilePath = filePath;
+        setReadOnly(!FileSystem.isNormalFile(myFilePath));
         addTextModelListener(new TextModelListener() {
             @Override
             public void prepareInsert(@NonNull TextModel model, int line, int column, @NonNull String newText) {
@@ -108,6 +109,11 @@ public class IDEEditorModel extends CodeEditTextModel implements OpenFileModel {
             mySyntaxHighlightGUI = mySyntaxHighlight;
             mySyntaxHighlight = span;
         }
+    }
+    
+    @Override
+    public boolean isBinary() {
+        return FileSystem.isArchiveEntry(myFilePath);
     }
     
     @NonNull

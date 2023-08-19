@@ -27,6 +27,7 @@ public class ProjectService implements IService {
 	@Override
 	public void initialize() {
 		addProjectManager(new ProjectManagerImpl());
+		reloadProject();
 	}
 
 	@Override
@@ -147,6 +148,13 @@ public class ProjectService implements IService {
 			return file.exists() && file.isDirectory();
 		}
 		return false;
+	}
+	
+	public String getProjectRootPath(){
+		if (isProjectOpened()){
+			return myProjectManager.getRootPath();
+		}
+		return "";
 	}
 
 	@NonNull

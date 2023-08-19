@@ -14,10 +14,12 @@ import com.apkide.common.MessageBox;
 import com.apkide.ui.App;
 import com.apkide.ui.R;
 import com.apkide.ui.browsers.HeaderBrowserLayout;
+import com.apkide.ui.browsers.file.commands.ProjectPropertiesCommand;
 import com.apkide.ui.databinding.BrowserFileBinding;
 import com.apkide.ui.dialogs.ApkDecompileDialog;
 import com.apkide.ui.dialogs.DeleteFileDialog;
 import com.apkide.ui.dialogs.NewFileDialog;
+import com.apkide.ui.dialogs.OpenProjectDialog;
 import com.apkide.ui.dialogs.RenameFileDialog;
 
 import java.util.ArrayList;
@@ -65,11 +67,18 @@ public class FileBrowser extends HeaderBrowserLayout implements FileBrowserServi
                                 entities.add(new FileEntry(parent));
                             }
                             
+                            if (App.getProjectService().isProjectOpened()) {
+                                if (App.getProjectService().getProjectRootPath().equals(myOpenFolder)) {
+                                    entities.add(new FileEntry(new ProjectPropertiesCommand()));
+                                }
+                            }
+                            
                             for (String filePath : files) {
                                 String name = FileSystem.getName(filePath);
                                 boolean isDir = FileSystem.isDirectory(filePath);
-                                entities.add(new FileEntry(filePath, name, isDir,App.getProjectService().checkIsSupportedProjectRootPath(filePath)));
+                                entities.add(new FileEntry(filePath, name, isDir, App.getProjectService().checkIsSupportedProjectRootPath(filePath)));
                             }
+                            
                             entities.sort((o1, o2) -> {
                                 if (o1 instanceof FileEntry && o2 instanceof FileEntry) {
                                     return ((FileEntry) o1).compareTo((FileEntry) o2);
@@ -141,36 +150,22 @@ public class FileBrowser extends HeaderBrowserLayout implements FileBrowserServi
         if (entry instanceof FileEntry) {
             if (((FileEntry) entry).isPrev()) {
                 App.getFileBrowserService().openFolder(((FileEntry) entry).getFilePath());
-            } else if (((FileEntry) entry).isDirectory()) {
-                showOpenFolder((FileEntry) entry, view);
-            } else if (((FileEntry) entry).isFile()) {
-                showOpenFile((FileEntry) entry, view);
+            } else if (((FileEntry) entry).isCommand()) {
+                ((FileEntry) entry).getCommand().run();
+            } else {
+                openFileOrDir((FileEntry) entry, view);
             }
         }
     }
     
-    private void showOpenFolder(FileEntry entry, View view) {
-        if (App.getProjectService().checkIsSupportedProjectRootPath(entry.getFilePath())) {
-            MessageBox.showInfo(App.getMainUI(),
-                    "Open Project",
-                    "This directory is a supported project,\n" +
-                            " do I need to open this directory according to the project?",
-                    false, getContext().getString(android.R.string.ok), () -> {
-                        if (App.getProjectService().openProject(entry.getFilePath())) {
-                            //Do action
-                        }
-                    }, getContext().getString(android.R.string.cancel), () -> {
-                    
-                    });
-        }
-        App.getFileBrowserService().openFolder(entry.getFilePath());
-    }
-    
-    private void showOpenFile(FileEntry entry, View v) {
+    private void openFileOrDir(FileEntry entry, View v) {
         String path = entry.getFilePath();
-        if (FileSystem.isArchiveFile(path)) {
-            App.getFileBrowserService().openFolder(path);
-        } else {
+        if (FileSystem.isArchiveFile(path) || entry.isDirectory()) {
+            if (App.getProjectService().checkIsSupportedProjectRootPath(entry.getFilePath())) {
+                MessageBox.showDialog(App.getMainUI(), new OpenProjectDialog(entry.getFilePath()));
+            } else
+                App.getFileBrowserService().openFolder(path);
+        } else if (entry.isFile()){
             App.getOpenFileService().openFile(entry.getFilePath());
             if (App.getProjectService().checkIsSupportedProjectPath(entry.getFilePath())) {
                 MessageBox.showInfo(App.getMainUI(),
@@ -193,6 +188,9 @@ public class FileBrowser extends HeaderBrowserLayout implements FileBrowserServi
         if (entry instanceof FileEntry) {
             if (((FileEntry) entry).isPrev()) {
                 //Ignore
+                return true;
+            } else if (((FileEntry) entry).isCommand()) {
+                
                 return true;
             } else {
                 showEntryOptions((FileEntry) entry, view);
@@ -250,11 +248,11 @@ public class FileBrowser extends HeaderBrowserLayout implements FileBrowserServi
         if (FileSystem.isArchiveEntry(entry.getFilePath())) {
             popupMenu.getMenu().findItem(R.id.fileBrowserCommandRename).setVisible(false);
             popupMenu.getMenu().findItem(R.id.fileBrowserCommandDelete).setVisible(false);
-            popupMenu.getMenu().findItem(R.id.fileBrowserCommandDecompile).setVisible(entry.isFile()&&entry.getFilePath().endsWith(".apk"));
+            popupMenu.getMenu().findItem(R.id.fileBrowserCommandDecompile).setVisible(entry.isFile() && entry.getFilePath().endsWith(".apk"));
         }
         popupMenu.setOnMenuItemClickListener(item -> {
-            if (item.getItemId()==R.id.fileBrowserCommandDecompile){
-                MessageBox.showDialog(App.getMainUI(),new ApkDecompileDialog(entry.getFilePath()));
+            if (item.getItemId() == R.id.fileBrowserCommandDecompile) {
+                MessageBox.showDialog(App.getMainUI(), new ApkDecompileDialog(entry.getFilePath()));
                 return true;
             }
             if (item.getItemId() == R.id.fileBrowserCommandSyncWithDisk) {

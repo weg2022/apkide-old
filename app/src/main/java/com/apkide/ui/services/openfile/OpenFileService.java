@@ -104,6 +104,7 @@ public class OpenFileService implements IService {
                         listener.fileOpened(filePath, fileModel);
                     }
                 } catch (IOException e) {
+                    e.printStackTrace();
                     Toast.makeText(App.getUI(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
                 return;

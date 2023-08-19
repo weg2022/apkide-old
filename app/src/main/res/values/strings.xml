@@ -59,4 +59,5 @@
     <string name="action_paste">Paste</string>
     <string name="action_select_all">Select All</string>
     <string name="non_open_file">No Files Are Open…</string>
+    <string name="browser_file_project_properties">Project Properties</string>
 </resources>

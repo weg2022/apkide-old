@@ -9,7 +9,9 @@ import androidx.annotation.NonNull;
 
 import com.apkide.common.EntryListAdapter;
 import com.apkide.common.FileSystem;
+import com.apkide.ui.App;
 import com.apkide.ui.R;
+import com.apkide.ui.browsers.BrowserMenuCommand;
 
 public class FileEntry implements EntryListAdapter.Entry, Comparable<FileEntry> {
     
@@ -22,6 +24,21 @@ public class FileEntry implements EntryListAdapter.Entry, Comparable<FileEntry> 
     private final boolean isPrev;
     private final boolean isDirectory;
     private final boolean isHidden;
+    private BrowserMenuCommand myCommand;
+    
+    public FileEntry(BrowserMenuCommand command) {
+        this.filePath = null;
+        myCommand = command;
+        if (myCommand.getLabel() != 0)
+            label = App.getString(myCommand.getLabel());
+        else
+            label = "Command";
+        
+        icon = myCommand.getIcon();
+        isPrev = false;
+        isDirectory = false;
+        isHidden = false;
+    }
     
     public FileEntry(@NonNull String filePath) {
         this.filePath = filePath;
@@ -32,19 +49,19 @@ public class FileEntry implements EntryListAdapter.Entry, Comparable<FileEntry> 
         this.isHidden = false;
     }
     
-    public FileEntry(@NonNull String filePath, @NonNull String label, boolean isDirectory,boolean isProjectRoot) {
+    public FileEntry(@NonNull String filePath, @NonNull String label, boolean isDirectory, boolean isProjectRoot) {
         this.filePath = filePath;
         this.label = label;
         this.isDirectory = isDirectory;
         this.isPrev = false;
         if (isDirectory) {
             this.isHidden = isHidden(filePath);
-            icon =isProjectRoot?R.drawable.folder_open: isHidden ? R.drawable.folder_hidden : R.drawable.folder;
+            icon = isProjectRoot ? R.drawable.project_open : isHidden ? R.drawable.folder_hidden : R.drawable.folder;
         } else {
             this.isHidden = false;
             icon = FileIcons.getIcon(filePath);
         }
-        iconDrawable=FileIcons.getIconDrawable(filePath);
+        iconDrawable = FileIcons.getIconDrawable(filePath);
     }
     
     public static boolean isHidden(String filePath) {
@@ -95,6 +112,13 @@ public class FileEntry implements EntryListAdapter.Entry, Comparable<FileEntry> 
         return !isDirectory;
     }
     
+    public boolean isCommand(){
+        return myCommand!=null;
+    }
+    
+    public BrowserMenuCommand getCommand() {
+        return myCommand;
+    }
     
     @Override
     public int compareTo(FileEntry o) {
@@ -102,10 +126,19 @@ public class FileEntry implements EntryListAdapter.Entry, Comparable<FileEntry> 
             return -1;
         }
         
-        if (!isPrev() &&o.isPrev()){
+        if (!isPrev() && o.isPrev()) {
             return 1;
         }
         
+        if (isCommand() && !o.isCommand()) {
+            return -1;
+        }
+    
+        if (!isCommand() && o.isCommand()) {
+            return 1;
+        }
+    
+    
         if (FileSystem.isDirectory(filePath) && !FileSystem.isDirectory(o.filePath)) {
             return -1;
         }

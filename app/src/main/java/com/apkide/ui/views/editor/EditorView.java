@@ -5,6 +5,7 @@ import static java.lang.Math.max;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
@@ -34,7 +35,6 @@ public class EditorView extends Editor {
     private WindowManager windowManager;
     
     private void initView() {
-        setModel(new EditorModel());
         windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         setEditable(true);
         setFocusable(true);
@@ -105,5 +105,35 @@ public class EditorView extends Editor {
         for (SelectionListener listener : mySelectionListeners) {
             listener.selectionChanged(this, selectionVisibility);
         }
+    }
+    
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode){
+            case KeyEvent.KEYCODE_DPAD_UP:
+                moveCaretUp();
+                break;
+            case KeyEvent.KEYCODE_DPAD_DOWN:
+                moveCaretDown();
+                break;
+             case KeyEvent.KEYCODE_DPAD_LEFT:
+                 moveCaretLeft();
+                 break;
+             case KeyEvent.KEYCODE_DPAD_RIGHT:
+                 moveCaretRight();
+                 break;
+             case  KeyEvent.KEYCODE_ENTER:
+                 insertLineBreak();
+                 break;
+            case  KeyEvent.KEYCODE_TAB:
+                insertTab();
+                break;
+            case KeyEvent.KEYCODE_SPACE:
+                insertChar(' ');
+                break;
+            default:
+                super.onKeyDown(keyCode, event);
+        }
+        return true;
     }
 }

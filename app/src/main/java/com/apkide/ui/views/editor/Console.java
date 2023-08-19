@@ -121,7 +121,7 @@ public class Console extends View implements TextModel.TextModelListener, Theme.
     }
     
     private void computeSidebar() {
-        float padding = (float) ((myNumberCharWidth * log10(myModel.getLineCount() + 2.0d))) + getSidebarPaddingLeft();
+        float padding = (float) ((myNumberCharWidth * log10(myModel.getLineCount() + 4.0d))) + getSidebarPaddingLeft();
         mySidebarX = padding + (mySpaceCharWidth * 2.0f);
     }
     
@@ -631,6 +631,9 @@ public class Console extends View implements TextModel.TextModelListener, Theme.
     }
     
     public float computeLocationX(int line, int column) {
+        if (getModel()==null){
+            return 0;
+        }
         if (line < 0) line = 0;
         if (line >= getModel().getLineCount())
             line = getModel().getLineCount() - 1;
@@ -744,7 +747,7 @@ public class Console extends View implements TextModel.TextModelListener, Theme.
             if (color1 != null)
                 color = color1;
         }
-        if (color != null && color.value != 0 && myRect.contains((int) mySidebarX, (int) y)) {
+        if (color != null && color.value != 0) {
             myPaint.setColor(color.value);
             canvas.drawText(Integer.toString(line + 1), 0, y, myPaint);
         }

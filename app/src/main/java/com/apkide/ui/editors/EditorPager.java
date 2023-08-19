@@ -18,8 +18,10 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.apkide.common.AppLog;
 import com.apkide.common.FileSystem;
+import com.apkide.common.MessageBox;
 import com.apkide.ui.App;
 import com.apkide.ui.R;
+import com.apkide.ui.dialogs.ProgressDialog;
 import com.apkide.ui.services.openfile.OpenFileModel;
 import com.apkide.ui.services.openfile.OpenFileModelFactory;
 import com.apkide.ui.services.openfile.OpenFileServiceListener;
@@ -86,12 +88,12 @@ public class EditorPager extends ViewPager implements OpenFileModelFactory, Open
                     this.index = position;
                 }
             }
-    
+            
             @Nullable
             @Override
             public CharSequence getPageTitle(int position) {
-                IDEEditor editor =getEditor(position);
-                if (editor!=null){
+                IDEEditor editor = getEditor(position);
+                if (editor != null) {
                     return FileSystem.getName(editor.getIDEEditorModel().getFilePath());
                 }
                 return super.getPageTitle(position);
@@ -100,6 +102,7 @@ public class EditorPager extends ViewPager implements OpenFileModelFactory, Open
         
         App.getOpenFileService().addOpenFileModelFactory(this);
         App.getOpenFileService().addListener(this);
+        
     }
     
     @SuppressLint("InflateParams")
@@ -110,32 +113,43 @@ public class EditorPager extends ViewPager implements OpenFileModelFactory, Open
         for (IDEEditor editor : getEditors()) {
             if (editor.getIDEEditorModel().getFilePath().equals(filePath)) {
                 int index = foundEditor(filePath);
-                
-                setCurrentItem(index);
-                return;
+                if (index!=-1) {
+                    setCurrentItem(index);
+                    editor.redraw();
+                    return;
+                }
             }
         }
-        
-        List<IDEEditor> editors = getEditors();
-        for (int i = 0; i < editors.size(); i++) {
-            if (editors.get(i).getIDEEditorModel().getFilePath().equals(filePath)) {
-                myViews.remove(i);
+    
+        MessageBox.showDialog(App.getMainUI(),new ProgressDialog("Open File", "File Opening..."));
+        App.runOnBackground(() -> {
+            try {
+                fileModel.sync();
+            } catch (IOException e) {
+                AppLog.e(e);
+                post(() -> {
+                MessageBox.hide();
+                MessageBox.showError(App.getMainUI(),"Open Failed", e.getMessage());
+                });
+                return;
+            }
+            post(() -> {
+                MessageBox.hide();
+                View view = LayoutInflater.from(getContext()).inflate(R.layout.editor, null);
+                IDEEditor editor = view.findViewById(R.id.editor);
+                editor.setModel((IDEEditorModel) fileModel);
+                myViews.add(view);
                 requireNonNull(getAdapter()).notifyDataSetChanged();
+                openEditor(filePath);
                 requestLayout();
-                return;
-            }
-        }
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.editor, null);
-        IDEEditor editor = view.findViewById(R.id.editor);
-        myViews.add(view);
-        editor.setModel((IDEEditorModel) fileModel);
-        requireNonNull(getAdapter()).notifyDataSetChanged();
-        openEditor(filePath);
-        requestLayout();
-        postDelayed(() -> {
-            editor.getScrollView().scrollToCaretVisible();
-            editor.getEditorView().redraw();
-        }, 100L);
+                postDelayed(() -> {
+                    requestLayout();
+                    editor.getScrollView().scrollToCaretVisible();
+                    editor.redraw();
+                }, 100L);
+            });
+        });
+     
     }
     
     @Override
@@ -160,6 +174,7 @@ public class EditorPager extends ViewPager implements OpenFileModelFactory, Open
     
     @Override
     public boolean isSupportedFile(@NonNull String filePath) {
+        AppLog.s(filePath);
         if (FileSystem.isBinary(filePath)) {
             return false;
         }
@@ -170,7 +185,7 @@ public class EditorPager extends ViewPager implements OpenFileModelFactory, Open
     @Override
     public OpenFileModel createFileModel(@NonNull String filePath) throws IOException {
         IDEEditorModel model = new IDEEditorModel(filePath);
-        model.sync();
+ 
         return model;
     }
     

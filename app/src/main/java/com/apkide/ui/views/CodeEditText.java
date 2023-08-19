@@ -107,6 +107,9 @@ public class CodeEditText extends ViewGroup {
         return (EditorView) getChildAt(0);
     }
     
+    public void redraw(){
+        getEditorView().redraw();
+    }
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         getChildAt(0).layout(0, 0, r - l, b - t);

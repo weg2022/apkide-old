@@ -37,7 +37,7 @@ public class JarFileArchiveReader implements FileSystem.FileArchiveReader {
         if (new File(archivePath).isDirectory()) {
             if (entryName.endsWith(".class")) {
                 return new InputStreamReader(myJavaBinaryReader.getFileReader(
-                                archivePath + File.separator + entryName, encoding));
+                                archivePath + File.separator + entryName));
             }
             FileInputStream inputStream = new FileInputStream(archivePath + File.separator + entryName);
             return encoding == null ?
@@ -53,7 +53,7 @@ public class JarFileArchiveReader implements FileSystem.FileArchiveReader {
                 }
                 
                 return new InputStreamReader(
-                        myJavaBinaryReader.getArchiveFileReader(archivePath, entryName, encoding));
+                        myJavaBinaryReader.getArchiveFileReader(archivePath, entryName));
             }
         }
         openFile(archivePath);
@@ -158,7 +158,7 @@ public class JarFileArchiveReader implements FileSystem.FileArchiveReader {
         if (new File(archivePath).isDirectory()) {
             if (entryName.endsWith(".class")) {
                 return myJavaBinaryReader.getFileReader(
-                        archivePath + File.separator + entryName, null);
+                        archivePath + File.separator + entryName);
             }
             return new FileInputStream(archivePath + File.separator + entryName);
         } else {
@@ -171,7 +171,7 @@ public class JarFileArchiveReader implements FileSystem.FileArchiveReader {
                 }
             
                 return
-                        myJavaBinaryReader.getArchiveFileReader(archivePath, entryName, null);
+                        myJavaBinaryReader.getArchiveFileReader(archivePath, entryName);
             }
         }
         openFile(archivePath);

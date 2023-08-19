@@ -91,7 +91,7 @@ public class MainUI extends StyledUI implements
 			}
 		});
 		
-		getEditorTabLayout().setupWithViewPager(getEditorPager());
+		getEditorTabLayout().setupWithViewPager(getEditorPager(),true);
 		boolean isSplit = getPreferences().getBoolean("isSplit", false);
 		if (isSplit)
 			getSplitLayout().openSplit();

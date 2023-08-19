@@ -24,6 +24,8 @@ public interface OpenFileModel {
 	void semanticHighlighting(@NonNull FileHighlighting highlighting);
 
 	boolean isReadOnly();
+	
+	boolean isBinary();
 
 	@NonNull
 	String getFilePath();
