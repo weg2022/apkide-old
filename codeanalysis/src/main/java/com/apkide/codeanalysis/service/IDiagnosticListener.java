@@ -6,6 +6,9 @@ import com.apkide.ls.api.Diagnostic;
 
 import java.util.List;
 
+import cn.thens.okbinder2.AIDL;
+
+@AIDL
 public interface IDiagnosticListener {
     
     void reportDiagnostics(@NonNull List<Diagnostic> diagnostics);

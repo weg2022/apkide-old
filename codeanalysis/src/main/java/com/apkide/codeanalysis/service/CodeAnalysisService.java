@@ -13,14 +13,13 @@ import com.apkide.codeanalysis.FileHighlighting;
 import com.apkide.codeanalysis.HighlightingListener;
 import com.apkide.ls.api.util.Position;
 import com.apkide.ls.api.util.Range;
-import com.jeremyliao.android.service.loader.InterfaceService;
+
+import cn.thens.okbinder2.OkBinder;
 
 public class CodeAnalysisService extends Service {
     
     private final CodeAnalysisEngine myEngine = new CodeAnalysisEngine();
-    private final Binder myBinder = InterfaceService.newService(
-            ICodeAnalysisService.class,
-            new ICodeAnalysisService() {
+    private final Binder myBinder = OkBinder.create(new ICodeAnalysisService() {
                 @Override
                 public void restart() {
                     myEngine.restart();
@@ -30,7 +29,12 @@ public class CodeAnalysisService extends Service {
                 public void shutdown() {
                     myEngine.shutdown();
                 }
-                
+    
+                @Override
+                public void openFile(@NonNull String filePath) {
+                    myEngine.openFile(filePath);
+                }
+    
                 @Override
                 public void renameFile(@NonNull String filePath, @NonNull String destFilePath) {
                 

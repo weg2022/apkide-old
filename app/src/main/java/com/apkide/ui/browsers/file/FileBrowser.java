@@ -103,6 +103,7 @@ public class FileBrowser extends HeaderBrowserLayout implements FileBrowserServi
                                 }
                                 getHeaderLabel().setText(label);
                                 myAdapter.updateEntries(entities);
+                                myBinding.fileListView.requestLayout();
                             },50L);
                             postDelayed(new Runnable() {
                                 @Override
@@ -110,7 +111,7 @@ public class FileBrowser extends HeaderBrowserLayout implements FileBrowserServi
                                     myBinding.fileListScrollView.requestLayout();
                                     myBinding.fileListView.requestFocus();
                                 }
-                            }, 80L);
+                            }, 100L);
                         }
                     
                         try {

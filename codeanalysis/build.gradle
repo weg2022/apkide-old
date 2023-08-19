@@ -40,6 +40,8 @@ dependencies {
     implementation libs.androidx.annotation
     implementation project(':common')
     implementation project(':language:lang-api')
-    implementation libs.interface.loader
+    implementation("com.github.7hens.okbinder:okbinder2:2.0")
+    annotationProcessor("com.github.7hens.okbinder:okbinder2-compiler:2.0")
+
     testImplementation libs.junit
 }

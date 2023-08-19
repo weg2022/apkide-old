@@ -1,4 +1,4 @@
-package com.apkide.ls.java;
+package com.apkide.ls.xml;
 
 import androidx.annotation.NonNull;
 
@@ -13,12 +13,13 @@ import com.apkide.ls.api.util.Range;
 import java.io.IOException;
 import java.util.Map;
 
-public class JavaLanguageServer implements LanguageServer {
+public class XmlLanguageServer implements LanguageServer {
     private Model myModel;
-    
+    private XmlLexer myLexer=new XmlLexer();
+    private FileHighlighter myHighlighter;
     @Override
     public void configure(@NonNull Model model) {
-        myModel = model;
+        myModel=model;
         myHighlighter=new FileHighlighter(myModel,myLexer);
     }
     
@@ -35,29 +36,25 @@ public class JavaLanguageServer implements LanguageServer {
     @NonNull
     @Override
     public String getName() {
-        return "Java";
+        return "XML";
     }
     
     @NonNull
     @Override
     public String[] getDefaultFilePatterns() {
-        return new String[]{"*.java","*.class"};
+        return new String[]{"*.xml"};
     }
     
-    private final JavaLexer myLexer = new JavaLexer();
-    private final Highlights highlights = new Highlights();
-    private  FileHighlighter myHighlighter;
-    
+    private final Highlights myHighlights=new Highlights();
     @Override
     public void requestHighlighting(@NonNull String filePath) {
-        myModel.getHighlighterCallback().highlightStarted(filePath, 0);
+        myModel.getHighlighterCallback().highlightStarted(filePath,0);
         try {
-            myHighlighter.highlighting(filePath, FileSystem.readFile(filePath), highlights);
+            myHighlighter.highlighting(filePath, FileSystem.readFile(filePath), myHighlights);
         } catch (IOException ignored) {
         
         }
-    
-        myModel.getHighlighterCallback().highlightFinished(filePath, 0);
+        myModel.getHighlighterCallback().highlightFinished(filePath,0);
     }
     
     @Override

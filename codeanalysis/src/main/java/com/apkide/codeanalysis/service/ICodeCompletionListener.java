@@ -6,6 +6,9 @@ import com.apkide.ls.api.Completion;
 
 import java.util.List;
 
+import cn.thens.okbinder2.AIDL;
+
+@AIDL
 public interface ICodeCompletionListener {
 
 	void completionCompleted(@NonNull String filePath,

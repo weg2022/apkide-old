@@ -47,6 +47,5 @@ dependencies {
     implementation project(':smali')
     implementation project(':util:antlr-runtime')
     implementation libs.snakeyaml
-    implementation libs.interface.loader
     testImplementation libs.junit
 }

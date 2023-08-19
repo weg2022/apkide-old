@@ -39,6 +39,15 @@ public class OpenFileService implements IService {
     
     @Override
     public void initialize() {
+    
+    }
+    
+    @Override
+    public void shutdown() {
+    
+    }
+    
+    public void register(){
         App.getEngineService().setHighlightingListener(new IHighlightingListener() {
             @Override
             public void highlightingCompleted(@NonNull FileHighlighting highlighting) {
@@ -50,23 +59,18 @@ public class OpenFileService implements IService {
                     }
                 }
             }
-            
+        
             @Override
             public void semanticHighlightingCompleted(@NonNull FileHighlighting highlighting) {
-				for (String filePath : myOpenFileModels.keySet()) {
-					if (filePath.equals(highlighting.filePath)) {
-						OpenFileModel model = myOpenFileModels.get(filePath);
-						if (model != null)
-							model.semanticHighlighting(highlighting);
-					}
-				}
+                for (String filePath : myOpenFileModels.keySet()) {
+                    if (filePath.equals(highlighting.filePath)) {
+                        OpenFileModel model = myOpenFileModels.get(filePath);
+                        if (model != null)
+                            model.semanticHighlighting(highlighting);
+                    }
+                }
             }
         });
-    }
-    
-    @Override
-    public void shutdown() {
-    
     }
     
     public void addListener(@NonNull OpenFileServiceListener listener) {
@@ -88,10 +92,11 @@ public class OpenFileService implements IService {
     
     public void openFile(@NonNull String filePath) {
         if (isOpenFile(filePath)) {
-            myVisibleFilePath = filePath;
+            setVisibleFilePath(filePath);
             for (OpenFileServiceListener listener : myListeners) {
                 listener.fileOpened(filePath, requireNonNull(getOpenFileModel(filePath)));
             }
+            App.getEngineService().openFile(filePath);
             return;
         }
         for (OpenFileModelFactory factory : myFactors.values()) {
@@ -99,10 +104,11 @@ public class OpenFileService implements IService {
                 try {
                     OpenFileModel fileModel = factory.createFileModel(filePath);
                     myOpenFileModels.put(filePath, fileModel);
-                    myVisibleFilePath = filePath;
+                    setVisibleFilePath(filePath);
                     for (OpenFileServiceListener listener : myListeners) {
                         listener.fileOpened(filePath, fileModel);
                     }
+                    App.getEngineService().openFile(filePath);
                 } catch (IOException e) {
                     e.printStackTrace();
                     Toast.makeText(App.getUI(), e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -116,6 +122,10 @@ public class OpenFileService implements IService {
         for (String filePath : myOpenFileModels.keySet()) {
             closeFile(filePath);
         }
+    }
+    
+    public void setVisibleFilePath(String visibleFilePath) {
+        myVisibleFilePath = visibleFilePath;
     }
     
     public void closeVisibleFile() {

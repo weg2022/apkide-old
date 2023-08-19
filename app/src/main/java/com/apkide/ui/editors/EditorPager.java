@@ -113,23 +113,23 @@ public class EditorPager extends ViewPager implements OpenFileModelFactory, Open
         for (IDEEditor editor : getEditors()) {
             if (editor.getIDEEditorModel().getFilePath().equals(filePath)) {
                 int index = foundEditor(filePath);
-                if (index!=-1) {
+                if (index != -1) {
                     setCurrentItem(index);
                     editor.redraw();
                     return;
                 }
             }
         }
-    
-        MessageBox.showDialog(App.getMainUI(),new ProgressDialog("Open File", "File Opening..."));
+        
+        MessageBox.showDialog(App.getMainUI(), new ProgressDialog("Open File", "File Opening..."));
         App.runOnBackground(() -> {
             try {
                 fileModel.sync();
             } catch (IOException e) {
                 AppLog.e(e);
                 post(() -> {
-                MessageBox.hide();
-                MessageBox.showError(App.getMainUI(),"Open Failed", e.getMessage());
+                    MessageBox.hide();
+                    MessageBox.showError(App.getMainUI(), "Open Failed", e.getMessage());
                 });
                 return;
             }
@@ -149,18 +149,21 @@ public class EditorPager extends ViewPager implements OpenFileModelFactory, Open
                 }, 100L);
             });
         });
-     
+        
     }
     
     @Override
     public void fileClosed(@NonNull String filePath, @NonNull OpenFileModel fileModel) {
         AppLog.s(this, "fileClosed: " + filePath);
-        List<IDEEditor> editors = getEditors();
-        for (int i = 0; i < editors.size(); i++) {
-            if (editors.get(i).getIDEEditorModel().getFilePath().equals(filePath)) {
+        for (int i = 0; i < getEditorCount(); i++) {
+            if (getEditor(i).getIDEEditorModel().getFilePath().equals(filePath)) {
                 myViews.remove(i);
                 requireNonNull(getAdapter()).notifyDataSetChanged();
                 requestLayout();
+                if (getEditorCount() != 0) {
+                    App.getOpenFileService().setVisibleFilePath(filePath);
+                    setCurrentItem(getEditorCount() - 1);
+                }
                 return;
             }
         }
@@ -174,7 +177,6 @@ public class EditorPager extends ViewPager implements OpenFileModelFactory, Open
     
     @Override
     public boolean isSupportedFile(@NonNull String filePath) {
-        AppLog.s(filePath);
         if (FileSystem.isBinary(filePath)) {
             return false;
         }
@@ -185,7 +187,7 @@ public class EditorPager extends ViewPager implements OpenFileModelFactory, Open
     @Override
     public OpenFileModel createFileModel(@NonNull String filePath) throws IOException {
         IDEEditorModel model = new IDEEditorModel(filePath);
- 
+        
         return model;
     }
     
@@ -233,9 +235,9 @@ public class EditorPager extends ViewPager implements OpenFileModelFactory, Open
         return editors;
     }
     
-    public void configureTheme(){
+    public void configureTheme() {
         for (IDEEditor editor : getEditors()) {
-          editor.configureTheme();
+            editor.configureTheme();
         }
     }
     

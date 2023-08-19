@@ -5,11 +5,16 @@ import androidx.annotation.NonNull;
 import com.apkide.ls.api.util.Position;
 import com.apkide.ls.api.util.Range;
 
+import cn.thens.okbinder2.AIDL;
+
+@AIDL
 public interface ICodeAnalysisService {
     
     void restart();
     
     void shutdown();
+    
+    void openFile(@NonNull String filePath);
     
     void renameFile(@NonNull String filePath,@NonNull String destFilePath);
     

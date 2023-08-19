@@ -2,6 +2,9 @@ package com.apkide.codeanalysis;
 
 import androidx.annotation.NonNull;
 
+import com.apkide.common.AppLog;
+import com.apkide.common.FileNameMatcher;
+import com.apkide.common.FileSystem;
 import com.apkide.ls.api.Highlights;
 import com.apkide.ls.api.LanguageServer;
 import com.apkide.ls.api.Model;
@@ -15,32 +18,50 @@ public final class CodeAnalysisEngine {
     private final Thread myThread;
     private final LanguageServer[] myLanguageServers;
     private final Model myModel;
+    private String myVisibleFile;
     private final HighlighterCallbackImpl myHighlighterCallback = new HighlighterCallbackImpl();
     private HighlightingListener myHighlightingListener;
     
     public CodeAnalysisEngine() {
-        myModel = new Model();
-        
+        myModel = new Model(null,null,null,myHighlighterCallback,null,null,null,null,null);
         myLanguageServers = LanguageServerProvider.get().getLanguageServers();
+        for (LanguageServer languageServer : myLanguageServers) {
+            if (languageServer!=null){
+                languageServer.configure(myModel);
+            }
+        }
         
-        myThread = new Thread(null, new Runnable() {
-            @Override
-            public void run() {
-                try {
+        myThread = new Thread(null, () -> {
+            try {
                 synchronized (myLock) {
                     while (!myDestroyed) {
                         
                         if (!myShutdown) {
-                        
-                        
+                            
+                            if (myVisibleFile != null) {
+                                LanguageServer languageServer = null;
+                                for (LanguageServer server : myLanguageServers) {
+                                    if (server != null) {
+                                        for (String pattern : server.getDefaultFilePatterns()) {
+                                            if (FileNameMatcher.get().match(FileSystem.getName(myVisibleFile), pattern)) {
+                                                languageServer = server;
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                if (languageServer!=null){
+                                    languageServer.requestHighlighting(myVisibleFile);
+                                }
+                                
+                            }
+                            
+                            myLock.wait();
                         }
-                    
-                        myLock.wait();
                     }
                 }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }, "CodeAnalysisEngine", 2000000L);
         myThread.setPriority(Thread.MIN_PRIORITY + 1);
@@ -48,14 +69,18 @@ public final class CodeAnalysisEngine {
     }
     
     
-    public void openFile(@NonNull String filePath){
-    
+    public void openFile(@NonNull String filePath) {
+        synchronized (myLock) {
+            myVisibleFile = filePath;
+            myLock.notify();
+        }
     }
     
     public void setHighlightingListener(HighlightingListener highlightingListener) {
-        synchronized (myLock) {
+        AppLog.s(this,"setHighlightingListener");
+      //  synchronized (myLock) {
             myHighlightingListener = highlightingListener;
-        }
+        //}
     }
     
     public void begin() {
@@ -111,6 +136,7 @@ public final class CodeAnalysisEngine {
         
         @Override
         public void fileHighlighting(@NonNull String filePath, long version, @NonNull Highlights highlights) {
+            //if (myHighlightingListener==null)return;
             myHighlightingListener.fileHighlighting(
                     filePath,
                     version,
@@ -119,6 +145,7 @@ public final class CodeAnalysisEngine {
                     highlights.startColumns,
                     highlights.endLines,
                     highlights.endColumns, highlights.size);
+            myHighlights.clear();
         }
         
         @Override
@@ -128,6 +155,7 @@ public final class CodeAnalysisEngine {
         
         @Override
         public void highlightFinished(@NonNull String filePath, long version) {
+            //if (myHighlightingListener==null)return;
             myHighlightingListener.semanticHighlighting(
                     filePath,
                     version,

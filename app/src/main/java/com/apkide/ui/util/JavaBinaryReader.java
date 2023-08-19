@@ -1,6 +1,5 @@
 package com.apkide.ui.util;
 
-import static com.apkide.common.FileSystem.delete;
 import static com.apkide.common.FileSystem.getName;
 import static com.apkide.common.FileUtils.readBytes;
 
@@ -131,7 +130,7 @@ public class JavaBinaryReader implements Closeable {
                     String.valueOf((getName(archivePath) + File.separator + getName(entryName)).hashCode()));
             
             if (!temDir.exists())
-            FileSystem.mkdir(temDir.getAbsolutePath());
+                FileSystem.mkdir(temDir.getAbsolutePath());
             
             List<ZipEntry> entities = new ArrayList<>();
             String className = FileSystem.getName(entryName.substring(0, entryName.indexOf(".")));
@@ -152,13 +151,13 @@ public class JavaBinaryReader implements Closeable {
                     }
                 }
             }
+            CacheEntity entity = new CacheEntity();
+            entity.lastModified = zfile.lastModified();
             
             for (ZipEntry entry : entities) {
                 File tempFile = new File(temDir, FileSystem.getName(entry.getName()));
-                if (tempFile.exists())
-                    tempFile.delete();
-                
-                tempFile.createNewFile();
+                if (!tempFile.exists())
+                    tempFile.createNewFile();
                 
                 InputStream in = archiveFile.getInputStream(entry);
                 FileOutputStream out = new FileOutputStream(tempFile);
@@ -167,10 +166,10 @@ public class JavaBinaryReader implements Closeable {
                 } finally {
                     IoUtils.safeClose(in, out);
                 }
+                
+                
             }
             
-            CacheEntity entity = new CacheEntity();
-            entity.lastModified = zfile.lastModified();
             Fernflower decompiler = new Fernflower((externalPath, internalPath) ->
                     readBytes(new File(externalPath)),
                     (path, qualifiedName, entryName1, content, mapping) ->
@@ -225,7 +224,7 @@ public class JavaBinaryReader implements Closeable {
             decompiler.decompileContext();
             decompiler.clearContext();
             archiveFile.close();
-            delete(temDir.getAbsolutePath());
+         //   delete(temDir.getAbsolutePath());
             myCaches.put(archivePath + File.separator + entryName, entity);
             cached = entity.contents;
         }

@@ -56,8 +56,8 @@ public final class App {
 		sMainUI = mainUI;
 		sApp.myEngineService.initialize();
 		sApp.myFileBrowserService.initialize();
-		sApp.myOpenFileService.initialize();
 		sApp.myProjectService.initialize();
+		sApp.myOpenFileService.initialize();
 	}
 
 

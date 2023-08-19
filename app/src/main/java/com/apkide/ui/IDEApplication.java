@@ -18,14 +18,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.multidex.MultiDexApplication;
 
+import com.apkide.codeanalysis.LanguageServerProvider;
 import com.apkide.common.AppLog;
 import com.apkide.common.Application;
 import com.apkide.common.FileSystem;
 import com.apkide.common.FileUtils;
 import com.apkide.common.Logger;
 import com.apkide.common.SafeRunner;
-import com.apkide.codeanalysis.LanguageServerProvider;
 import com.apkide.ls.api.LanguageServer;
+import com.apkide.ls.java.JavaLanguageServer;
+import com.apkide.ls.xml.XmlLanguageServer;
 import com.apkide.ui.util.JarFileArchiveReader;
 
 import java.io.File;
@@ -215,7 +217,8 @@ public class IDEApplication extends MultiDexApplication {
             @Override
             public LanguageServer[] getLanguageServers() {
                 return new LanguageServer[]{
-                
+                        new JavaLanguageServer(),
+                        new XmlLanguageServer(),
                 };
             }
         });

@@ -4,6 +4,9 @@ import androidx.annotation.NonNull;
 
 import com.apkide.codeanalysis.FileHighlighting;
 
+import cn.thens.okbinder2.AIDL;
+
+@AIDL
 public interface IHighlightingListener {
 
 	void highlightingCompleted(@NonNull FileHighlighting highlighting);
