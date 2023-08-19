@@ -29,7 +29,6 @@ public class FileBrowser extends HeaderBrowserLayout implements FileBrowserServi
     
     private final BrowserFileBinding myBinding;
     private final FileBrowserAdapter myAdapter;
-    private final Thread myThread;
     private boolean myShutdown;
     private final Object myLock = new Object();
     private String myOpenFolder;
@@ -49,46 +48,48 @@ public class FileBrowser extends HeaderBrowserLayout implements FileBrowserServi
         myBinding.fileListView.setLayoutManager(new LinearLayoutManager(getContext()));
         myBinding.fileListView.setNestedScrollingEnabled(false);
         myBinding.fileListView.setAdapter(myAdapter);
-        
-        myThread = new Thread(null, () -> {
+    
+        Thread thread = new Thread(null, () -> {
             synchronized (myLock) {
-                while (true) {
-                    if (!myShutdown) {
+                while (!myShutdown) {
+                   // if (!) {
                         if (myOpenFolder != null) {
                             List<String> files = FileSystem.getChildEntries(myOpenFolder);
-                            
+                        
                             List<EntryListAdapter.Entry> entities = new ArrayList<>();
-                            
+                        
                             if (!myOpenFolder.equals(App.getFileBrowserService().getDefaultFolder())) {
                                 String parent = FileSystem.getParentDirPath(myOpenFolder);
                                 if (parent == null || !FileSystem.exists(parent))
                                     parent = App.getFileBrowserService().getDefaultFolder();
-                                
+                            
                                 entities.add(new FileEntry(parent));
                             }
-                            
+                        
                             if (App.getProjectService().isProjectOpened()) {
                                 if (App.getProjectService().getProjectRootPath().equals(myOpenFolder)) {
                                     entities.add(new FileEntry(new ProjectPropertiesCommand()));
                                 }
                             }
-                            
+                        
                             for (String filePath : files) {
                                 String name = FileSystem.getName(filePath);
                                 boolean isDir = FileSystem.isDirectory(filePath);
                                 entities.add(new FileEntry(filePath, name, isDir, App.getProjectService().checkIsSupportedProjectRootPath(filePath)));
                             }
-                            
+                        
                             entities.sort((o1, o2) -> {
                                 if (o1 instanceof FileEntry && o2 instanceof FileEntry) {
                                     return ((FileEntry) o1).compareTo((FileEntry) o2);
                                 }
                                 return 0;
                             });
+                            String  path =myOpenFolder;
+                            myOpenFolder = null;
                             
-                            post(() -> {
+                            postDelayed(() -> {
                                 myBinding.fileProgressBar.setVisibility(GONE);
-                                String label = myOpenFolder;
+                                String label = path;
                                 if (FileSystem.isArchiveFile(label) || FileSystem.isArchiveDirectoryEntry(label)) {
                                     String pre = FileSystem.getEnclosingArchivePath(label);
                                     if (pre != null) {
@@ -102,26 +103,26 @@ public class FileBrowser extends HeaderBrowserLayout implements FileBrowserServi
                                 }
                                 getHeaderLabel().setText(label);
                                 myAdapter.updateEntries(entities);
-                            });
+                            },50L);
                             postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     myBinding.fileListScrollView.requestLayout();
-                                    //     myBinding.fileListScrollView.invalidate();
                                     myBinding.fileListView.requestFocus();
                                 }
                             }, 50L);
                         }
+                    
                         try {
                             myLock.wait();
                         } catch (InterruptedException ignored) {
                         
                         }
-                    }
+                  //  }
                 }
             }
         }, getBrowserName());
-        myThread.start();
+        thread.start();
         
         App.getFileBrowserService().setListener(this);
         App.getFileBrowserService().sync();
@@ -146,6 +147,13 @@ public class FileBrowser extends HeaderBrowserLayout implements FileBrowserServi
     }
     
     @Override
+    public void fileBrowserShutdown() {
+        synchronized (myLock) {
+            myShutdown = true;
+        }
+    }
+    
+    @Override
     public void onEntryClicked(EntryListAdapter.Entry entry, View view, int position) {
         if (entry instanceof FileEntry) {
             if (((FileEntry) entry).isPrev()) {
@@ -165,7 +173,7 @@ public class FileBrowser extends HeaderBrowserLayout implements FileBrowserServi
                 MessageBox.showDialog(App.getMainUI(), new OpenProjectDialog(entry.getFilePath()));
             } else
                 App.getFileBrowserService().openFolder(path);
-        } else if (entry.isFile()){
+        } else if (entry.isFile()) {
             App.getOpenFileService().openFile(entry.getFilePath());
             if (App.getProjectService().checkIsSupportedProjectPath(entry.getFilePath())) {
                 MessageBox.showInfo(App.getMainUI(),

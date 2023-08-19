@@ -64,10 +64,10 @@ public final class App {
 	public static void shutdown() {
 		if (sApp != null) {
 			
-			sApp.myEngineService.shutdown();
-			sApp.myProjectService.shutdown();
 			sApp.myOpenFileService.shutdown();
 			sApp.myFileBrowserService.shutdown();
+			sApp.myProjectService.shutdown();
+			sApp.myEngineService.shutdown();
 			sActivities.clear();
 			sMainUI = null;
 			sHandler = null;

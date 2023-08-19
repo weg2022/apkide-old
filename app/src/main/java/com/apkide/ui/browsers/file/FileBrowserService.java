@@ -15,6 +15,8 @@ public class FileBrowserService implements IService {
     
     public interface FileBrowserServiceListener {
         void fileBrowserFolderChanged(@NonNull String folderPath);
+        
+        void fileBrowserShutdown();
     }
     
     private SharedPreferences myPreferences;
@@ -28,7 +30,8 @@ public class FileBrowserService implements IService {
     
     @Override
     public void shutdown() {
-    
+        if (myListener != null)
+            myListener.fileBrowserShutdown();
     }
     
     public void setListener(FileBrowserServiceListener listener) {
@@ -45,8 +48,8 @@ public class FileBrowserService implements IService {
         if ((FileSystem.isArchiveFile(folder) || FileSystem.isDirectory(folder))
                 && !getCurrentFolder().equals(folder)) {
             getPreferences().edit().putString("open.folder", folder).apply();
-            if (myListener != null)
-                myListener.fileBrowserFolderChanged(folder);
+                if (myListener != null)
+                    myListener.fileBrowserFolderChanged(folder);
         }
     }
     

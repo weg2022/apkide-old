@@ -233,6 +233,12 @@ public class EditorPager extends ViewPager implements OpenFileModelFactory, Open
         return editors;
     }
     
+    public void configureTheme(){
+        for (IDEEditor editor : getEditors()) {
+          editor.configureTheme();
+        }
+    }
+    
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         if (ev.getAction() == 0 && getCurrentEditor() != null &&

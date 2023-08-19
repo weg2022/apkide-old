@@ -1,10 +1,6 @@
 package com.apkide.ui;
 
 import static android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
-import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO;
-import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES;
-import static androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode;
 import static java.lang.System.currentTimeMillis;
 
 import android.content.SharedPreferences;
@@ -17,7 +13,6 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.apkide.common.Command;
@@ -42,8 +37,8 @@ public class MainUI extends StyledUI implements
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		App.init(this);
+		super.onCreate(savedInstanceState);
 		AppPreferences.registerListener(this);
 		myUIViewModel = new ViewModelProvider(this, new ViewModelProvider.AndroidViewModelFactory(getApplication())).get(MainUIViewModel.class);
 		myUiBinding = MainBinding.inflate(getLayoutInflater());
@@ -137,27 +132,21 @@ public class MainUI extends StyledUI implements
 
 
 		boolean recreated = false;
-		if (key.equals("app.theme.night")) {
-			if (isNightMode() != AppPreferences.isNightTheme()) {
-				setDefaultNightMode(AppPreferences.isNightTheme() ? MODE_NIGHT_YES : MODE_NIGHT_NO);
-				recreated = true;
-			}
-		}
-
-		if (key.equals("app.theme.followSystem")) {
-			if (AppCompatDelegate.getDefaultNightMode() != MODE_NIGHT_FOLLOW_SYSTEM) {
-				AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM);
-				recreated = true;
-			} else {
-				if (isNightMode() != AppPreferences.isNightTheme()) {
+		if (key.equals("app.theme.night") || key.equals("app.theme.followSystem")) {
+			/*if (AppPreferences.isFollowSystemTheme()) {
+				if (AppCompatDelegate.getDefaultNightMode() != MODE_NIGHT_FOLLOW_SYSTEM)
+					AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM);
+				else
 					setDefaultNightMode(AppPreferences.isNightTheme() ? MODE_NIGHT_YES : MODE_NIGHT_NO);
-					recreated = true;
-				}
-			}
+			} else
+				setDefaultNightMode(AppPreferences.isNightTheme() ? MODE_NIGHT_YES : MODE_NIGHT_NO);*/
+			getEditorPager().configureTheme();
+			recreated = true;
 		}
 
-		if (recreated)
-			recreate();
+		if (recreated) {
+			recreate(); //TODO： Some elements are invalid
+		}
 	}
 
 	@Override
