@@ -113,7 +113,7 @@ APK-IDE是一款用于反编译；编译；逆向；修改APK的安卓软件。
 * [fernflower](https://github.com/fesh0r/fernflower)
 * [r8](https://r8.googlesource.com/r8)
 * [okbinder](https://github.com/7hens/okbinder)
-* [antlr-runtime](https://github.com/antlr/antl3)
+* [antlr-runtime](https://github.com/antlr/antlr3)
 * [antlr4-runtime](https://github.com/antlr/antlr4)
 
 ## License
