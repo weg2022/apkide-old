@@ -8,7 +8,6 @@ import com.apkide.common.io.iterator.LineIterator;
 import java.io.IOException;
 
 public interface FileModel {
-
 	@NonNull
 	String getFileContent();
 
