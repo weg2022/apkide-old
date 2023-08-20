@@ -1,6 +1,7 @@
 package com.apkide.ui;
 
 import static android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import static com.apkide.ui.views.SplitLayout.OnSplitChangeListener;
 import static java.lang.System.currentTimeMillis;
 
 import android.content.SharedPreferences;
@@ -15,7 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.apkide.common.Command;
+import com.apkide.common.command.Command;
 import com.apkide.ui.browsers.BrowserPager;
 import com.apkide.ui.databinding.MainBinding;
 import com.apkide.ui.editors.EditorPager;
@@ -29,7 +30,7 @@ import java.util.List;
 
 public class MainUI extends StyledUI implements
 		OnSharedPreferenceChangeListener,
-		SplitLayout.OnSplitChangeListener {
+		OnSplitChangeListener{
 	private SharedPreferences myPreferences;
 	private MainBinding myUiBinding;
 	private MainUIViewModel myUIViewModel;
@@ -68,7 +69,7 @@ public class MainUI extends StyledUI implements
 			}, 100L);
 
 		});
-
+		
 		getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
 			@Override
 			public void handleOnBackPressed() {
@@ -85,7 +86,6 @@ public class MainUI extends StyledUI implements
 				}
 			}
 		});
-		
 		getEditorTabLayout().setupWithViewPager(getEditorPager(),true);
 		boolean isSplit = getPreferences().getBoolean("isSplit", false);
 		if (isSplit)
@@ -129,24 +129,6 @@ public class MainUI extends StyledUI implements
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @Nullable String key) {
 		if (key == null) return;
-
-
-		boolean recreated = false;
-		if (key.equals("app.theme.night") || key.equals("app.theme.followSystem")) {
-			/*if (AppPreferences.isFollowSystemTheme()) {
-				if (AppCompatDelegate.getDefaultNightMode() != MODE_NIGHT_FOLLOW_SYSTEM)
-					AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM);
-				else
-					setDefaultNightMode(AppPreferences.isNightTheme() ? MODE_NIGHT_YES : MODE_NIGHT_NO);
-			} else
-				setDefaultNightMode(AppPreferences.isNightTheme() ? MODE_NIGHT_YES : MODE_NIGHT_NO);*/
-			getEditorPager().configureTheme();
-			recreated = true;
-		}
-
-		if (recreated) {
-			recreate(); //TODO： Some elements are invalid
-		}
 	}
 
 	@Override
@@ -182,7 +164,7 @@ public class MainUI extends StyledUI implements
 				item.setEnabled(cached.isEnabled());
 				if (cached.getTitle() != null)
 					item.setTitle(cached.getTitle());
-				if (cached.getIcon() != -1)
+				if (cached.getIcon() != 0)
 					item.setIcon(cached.getIcon());
 			} else {
 				List<Command> commands = AppCommands.getCommands();
@@ -195,7 +177,7 @@ public class MainUI extends StyledUI implements
 						item.setEnabled(command.isEnabled());
 						if (((MenuCommand) command).getTitle() != null)
 							item.setTitle(((MenuCommand) command).getTitle());
-						if (((MenuCommand) command).getIcon() != -1)
+						if (((MenuCommand) command).getIcon() != 0)
 							item.setIcon(((MenuCommand) command).getIcon());
 					}
 				}
@@ -229,4 +211,5 @@ public class MainUI extends StyledUI implements
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
 }
