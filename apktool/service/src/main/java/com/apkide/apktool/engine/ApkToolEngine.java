@@ -16,6 +16,9 @@ import com.apkide.common.logger.LoggerListener;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * ApkTool 引擎
+ */
 public final class ApkToolEngine {
     private final Object myLock = new Object();
     private boolean myDestroyed;
@@ -29,8 +32,17 @@ public final class ApkToolEngine {
     private ProcessingCallback myCallback;
     
     private enum Mode {
+        /**
+         * 无操作模式
+         */
         None,
+        /**
+         * 构建模式
+         */
         Build,
+        /**
+         * 反编译模式
+         */
         Decode
     }
     
@@ -123,12 +135,24 @@ public final class ApkToolEngine {
     }
     
     
+    /**
+     * 更新配置
+     *
+     * @param config 配置
+     */
     public void configureConfig(@NonNull ApkToolConfig config) {
         synchronized (myLock) {
             myApkToolConfig = config;
         }
     }
     
+    /**
+     * 反编译
+     *
+     * @param apkFilePath apk 文件路径
+     * @param outputPath  输出文件路径
+     * @param callback    处理回调
+     */
     public void decode(@NonNull String apkFilePath, @NonNull String outputPath, @NonNull ProcessingCallback callback) {
         synchronized (myLock) {
             mySourcePath = apkFilePath;
@@ -140,6 +164,13 @@ public final class ApkToolEngine {
     }
     
     
+    /**
+     * 构建
+     *
+     * @param rootPath  项目根路径
+     * @param outputPath 输出文件路径
+     * @param callback   处理回调
+     */
     public void build(@NonNull String rootPath, @NonNull String outputPath, @NonNull ProcessingCallback callback) {
         synchronized (myLock) {
             mySourcePath = rootPath;
@@ -150,18 +181,27 @@ public final class ApkToolEngine {
         }
     }
     
+    /**
+     * 重启
+     */
     public void restart() {
         synchronized (myLock) {
             myShutdown = false;
         }
     }
     
+    /**
+     * 关闭
+     */
     public void shutdown() {
         synchronized (myLock) {
             myShutdown = false;
         }
     }
     
+    /**
+     * 销毁.
+     */
     public void destroy() {
         synchronized (myLock) {
             myDestroyed = true;
