@@ -15,7 +15,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,7 +26,6 @@ import com.apkide.common.AppLog;
 import com.apkide.common.Application;
 import com.apkide.common.FileSystem;
 import com.apkide.common.FileUtils;
-import com.apkide.common.Logger;
 import com.apkide.common.SafeRunner;
 import com.apkide.ls.api.LanguageServer;
 import com.apkide.ls.java.JavaLanguageServer;
@@ -105,15 +103,18 @@ public class IDEApplication extends MultiDexApplication {
                 
                 final long[] version = {-1};
                 final InputStream[] inputStreams = new InputStream[1];
+                
                 for (String a : arch) {
                     String fullFileName = "bin" + separator + a + separator + binaryName;
                     try {
                         InputStream inputStream = getContext().getAssets().open(fullFileName);
                         inputStreams[0] = inputStream;
-                        break;
                     } catch (IOException ignored) {
                     
                     }
+                    
+                    if (inputStreams[0] != null)
+                        break;
                 }
                 
                 if (inputStreams[0] != null) {
@@ -189,7 +190,7 @@ public class IDEApplication extends MultiDexApplication {
             
             private final Handler myHandler = new Handler(requireNonNull(Looper.myLooper()));
             private final ExecutorService myService = Executors.newFixedThreadPool(8);
-      
+            
             @Override
             public boolean postExec(@NonNull Runnable runnable, long delayMillis) {
                 if (delayMillis <= 0) {
@@ -216,33 +217,6 @@ public class IDEApplication extends MultiDexApplication {
                 setDefaultNightMode(AppPreferences.isNightTheme() ? MODE_NIGHT_YES : MODE_NIGHT_NO);
         } else
             setDefaultNightMode(AppPreferences.isNightTheme() ? MODE_NIGHT_YES : MODE_NIGHT_NO);
-        
-        Logger.setFactory(name -> new Logger(name) {
-            @Override
-            protected void onLogging(@NonNull Level level, @NonNull String msg) {
-                if (BuildConfig.DEBUG) {
-                    switch (level) {
-                        case Debug:
-                            Log.d(getName(), msg);
-                            break;
-                        case Information:
-                            Log.i(getName(), msg);
-                            break;
-                        case Verbose:
-                            Log.v(getName(), msg);
-                            break;
-                        case Warning:
-                            Log.w(getName(), msg);
-                            break;
-                        case Error:
-                            Log.e(getName(), msg);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-        });
         
         FileSystem.setArchiveReaders(new FileSystem.FileArchiveReader[]{
                 new JarFileArchiveReader(),

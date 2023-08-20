@@ -21,7 +21,7 @@ public class AppLog {
 	}
 
 	public static void s(@NonNull Object obj,@NonNull String method) {
-		Log.i(TAG, obj.getClass().getName() + "." + method);
+		Log.i(TAG, obj instanceof String? (String) obj :obj.getClass().getName() + "." + method);
 	}
 
 	public static void s(@Nullable String state) {

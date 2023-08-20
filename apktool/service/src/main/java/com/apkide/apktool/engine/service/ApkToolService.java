@@ -8,10 +8,9 @@ import android.os.IBinder;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.apkide.apktool.engine.ApkBuildingListener;
-import com.apkide.apktool.engine.ApkDecodingListener;
 import com.apkide.apktool.engine.ApkToolConfig;
 import com.apkide.apktool.engine.ApkToolEngine;
+import com.apkide.apktool.engine.ProcessingCallback;
 import com.apkide.common.Logger;
 
 import cn.thens.okbinder2.OkBinder;
@@ -19,71 +18,62 @@ import cn.thens.okbinder2.OkBinder;
 public class ApkToolService extends Service {
     private ApkToolEngine myEngine = new ApkToolEngine();
     private final Binder myBinder = OkBinder.create(new IApkToolService() {
+        
         @Override
-        public void setApkBuildListener(@NonNull IApkBuildingListener listener) {
-            myEngine.setApkBuildingListener(new ApkBuildingListener() {
+        public void configure(@NonNull ApkToolConfig config) {
+            myEngine.configureConfig(config);
+        }
+        
+        @Override
+        public void build(@NonNull String rootPath, @NonNull String outputPath, @NonNull IProcessingCallback callback) {
+            myEngine.build(rootPath, outputPath, new ProcessingCallback() {
                 @Override
-                public void apkBuildStarted(@NonNull String rootPath) {
-                    listener.apkBuildStarted(rootPath);
+                public void processPrepare(@NonNull String sourcePath) {
+                    callback.processPrepare(sourcePath);
                 }
     
                 @Override
-                public void apkBuildProgressing(@NonNull Logger.Level level, @NonNull String msg) {
-                    listener.apkBuildProgressing(level,msg);
+                public void processing(@NonNull Logger.Level level, @NonNull String msg) {
+                    callback.processing(level, msg);
                 }
     
                 @Override
-                public void apkBuildFailed(@NonNull Throwable error) {
-                    listener.apkBuildFailed(error);
+                public void processError(@NonNull Throwable error) {
+                    callback.processError(error);
                 }
-                
+    
                 @Override
-                public void apkBuildFinished(@NonNull String outputPath) {
-                    listener.apkBuildFinished(outputPath);
+                public void processDone(@NonNull String outputPath) {
+                    callback.processDone(outputPath);
                 }
             });
         }
         
         @Override
-        public void setApkDecodeListener(@NonNull IApkDecodingListener listener) {
-            myEngine.setApkDecodingListener(new ApkDecodingListener() {
+        public void decode(@NonNull String apkFilePath, @NonNull String outputPath, @NonNull IProcessingCallback callback) {
+            myEngine.decode(apkFilePath, outputPath, new ProcessingCallback() {
                 @Override
-                public void apkDecodeStarted(@NonNull String apkFilePath) {
-                    listener.apkDecodeStarted(apkFilePath);
+                public void processPrepare(@NonNull String sourcePath) {
+                    callback.processPrepare(sourcePath);
                 }
     
                 @Override
-                public void apkDecodeProgressing(@NonNull Logger.Level level, @NonNull String msg) {
-                    listener.apkDecodeProgressing(level,msg);
+                public void processing(@NonNull Logger.Level level, @NonNull String msg) {
+                    callback.processing(level, msg);
                 }
     
                 @Override
-                public void apkDecodeFailed(@NonNull Throwable error) {
-                    listener.apkDecodeFailed(error);
+                public void processError(@NonNull Throwable error) {
+                    callback.processError(error);
                 }
-                
+    
                 @Override
-                public void apkDecodeFinish(@NonNull String outputPath) {
-                    listener.apkDecodeFinish(outputPath);
+                public void processDone(@NonNull String outputPath) {
+                    callback.processDone(outputPath);
                 }
             });
         }
-    
-        @Override
-        public void configure(@NonNull ApkToolConfig config) {
-            myEngine.configureConfig(config);
-        }
-    
-        @Override
-        public void build(@NonNull String rootPath, @NonNull String outputPath) {
-            myEngine.build(rootPath,outputPath);
-        }
-    
-        @Override
-        public void decode(@NonNull String apkFilePath, @NonNull String outputPath) {
-            myEngine.decode(apkFilePath,outputPath);
-        }
-    
+        
         @Override
         public void restart() {
             myEngine.restart();

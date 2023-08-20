@@ -1,11 +1,10 @@
 package com.apkide.ui.commands;
 
-import android.content.Intent;
-
 import androidx.annotation.IdRes;
 
 import com.apkide.ui.App;
 import com.apkide.ui.R;
+import com.apkide.ui.preferences.PreferencesUI;
 import com.apkide.ui.util.MenuCommand;
 
 public class GotoSettingsCommand implements MenuCommand {
@@ -27,10 +26,7 @@ public class GotoSettingsCommand implements MenuCommand {
 
 	@Override
 	public boolean run() {
-		Intent intent = new Intent();
-		intent.setClassName("com.apkide.ui",
-				"com.apkide.ui.preferences.PreferencesUI");
-		App.getMainUI().startActivity(intent);
+		App.gotoUI(PreferencesUI.class.getName());
 		return true;
 	}
 }

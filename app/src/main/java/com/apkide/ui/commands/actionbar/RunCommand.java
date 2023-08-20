@@ -25,7 +25,6 @@ public class RunCommand implements MenuCommand {
 
 	@Override
 	public boolean run() {
-		
-		return false;
+		return true;
 	}
 }

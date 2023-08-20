@@ -3,6 +3,7 @@ package com.apkide.ui;
 import static java.util.Objects.requireNonNull;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
@@ -104,6 +105,16 @@ public final class App {
     @NonNull
     public static StyledUI getUI() {
         return sActivities.isEmpty() ? sMainUI : sActivities.get(sActivities.size() - 1);
+    }
+    
+    public static void gotoUI(@NonNull String className) {
+        gotoUI(App.getContext().getPackageName(), className);
+    }
+    
+    public static void gotoUI(@NonNull String packageName, @NonNull String className) {
+        Intent intent = new Intent();
+        intent.setClassName(packageName, className);
+        App.getUI().startActivity(intent);
     }
     
     public static void startUI(@NonNull StyledUI ui) {

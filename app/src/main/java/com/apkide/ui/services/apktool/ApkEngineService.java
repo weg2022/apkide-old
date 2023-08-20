@@ -9,11 +9,9 @@ import android.os.IBinder;
 import androidx.annotation.NonNull;
 
 import com.apkide.apktool.engine.service.ApkToolService;
-import com.apkide.apktool.engine.service.IApkBuildingListener;
-import com.apkide.apktool.engine.service.IApkDecodingListener;
 import com.apkide.apktool.engine.service.IApkToolService;
+import com.apkide.apktool.engine.service.IProcessingCallback;
 import com.apkide.common.AppLog;
-import com.apkide.common.Logger;
 import com.apkide.ui.App;
 import com.apkide.ui.services.IService;
 
@@ -38,55 +36,21 @@ public class ApkEngineService implements IService {
     
     private IApkToolService myService;
     
-    public void decodeApk(@NonNull String apkFilePath,@NonNull String outputDir){
-        if (isConnected()){
-            myService.decode(apkFilePath,outputDir);
+    public void decodeApk(@NonNull String apkFilePath, @NonNull String outputDir, @NonNull IProcessingCallback callback) {
+        if (isConnected()) {
+            myService.decode(apkFilePath, outputDir, callback);
         }
     }
     
-    public void buildApk(@NonNull String rootPath,@NonNull String outputDir){
-        if (isConnected()){
-            myService.build(rootPath,outputDir);
-        }
-    }
-    
-    public void setBuildListener(@NonNull IApkBuildingListener listener){
-        if (isConnected()){
-            myService.setApkBuildListener(listener);
-        }
-    }
-    
-    public void setDecodeListener(@NonNull IApkDecodingListener listener){
-        if (isConnected()){
-            myService.setApkDecodeListener(listener);
+    public void buildApk(@NonNull String rootPath, @NonNull String outputDir, @NonNull IProcessingCallback callback) {
+        if (isConnected()) {
+            myService.build(rootPath, outputDir, callback);
         }
     }
     
     public void restart() {
         if (!isConnected()) return;
         myService.restart();
-        //Testing
-        setDecodeListener(new IApkDecodingListener() {
-            @Override
-            public void apkDecodeStarted(@NonNull String apkFilePath) {
-                AppLog.s(ApkEngineService.class,"apkDecodeStarted:"+apkFilePath);
-            }
-    
-            @Override
-            public void apkDecodeProgressing(@NonNull Logger.Level level, @NonNull String msg) {
-                AppLog.s(ApkEngineService.class,"apkDecodeProgressing:"+msg);
-            }
-    
-            @Override
-            public void apkDecodeFailed(@NonNull Throwable error) {
-                AppLog.s(ApkEngineService.class,"apkDecodeFailed:"+error.getMessage());
-            }
-    
-            @Override
-            public void apkDecodeFinish(@NonNull String outputPath) {
-                AppLog.s(ApkEngineService.class,"apkDecodeFinish:"+outputPath);
-            }
-        });
     }
     
     @Override

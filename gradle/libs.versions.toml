@@ -18,7 +18,6 @@ preference = "1.1.0"
 #noinspection GradleDependency
 material = "1.5.0"
 
-snakeyaml = "2.1"
 
 [libraries]
 androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "multidex" }
@@ -33,7 +32,7 @@ desugar_jdk_libs_nio = { module = "com.android.tools:desugar_jdk_libs_nio", vers
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 okbinder2-compiler = { module = "com.github.7hens.okbinder:okbinder2-compiler", version.ref = "okbinder2-compiler" }
 okbinder2 = { module = "com.github.7hens.okbinder:okbinder2", version.ref = "okbinder2" }
-snakeyaml = { module = "org.yaml:snakeyaml", version.ref = "snakeyaml" }
+
 tools-r8 = { module = "com.android.tools:r8", version.ref = "android-r8" }
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

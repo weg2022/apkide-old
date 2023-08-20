@@ -16,6 +16,8 @@
  */
 package com.apkide.apktool.util;
 
+import android.os.Build;
+
 import com.apkide.apktool.common.BrutException;
 import com.apkide.common.Application;
 
@@ -39,10 +41,14 @@ public class AaptManager {
         
         aaptBinary = Application.get().foundBinary(aaptVersion);
     
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            return aaptBinary;
+        }
+        
         if (aaptBinary.setExecutable(true)) {
             return aaptBinary;
         }
-
+        
         throw new BrutException("Can't set aapt binary as executable");
     }
 

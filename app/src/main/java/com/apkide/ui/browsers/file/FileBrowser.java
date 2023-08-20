@@ -16,7 +16,6 @@ import com.apkide.ui.R;
 import com.apkide.ui.browsers.HeaderBrowserLayout;
 import com.apkide.ui.browsers.file.commands.ProjectPropertiesCommand;
 import com.apkide.ui.databinding.BrowserFileBinding;
-import com.apkide.ui.dialogs.ApkDecompileDialog;
 import com.apkide.ui.dialogs.DeleteFileDialog;
 import com.apkide.ui.dialogs.NewFileDialog;
 import com.apkide.ui.dialogs.OpenProjectDialog;
@@ -260,10 +259,6 @@ public class FileBrowser extends HeaderBrowserLayout implements FileBrowserServi
             popupMenu.getMenu().findItem(R.id.fileBrowserCommandDecompile).setVisible(entry.isFile() && entry.getFilePath().endsWith(".apk"));
         }
         popupMenu.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.fileBrowserCommandDecompile) {
-                MessageBox.showDialog(App.getMainUI(), new ApkDecompileDialog(entry.getFilePath()));
-                return true;
-            }
             if (item.getItemId() == R.id.fileBrowserCommandSyncWithDisk) {
                 App.getFileBrowserService().sync();
                 return true;

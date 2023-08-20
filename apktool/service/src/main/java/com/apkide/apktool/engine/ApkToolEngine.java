@@ -2,23 +2,11 @@ package com.apkide.apktool.engine;
 
 import androidx.annotation.NonNull;
 
-import com.apkide.apktool.androlib.AaptInvoker;
 import com.apkide.apktool.androlib.ApkBuilder;
 import com.apkide.apktool.androlib.ApkDecoder;
 import com.apkide.apktool.androlib.Config;
 import com.apkide.apktool.androlib.exceptions.AndrolibException;
-import com.apkide.apktool.androlib.res.Framework;
-import com.apkide.apktool.androlib.res.ResourcesDecoder;
-import com.apkide.apktool.androlib.res.data.ResTable;
-import com.apkide.apktool.androlib.res.decoder.ARSCDecoder;
-import com.apkide.apktool.androlib.res.decoder.AXmlResourceParser;
-import com.apkide.apktool.androlib.res.decoder.StringBlock;
-import com.apkide.apktool.androlib.res.decoder.StyledString;
-import com.apkide.apktool.androlib.res.xml.ResXmlPatcher;
-import com.apkide.apktool.androlib.src.SmaliBuilder;
-import com.apkide.apktool.androlib.src.SmaliDecoder;
 import com.apkide.apktool.common.BrutException;
-import com.apkide.apktool.directory.DirUtil;
 import com.apkide.apktool.directory.DirectoryException;
 import com.apkide.apktool.directory.ExtFile;
 import com.apkide.common.AppLog;
@@ -32,15 +20,12 @@ public final class ApkToolEngine {
     private boolean myDestroyed;
     private boolean myShutdown;
     private Mode myMode = Mode.None;
-    private String myApkFilePath;
-    private String myDecodeDestPath;
-    private String myRootPath;
-    private String myOutputPath;
     private final Config myConfig = Config.getDefaultConfig();
     private ApkToolConfig myApkToolConfig;
-    private ApkBuildingListener myBuildingListener;
-    private ApkDecodingListener myDecodingListener;
     
+    private String mySourcePath;
+    private String myOutputPath;
+    private ProcessingCallback myCallback;
     
     private enum Mode {
         None,
@@ -49,40 +34,13 @@ public final class ApkToolEngine {
     }
     
     public ApkToolEngine() {
-        
-        Logger.LoggerListener buildLoggingListener = (name, level, msg) -> {
-                if (myMode == Mode.Build) {
-                    if (myBuildingListener != null)
-                        myBuildingListener.apkBuildProgressing(level, msg);
+        Logger.LoggerListener loggerListener = (name, level, msg) -> {
+            if (myMode != Mode.None && myCallback != null) {
+                myCallback.processing(level, msg);
             }
         };
-        
-        Logger.getLogger(ApkBuilder.class.getName()).addListener(buildLoggingListener);
-        Logger.getLogger(Framework.class.getName()).addListener(buildLoggingListener);
-        Logger.getLogger(ResXmlPatcher.class.getName()).addListener(buildLoggingListener);
-        Logger.getLogger(AaptInvoker.class.getName()).addListener(buildLoggingListener);
-        Logger.getLogger(SmaliBuilder.class.getName()).addListener(buildLoggingListener);
-        Logger.getLogger(Config.class.getName()).addListener(buildLoggingListener);
-        Logger.getLogger(DirUtil.class.getName()).addListener(buildLoggingListener);
-        
-        Logger.LoggerListener compileLoggingListener = (name, level, msg) -> {
-                if (myMode == Mode.Decode) {
-                    if (myDecodingListener != null)
-                        myDecodingListener.apkDecodeProgressing(level, msg);
-                }
-        };
-        
-        Logger.getLogger(ApkDecoder.class.getName()).addListener(compileLoggingListener);
-        Logger.getLogger(SmaliDecoder.class.getName()).addListener(compileLoggingListener);
-        Logger.getLogger(Framework.class.getName()).addListener(compileLoggingListener);
-        Logger.getLogger(ResTable.class.getName()).addListener(compileLoggingListener);
-        Logger.getLogger(ResourcesDecoder.class.getName()).addListener(compileLoggingListener);
-        Logger.getLogger(ARSCDecoder.class.getName()).addListener(compileLoggingListener);
-        Logger.getLogger(AXmlResourceParser.class.getName()).addListener(compileLoggingListener);
-        Logger.getLogger(StringBlock.class.getName()).addListener(compileLoggingListener);
-        Logger.getLogger(StyledString.class.getName()).addListener(compileLoggingListener);
-        Logger.getLogger(DirUtil.class.getName()).addListener(compileLoggingListener);
-        
+        Logger.getLogger(ApkBuilder.class.getName()).addListener(loggerListener);
+        Logger.getLogger(ApkDecoder.class.getName()).addListener(loggerListener);
         
         Thread thread = new Thread(null, () -> {
             try {
@@ -93,13 +51,15 @@ public final class ApkToolEngine {
                                 myApkToolConfig.configure(myConfig);
                             switch (myMode) {
                                 case Build:
-                                    if (myRootPath != null && myOutputPath != null) {
-                                        if (myBuildingListener != null)
-                                            myBuildingListener.apkBuildStarted(myRootPath);
+                                    if (mySourcePath != null && myOutputPath != null) {
+                                        if (myCallback != null)
+                                            myCallback.processPrepare(mySourcePath);
                                         
-                                        ApkBuilder builder = new ApkBuilder(myConfig, new ExtFile(myRootPath));
+                                        ApkBuilder builder = new ApkBuilder(myConfig, new ExtFile(mySourcePath));
                                         File outDir = new File(myOutputPath);
                                         Throwable err = null;
+                                        
+                                        
                                         try {
                                             builder.build(outDir);
                                         } catch (BrutException e) {
@@ -107,22 +67,23 @@ public final class ApkToolEngine {
                                             err = e;
                                         }
                                         
-                                        if (myBuildingListener != null) {
+                                        if (myCallback != null) {
                                             if (err != null)
-                                                myBuildingListener.apkBuildFailed(err);
+                                                myCallback.processError(err);
                                             else
-                                                myBuildingListener.apkBuildFinished(myOutputPath);
+                                                myCallback.processDone(myOutputPath);
                                         }
-                                        myRootPath = null;
-                                        myDecodeDestPath = null;
+                                        
+                                        mySourcePath = null;
+                                        myOutputPath = null;
                                     }
                                     break;
                                 case Decode:
-                                    if (myApkFilePath != null && myDecodeDestPath != null) {
-                                        if (myDecodingListener != null)
-                                            myDecodingListener.apkDecodeStarted(myApkFilePath);
-                                        ApkDecoder decoder = new ApkDecoder(myConfig, new ExtFile(myApkFilePath));
-                                        File outDir = new File(myDecodeDestPath);
+                                    if (mySourcePath != null && myOutputPath != null) {
+                                        if (myCallback != null)
+                                            myCallback.processPrepare(mySourcePath);
+                                        ApkDecoder decoder = new ApkDecoder(myConfig, new ExtFile(mySourcePath));
+                                        File outDir = new File(myOutputPath);
                                         Throwable err = null;
                                         try {
                                             decoder.decode(outDir);
@@ -131,14 +92,16 @@ public final class ApkToolEngine {
                                             AppLog.e(e);
                                             err = e;
                                         }
-                                        if (myDecodingListener != null) {
+                                        
+                                        if (myCallback != null) {
                                             if (err != null)
-                                                myDecodingListener.apkDecodeFailed(err);
+                                                myCallback.processError(err);
                                             else
-                                                myDecodingListener.apkDecodeFinish(myDecodeDestPath);
+                                                myCallback.processDone(myOutputPath);
                                         }
-                                        myApkFilePath = null;
-                                        myDecodeDestPath = null;
+                                        
+                                        mySourcePath = null;
+                                        myOutputPath = null;
                                     }
                                     break;
                                 default:
@@ -165,33 +128,24 @@ public final class ApkToolEngine {
         }
     }
     
-    public void decode(@NonNull String apkFilePath, @NonNull String outputPath) {
+    public void decode(@NonNull String apkFilePath, @NonNull String outputPath, @NonNull ProcessingCallback callback) {
         synchronized (myLock) {
-            myApkFilePath = apkFilePath;
-            myDecodeDestPath = outputPath;
+            mySourcePath = apkFilePath;
+            myOutputPath = outputPath;
             myMode = Mode.Decode;
+            myCallback = callback;
             myLock.notify();
         }
     }
     
-    public void build(@NonNull String rootPath, @NonNull String outputPath) {
+    
+    public void build(@NonNull String rootPath, @NonNull String outputPath, @NonNull ProcessingCallback callback) {
         synchronized (myLock) {
-            myRootPath = rootPath;
+            mySourcePath = rootPath;
             myOutputPath = outputPath;
             myMode = Mode.Build;
+            myCallback = callback;
             myLock.notify();
-        }
-    }
-    
-    public void setApkBuildingListener(@NonNull ApkBuildingListener listener) {
-        synchronized (myLock) {
-            myBuildingListener = listener;
-        }
-    }
-    
-    public void setApkDecodingListener(@NonNull ApkDecodingListener listener) {
-        synchronized (myLock) {
-            myDecodingListener = listener;
         }
     }
     

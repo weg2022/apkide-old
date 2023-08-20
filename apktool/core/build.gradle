@@ -46,6 +46,6 @@ dependencies {
     implementation project(':common')
     implementation project(':smali')
     implementation project(':util:antlr-runtime')
-    implementation libs.snakeyaml
+    implementation 'org.yaml:snakeyaml:1.32:android'
     testImplementation libs.junit
 }
