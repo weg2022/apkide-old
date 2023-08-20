@@ -21,7 +21,7 @@ import com.apkide.apktool.androlib.exceptions.AndrolibException;
 import com.apkide.apktool.common.BrutException;
 import com.apkide.apktool.util.AaptManager;
 import com.apkide.apktool.util.OS;
-import com.apkide.common.Logger;
+import com.apkide.common.logger.Logger;
 
 import java.io.BufferedWriter;
 import java.io.File;

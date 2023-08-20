@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.apkide.common.FileSystem;
-import com.apkide.common.IoUtils;
+import com.apkide.common.io.IoUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -67,7 +67,7 @@ public class JarFileArchiveReader implements FileSystem.FileArchiveReader {
         if (entry == null) {
             throw new IOException(archivePath + ":" + entryName + " is not exists..");
         }
-        byte[] bytes = IoUtils.readAllBytes(archiveFile.getInputStream(entry));
+        byte[] bytes = IoUtils.readBytes(archiveFile.getInputStream(entry));
         return encoding == null ?
                 new InputStreamReader(new ByteArrayInputStream(bytes)) :
                 new InputStreamReader(new ByteArrayInputStream(bytes), encoding);
@@ -185,7 +185,7 @@ public class JarFileArchiveReader implements FileSystem.FileArchiveReader {
         if (entry == null) {
             throw new IOException(archivePath + ":" + entryName + " is not exists..");
         }
-        byte[] bytes = IoUtils.readAllBytes(archiveFile.getInputStream(entry));
+        byte[] bytes = IoUtils.readBytes(archiveFile.getInputStream(entry));
         return new ByteArrayInputStream(bytes);
     }
     

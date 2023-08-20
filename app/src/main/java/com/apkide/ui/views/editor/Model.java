@@ -1,8 +1,8 @@
 package com.apkide.ui.views.editor;
 
-import com.apkide.common.Color;
-import com.apkide.common.TextModelImpl;
-import com.apkide.ls.api.Diagnostic;
+import com.apkide.common.color.Color;
+import com.apkide.common.text.TextModelImpl;
+import com.apkide.ls.api.diagnostic.Diagnostic;
 
 public class Model extends TextModelImpl {
     public Model() {

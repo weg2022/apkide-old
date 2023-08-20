@@ -2,7 +2,7 @@ package com.apkide.codeanalysis.service;
 
 import androidx.annotation.NonNull;
 
-import com.apkide.ls.api.Diagnostic;
+import com.apkide.ls.api.diagnostic.Diagnostic;
 
 import java.util.List;
 

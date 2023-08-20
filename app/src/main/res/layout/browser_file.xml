@@ -4,24 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
-    <ProgressBar
-        android:id="@+id/fileProgressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:indeterminate="true" />
-
-    <HorizontalScrollView
-        android:id="@+id/fileListScrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/fileListView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:listitem="@layout/browser_file_entry" />
-    </HorizontalScrollView>
 </androidx.appcompat.widget.LinearLayoutCompat>

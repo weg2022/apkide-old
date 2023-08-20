@@ -33,8 +33,6 @@ android {
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
-    implementation libs.androidx.annotation
-    implementation libs.androidx.preference
     api libs.google.guava
     api libs.commons.text
     implementation libs.material

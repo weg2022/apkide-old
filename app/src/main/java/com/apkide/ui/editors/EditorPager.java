@@ -18,20 +18,20 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.apkide.common.AppLog;
 import com.apkide.common.FileSystem;
-import com.apkide.common.MessageBox;
+import com.apkide.ui.util.MessageBox;
 import com.apkide.ui.App;
 import com.apkide.ui.R;
 import com.apkide.ui.dialogs.ProgressDialog;
-import com.apkide.ui.services.openfile.OpenFileModel;
-import com.apkide.ui.services.openfile.OpenFileModelFactory;
-import com.apkide.ui.services.openfile.OpenFileServiceListener;
+import com.apkide.ui.services.file.FileModel;
+import com.apkide.ui.services.file.FileModelFactory;
+import com.apkide.ui.services.file.FileServiceListener;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EditorPager extends ViewPager implements OpenFileModelFactory, OpenFileServiceListener {
+public class EditorPager extends ViewPager implements FileModelFactory, FileServiceListener {
     public EditorPager(Context context) {
         super(context);
         initView();
@@ -100,14 +100,14 @@ public class EditorPager extends ViewPager implements OpenFileModelFactory, Open
             }
         });
         
-        App.getOpenFileService().addOpenFileModelFactory(this);
-        App.getOpenFileService().addListener(this);
+        App.getFileService().addOpenFileModelFactory(this);
+        App.getFileService().addListener(this);
         
     }
     
     @SuppressLint("InflateParams")
     @Override
-    public void fileOpened(@NonNull String filePath, @NonNull OpenFileModel fileModel) {
+    public void fileOpened(@NonNull String filePath, @NonNull FileModel fileModel) {
         AppLog.s(this, "fileOpened: " + filePath);
         
         for (IDEEditor editor : getEditors()) {
@@ -121,7 +121,7 @@ public class EditorPager extends ViewPager implements OpenFileModelFactory, Open
             }
         }
         
-        MessageBox.showDialog(App.getMainUI(), new ProgressDialog("Open File", "File Opening..."));
+        MessageBox.show(App.getMainUI(), new ProgressDialog("Open File", "File Opening..."));
         App.runOnBackground(() -> {
             try {
                 fileModel.sync();
@@ -153,7 +153,7 @@ public class EditorPager extends ViewPager implements OpenFileModelFactory, Open
     }
     
     @Override
-    public void fileClosed(@NonNull String filePath, @NonNull OpenFileModel fileModel) {
+    public void fileClosed(@NonNull String filePath, @NonNull FileModel fileModel) {
         AppLog.s(this, "fileClosed: " + filePath);
         for (int i = 0; i < getEditorCount(); i++) {
             if (getEditor(i).getIDEEditorModel().getFilePath().equals(filePath)) {
@@ -161,7 +161,7 @@ public class EditorPager extends ViewPager implements OpenFileModelFactory, Open
                 requireNonNull(getAdapter()).notifyDataSetChanged();
                 requestLayout();
                 if (getEditorCount() != 0) {
-                    App.getOpenFileService().setVisibleFilePath(filePath);
+                    App.getFileService().setVisibleFilePath(filePath);
                     setCurrentItem(getEditorCount() - 1);
                 }
                 return;
@@ -185,7 +185,7 @@ public class EditorPager extends ViewPager implements OpenFileModelFactory, Open
     
     @NonNull
     @Override
-    public OpenFileModel createFileModel(@NonNull String filePath) throws IOException {
+    public FileModel createFileModel(@NonNull String filePath) throws IOException {
         IDEEditorModel model = new IDEEditorModel(filePath);
         
         return model;
@@ -235,11 +235,6 @@ public class EditorPager extends ViewPager implements OpenFileModelFactory, Open
         return editors;
     }
     
-    public void configureTheme() {
-        for (IDEEditor editor : getEditors()) {
-            editor.configureTheme();
-        }
-    }
     
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
@@ -247,7 +242,6 @@ public class EditorPager extends ViewPager implements OpenFileModelFactory, Open
                 getCurrentEditor().isTouchEventInsideHandle(ev)) {
             return false;
         }
-        
         return super.onInterceptTouchEvent(ev);
     }
 }

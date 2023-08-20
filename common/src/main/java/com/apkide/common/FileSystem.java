@@ -1,9 +1,11 @@
 package com.apkide.common;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.apkide.common.io.FileUtils;
+import com.apkide.common.io.IoUtils;
+import com.apkide.common.io.iterator.LineIterator;
 
 import java.io.Closeable;
 import java.io.DataInputStream;
@@ -49,7 +51,7 @@ public class FileSystem {
         }
     }
     
-    public static boolean areEqualTimestamps(long time1, long time2) {
+    public static boolean equalTimestamps(long time1, long time2) {
         long difference = Math.abs(time1 - time2);
         if (difference <= 1000)
             return true;
@@ -63,9 +65,6 @@ public class FileSystem {
     }
     
     public static boolean isBinary(@NonNull String filePath) {
-        if (isArchiveFile(filePath) || isArchiveFileEntry(filePath))
-            return false;
-        
         long fileLength = new File(filePath).length();
         int readCount = BINARY_CHECK_BYTE_COUNT < fileLength ?
                 BINARY_CHECK_BYTE_COUNT :
@@ -93,21 +92,21 @@ public class FileSystem {
     @NonNull
     public static Reader readFile(@NonNull String filePath, @Nullable String encoding) throws IOException {
         if (isNormalFile(filePath)) {
-            String parent = getParentDirPath(filePath);
+            String parent = getParentPath(filePath);
             if (parent == null)
                 throw new IOException("parent dir is null.");
             for (FileArchiveReader archiveReader : getArchiveReaders()) {
                 for (String filePattern : archiveReader.getSupportArchiveFilePatterns()) {
-                    if (FileNameMatcher.get().match(getName(parent), filePattern)) {
+                    if (FilePatternMatcher.get().match(getName(parent), filePattern)) {
                         Reader reader = archiveReader.getArchiveEntryReader(parent, getName(filePath), encoding);
-                        return NormalizedReader.get().createReader(reader);
+                        return NormalizedReadWriter.get().createReader(reader);
                     }
                 }
             }
             Reader reader = encoding == null ?
                     new FileReader(filePath) :
                     new InputStreamReader(new FileInputStream(filePath), encoding);
-            return new NormalizedReader.DefaultReader(reader);
+            return NormalizedReadWriter.get().createReader(reader);
         } else if (isArchiveFileEntry(filePath))
             return readArchiveFileEntry(filePath, encoding);
         throw new IOException();
@@ -133,12 +132,12 @@ public class FileSystem {
     }
     
     @Nullable
-    public static String getEnclosingArchivePath(@NonNull String path) {
+    public static String foundParentArchivePath(@NonNull String path) {
         if (isArchiveFile(path))
             return path;
         String parentPath = path;
         while (true) {
-            parentPath = getParentDirPath(parentPath);
+            parentPath = getParentPath(parentPath);
             if (parentPath == null)
                 return null;
             if (isArchiveFile(parentPath))
@@ -150,7 +149,7 @@ public class FileSystem {
         if (new File(path).isFile()) {
             for (FileArchiveReader archiveReader : getArchiveReaders()) {
                 for (String filePattern : archiveReader.getSupportArchiveFilePatterns()) {
-                    if (FileNameMatcher.get().match(getName(path), filePattern)) {
+                    if (FilePatternMatcher.get().match(getName(path), filePattern)) {
                         return true;
                     }
                 }
@@ -163,7 +162,7 @@ public class FileSystem {
         if (new File(archivePath).isFile()) {
             for (FileArchiveReader archiveReader : getArchiveReaders()) {
                 for (String filePattern : archiveReader.getSupportArchiveFilePatterns()) {
-                    if (FileNameMatcher.get().match(getName(archivePath), filePattern)) {
+                    if (FilePatternMatcher.get().match(getName(archivePath), filePattern)) {
                         archiveReader.close();
                     }
                 }
@@ -175,7 +174,7 @@ public class FileSystem {
         if (new File(archivePath).isFile()) {
             for (FileArchiveReader archiveReader : getArchiveReaders()) {
                 for (String filePattern : archiveReader.getSupportArchiveFilePatterns()) {
-                    if (FileNameMatcher.get().match(getName(archivePath), filePattern)) {
+                    if (FilePatternMatcher.get().match(getName(archivePath), filePattern)) {
                         return archiveReader.getArchiveVersion(archivePath);
                     }
                 }
@@ -186,16 +185,16 @@ public class FileSystem {
     
     @NonNull
     private static Reader readArchiveFileEntry(@NonNull String filePath, @Nullable String encoding) throws IOException {
-        String archivePath = getEnclosingArchivePath(filePath);
-        String entryPath = getArchiveFileEntryRelativePath(filePath);
+        String archivePath = foundParentArchivePath(filePath);
+        String entryPath = foundArchiveEntryPath(filePath);
         if (archivePath == null) {
             throw new IOException("archive file is null.");
         }
         for (FileArchiveReader archiveReader : getArchiveReaders()) {
             for (String filePattern : archiveReader.getSupportArchiveFilePatterns()) {
-                if (FileNameMatcher.get().match(getName(archivePath), filePattern)) {
+                if (FilePatternMatcher.get().match(getName(archivePath), filePattern)) {
                     Reader reader = archiveReader.getArchiveEntryReader(archivePath, entryPath, encoding);
-                    return NormalizedReader.get().createReader(reader);
+                    return NormalizedReadWriter.get().createReader(reader);
                 }
             }
         }
@@ -203,53 +202,56 @@ public class FileSystem {
     }
     
     @NonNull
-    public static String getArchiveFileEntryRelativePath(@NonNull String path) {
-        String archivePath = getEnclosingArchivePath(path);
-        if (archivePath == null || archivePath.length() == path.length())
+    public static String foundArchiveEntryPath(@NonNull String filePath) {
+        String archivePath = foundParentArchivePath(filePath);
+        if (archivePath == null || archivePath.length() == filePath.length())
             return "";
-        return path.substring(archivePath.length() + 1);
+        return filePath.substring(archivePath.length() + 1);
     }
     
     
     public static void writeFile(@NonNull String filePath, @NonNull Reader content) throws IOException {
-        FileUtils.writeUtf8(new File(filePath), IoUtils.readAllChars(content));
+        FileUtils.writeUtf8(new File(filePath), IoUtils.readString(content));
     }
     
-    public static boolean isRoot(@NonNull String path) {
-        return path.equals("/");
+    public static boolean isRoot(@NonNull String filePath) {
+        return filePath.equals(File.separator);
     }
     
     @Nullable
-    public static String getParentDirPath(@NonNull String path) {
-        if (path.length() == 0)
+    public static String getParentPath(@NonNull String filePath) {
+        if (filePath.length() == 0)
             return null;
-        if (isRoot(path))
+        if (isRoot(filePath))
             return null;
-        int index = path.lastIndexOf('/');
+        int index = filePath.lastIndexOf('/');
         if (index == 0)
-            return "/";
+            return File.separator;
         else if (index == -1)
             return null;
-        return path.substring(0, index);
+        return filePath.substring(0, index);
     }
     
     @NonNull
-    public static String getName(@Nullable String path) {
-        if (path==null)return "";
-        return path.substring(path.lastIndexOf('/') + 1);
+    public static String getName(@NonNull String filePath) {
+        return FileUtils.getFileName(filePath);
     }
     
-    public static boolean exists(@NonNull String path) {
-        return new File(path).exists() || isArchiveEntry(path);
+    public static boolean isNormalExists(@NonNull String filePath){
+        return new File(filePath).exists();
+    }
+    
+    public static boolean exists(@NonNull String filePath) {
+        return new File(filePath).exists() || isArchiveEntry(filePath);
     }
     
     public static boolean isArchiveEntry(@NonNull String path) {
-        String archivePath = getEnclosingArchivePath(path);
+        String archivePath = foundParentArchivePath(path);
         if (archivePath == null) return false;
-        String entryName = getArchiveFileEntryRelativePath(path);
+        String entryName = foundArchiveEntryPath(path);
         for (FileArchiveReader archiveReader : getArchiveReaders()) {
             for (String filePattern : archiveReader.getSupportArchiveFilePatterns()) {
-                if (FileNameMatcher.get().match(getName(archivePath), filePattern)) {
+                if (FilePatternMatcher.get().match(getName(archivePath), filePattern)) {
                     return archiveReader.isArchiveFileEntry(archivePath, entryName) ||
                             archiveReader.isArchiveDirectoryEntry(archivePath, entryName);
                 }
@@ -259,14 +261,14 @@ public class FileSystem {
     }
     
     public static boolean isArchiveFileEntry(@NonNull String path) {
-        String archivePath = getEnclosingArchivePath(path);
+        String archivePath = foundParentArchivePath(path);
         if (archivePath == null)
             return false;
         
-        String entryName = getArchiveFileEntryRelativePath(path);
+        String entryName = foundArchiveEntryPath(path);
         for (FileArchiveReader archiveReader : getArchiveReaders()) {
             for (String filePattern : archiveReader.getSupportArchiveFilePatterns()) {
-                if (FileNameMatcher.get().match(getName(archivePath), filePattern)) {
+                if (FilePatternMatcher.get().match(getName(archivePath), filePattern)) {
                     return archiveReader.isArchiveFileEntry(archivePath, entryName);
                 }
             }
@@ -274,13 +276,13 @@ public class FileSystem {
         return false;
     }
     
-    public static boolean isArchiveDirectoryEntry(@NonNull String path) {
-        String archivePath = getEnclosingArchivePath(path);
+    public static boolean isArchiveDirectory(@NonNull String filePath) {
+        String archivePath = foundParentArchivePath(filePath);
         if (archivePath == null) return false;
-        String entryName = getArchiveFileEntryRelativePath(path);
+        String entryName = foundArchiveEntryPath(filePath);
         for (FileArchiveReader archiveReader : getArchiveReaders()) {
             for (String filePattern : archiveReader.getSupportArchiveFilePatterns()) {
-                if (FileNameMatcher.get().match(getName(archivePath), filePattern)) {
+                if (FilePatternMatcher.get().match(getName(archivePath), filePattern)) {
                     return archiveReader.isArchiveDirectoryEntry(archivePath, entryName);
                 }
             }
@@ -288,18 +290,16 @@ public class FileSystem {
         return false;
     }
     
-    public static boolean isDirectory(@NonNull String path) {
-        return isNormalDirectory(path) ||
-                isArchiveDirectoryEntry(path);
+    public static boolean isDirectory(@NonNull String filePath) {
+        return isNormalDirectory(filePath) || isArchiveDirectory(filePath);
     }
     
-    public static boolean isNormalDirectory(@Nullable String path) {
-        if (path == null) return false;
-        return new File(path).isDirectory();
+    public static boolean isNormalDirectory(@NonNull String filePath) {
+        return new File(filePath).isDirectory();
     }
     
-    public static boolean isNormalFile(@NonNull String path) {
-        return new File(path).isFile();
+    public static boolean isNormalFile(@NonNull String filePath) {
+        return new File(filePath).isFile();
     }
     
     public static boolean isFile(@NonNull String path) {
@@ -308,13 +308,13 @@ public class FileSystem {
     
     @NonNull
     public static List<String> getChildEntries(@NonNull String dirPath) {
-        if (isArchiveFile(dirPath) || isArchiveDirectoryEntry(dirPath)) {
-            String archivePath = getEnclosingArchivePath(dirPath);
+        if (isArchiveFile(dirPath) || isArchiveDirectory(dirPath)) {
+            String archivePath = foundParentArchivePath(dirPath);
             if (archivePath != null) {
-                String entryPath = getArchiveFileEntryRelativePath(dirPath);
+                String entryPath = foundArchiveEntryPath(dirPath);
                 for (FileArchiveReader archiveReader : getArchiveReaders()) {
                     for (String filePattern : archiveReader.getSupportArchiveFilePatterns()) {
-                        if (FileNameMatcher.get().match(getName(archivePath), filePattern)) {
+                        if (FilePatternMatcher.get().match(getName(archivePath), filePattern)) {
                             try {
                                 return archiveReader.getArchiveDirectoryEntries(archivePath, entryPath);
                             } catch (IOException e) {
@@ -331,7 +331,7 @@ public class FileSystem {
                 return new ArrayList<>();
             List<String> list = new ArrayList<>();
             String[] paths = new String[entries.length];
-            String prefix = dirPath.equals("/") ? "/" : dirPath + File.separator;
+            String prefix = dirPath.equals(File.separator) ? File.separator : dirPath + File.separator;
             for (int i = 0; i < paths.length; i++) {
                 paths[i] = prefix + entries[i];
                 list.add(paths[i]);
@@ -348,7 +348,7 @@ public class FileSystem {
     }
     
     public static boolean isContained(@NonNull String path, @Nullable String entryPath) {
-        return entryPath != null && (entryPath.equals(path) || entryPath.startsWith(path + "/"));
+        return entryPath != null && (entryPath.equals(path) || entryPath.startsWith(path + File.separator));
     }
     
     @NonNull
@@ -364,7 +364,7 @@ public class FileSystem {
             throw new IOException(path + " could not be renamed");
     }
     
-    public static void mkdir(@NonNull String path) throws IOException {
+    public static void createDir(@NonNull String path) throws IOException {
         if (!new File(path).mkdir()) {
             if (!new File(path).mkdirs()) {
                 throw new IOException(path + " could not be created");
@@ -383,7 +383,6 @@ public class FileSystem {
             throw new IOException(path + " already exists");
         FileUtils.writeUtf8(new File(path), content);
     }
-    
     
     public static void copy(@NonNull String path, @NonNull String destPath) throws IOException {
         FileUtils.copyFile(path, destPath);
@@ -407,7 +406,7 @@ public class FileSystem {
         delete(new File(path));
     }
     
-    private static void delete(@NonNull File file) throws IOException {
+    public static void delete(@NonNull File file) throws IOException {
         if (file.isDirectory()) {
             String[] children = file.list();
             if (children != null) {
@@ -421,12 +420,12 @@ public class FileSystem {
     
     public static long getLastModified(@NonNull String filePath) {
         if (!isNormalFile(filePath) && isArchiveEntry(filePath)) {
-            String archivePath = getEnclosingArchivePath(filePath);
-            String entryName = getArchiveFileEntryRelativePath(filePath);
+            String archivePath = foundParentArchivePath(filePath);
+            String entryName = foundArchiveEntryPath(filePath);
             if (archivePath != null) {
                 for (FileArchiveReader reader : getArchiveReaders()) {
                     for (String pattern : reader.getSupportArchiveFilePatterns()) {
-                        if (FileNameMatcher.get().match(getName(filePath), pattern)) {
+                        if (FilePatternMatcher.get().match(getName(filePath), pattern)) {
                             return reader.getLastModified(archivePath, entryName);
                         }
                     }
@@ -441,12 +440,12 @@ public class FileSystem {
     
     public static long getLength(@NonNull String filePath) {
         if (!isNormalFile(filePath) && isArchiveEntry(filePath)) {
-            String archivePath = getEnclosingArchivePath(filePath);
-            String entryName = getArchiveFileEntryRelativePath(filePath);
+            String archivePath = foundParentArchivePath(filePath);
+            String entryName = foundArchiveEntryPath(filePath);
             if (archivePath != null) {
                 for (FileArchiveReader reader : getArchiveReaders()) {
                     for (String pattern : reader.getSupportArchiveFilePatterns()) {
-                        if (FileNameMatcher.get().match(getName(filePath), pattern)) {
+                        if (FilePatternMatcher.get().match(getName(filePath), pattern)) {
                             return reader.getSize(archivePath, entryName);
                         }
                     }
@@ -461,20 +460,12 @@ public class FileSystem {
     
     @NonNull
     public static String getExtensionName(@NonNull String filePath) {
-        String filename = getName(filePath);
-        int i = filename.lastIndexOf('.');
-        if (i < 0)
-            return "";
-        return filename.substring(i);
+        return FileUtils.getExtensionName(filePath);
     }
     
     @NonNull
     public static String getExtension(@NonNull String filePath) {
-        String filename = getName(filePath);
-        int i = filename.lastIndexOf('.');
-        if (i < 0)
-            return "";
-        return filename.substring(i + 1);
+        return FileUtils.getExtension(filePath);
     }
     
     @NonNull
@@ -487,19 +478,17 @@ public class FileSystem {
     
     @NonNull
     public static String resolvePath(@NonNull String rootPath, @NonNull String relativeOrAbsolutePath) {
-        String res = resolvePath0(rootPath, relativeOrAbsolutePath);
-        Log.d(TAG, "Resolved (" + rootPath + ", " + relativeOrAbsolutePath + ") to " + res);
-        return res;
+        return resolvePath0(rootPath, relativeOrAbsolutePath);
     }
     
     private static String resolvePath0(String rootPath, String relativeOrAbsolutePath) {
         String relPath = relativeOrAbsolutePath;
-        relPath = relPath.replace("\\\\", "/");
-        relPath = relPath.replace("\\", "/");
-        if (!relPath.contains("/"))
-            return rootPath + "/" + relPath;
+        relPath = relPath.replace("\\\\", File.separator);
+        relPath = relPath.replace("\\", File.separator);
+        if (!relPath.contains(File.separator))
+            return rootPath + File.separator + relPath;
         
-        if (relPath.startsWith("/"))
+        if (relPath.startsWith(File.separator))
             relPath = ".." + relPath;
         
         String tryRelative = getCanonicalPathPreservingSymlinks(new File(rootPath, relPath));
@@ -526,28 +515,28 @@ public class FileSystem {
         }
         StringBuilder resBuilder = new StringBuilder();
         for (String canonicalPathComponent : canonicalPathComponents) {
-            resBuilder.append("/");
+            resBuilder.append(File.separator);
             resBuilder.append(canonicalPathComponent);
         }
-        if (absolutePath.endsWith("/")) resBuilder.append("/");
+        if (absolutePath.endsWith(File.separator)) resBuilder.append(File.separator);
         return resBuilder.toString();
     }
     
     
     @Nullable
     public static String getEnclosingParent(@NonNull String path, @NonNull Predicate<String> runnable) {
-        path = getParentDirPath(path);
+        path = getParentPath(path);
         while (path != null) {
             if (runnable.test(path)) {
                 return path;
             }
-            path = getParentDirPath(path);
+            path = getParentPath(path);
         }
         return null;
     }
     
     public static boolean isValidFilePath(@NonNull String path) {
-        return path.startsWith("/") && isNormalDirectory(getParentDirPath(path));
+        return path.startsWith(File.separator) && isNormalDirectory(getParentPath(path));
     }
     
     public static int getContainedFileCount(@NonNull String path, int maxCount, @NonNull String... suffixes) {
@@ -582,36 +571,36 @@ public class FileSystem {
             } else if (!new File(entryTargetPath).isFile()) {
                 new File(entryTargetPath).getParentFile().mkdirs();
                 FileOutputStream fileOut = new FileOutputStream(entryTargetPath);
-                IoUtils.copyAllBytes(zipStream, fileOut);
+                IoUtils.copy(zipStream, fileOut);
                 fileOut.close();
             }
         }
     }
     
     @NonNull
-    public static InputStream getInputStream(@NonNull String filePath)throws IOException {
+    public static InputStream getInputStream(@NonNull String filePath) throws IOException {
         if (isNormalFile(filePath)) {
-            String parent = getParentDirPath(filePath);
+            String parent = getParentPath(filePath);
             if (parent == null)
                 throw new IOException("parent dir is null.");
             for (FileArchiveReader archiveReader : getArchiveReaders()) {
                 for (String filePattern : archiveReader.getSupportArchiveFilePatterns()) {
-                    if (FileNameMatcher.get().match(getName(parent), filePattern)) {
-                       return archiveReader.getStream(parent, getName(filePath));
+                    if (FilePatternMatcher.get().match(getName(parent), filePattern)) {
+                        return archiveReader.getStream(parent, getName(filePath));
                     }
                 }
             }
             return new FileInputStream(filePath);
         } else if (isArchiveFileEntry(filePath)) {
-            String archivePath = getEnclosingArchivePath(filePath);
-            String entryPath = getArchiveFileEntryRelativePath(filePath);
+            String archivePath = foundParentArchivePath(filePath);
+            String entryPath = foundArchiveEntryPath(filePath);
             if (archivePath == null) {
                 throw new IOException("archive file is null.");
             }
             for (FileArchiveReader archiveReader : getArchiveReaders()) {
                 for (String filePattern : archiveReader.getSupportArchiveFilePatterns()) {
-                    if (FileNameMatcher.get().match(getName(archivePath), filePattern)) {
-                        return archiveReader.getStream(archivePath,entryPath);
+                    if (FilePatternMatcher.get().match(getName(archivePath), filePattern)) {
+                        return archiveReader.getStream(archivePath, entryPath);
                     }
                 }
             }
@@ -637,7 +626,8 @@ public class FileSystem {
         
         long getArchiveVersion(@NonNull String archivePath);
         
-        InputStream getStream(@NonNull String archivePath,@NonNull String entryName) throws IOException;
+        InputStream getStream(@NonNull String archivePath, @NonNull String entryName) throws IOException;
+        
         long getLastModified(@NonNull String archivePath, @NonNull String entryName);
         
         long getSize(@NonNull String archivePath, @NonNull String entryName);

@@ -4,7 +4,7 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
 import androidx.annotation.Nullable;
 
-import com.apkide.common.Command;
+import com.apkide.common.command.Command;
 
 
 public interface MenuCommand extends Command {
@@ -14,7 +14,7 @@ public interface MenuCommand extends Command {
 
 	@DrawableRes
 	default int getIcon(){
-		return -1;
+		return 0;
 	}
 
 	@Nullable

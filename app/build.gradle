@@ -111,4 +111,5 @@ dependencies {
     implementation project(':language-server:impl-xml')
 
     implementation project(':smali')
+    implementation project(':java-decompiler')
 }

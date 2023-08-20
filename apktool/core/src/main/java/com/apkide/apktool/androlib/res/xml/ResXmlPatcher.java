@@ -17,7 +17,7 @@
 package com.apkide.apktool.androlib.res.xml;
 
 import com.apkide.apktool.androlib.exceptions.AndrolibException;
-import com.apkide.common.Logger;
+import com.apkide.common.logger.Logger;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;

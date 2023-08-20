@@ -7,13 +7,12 @@ import android.graphics.drawable.Drawable;
 
 import androidx.annotation.NonNull;
 
-import com.apkide.common.EntryListAdapter;
-import com.apkide.common.FileSystem;
 import com.apkide.ui.App;
 import com.apkide.ui.R;
 import com.apkide.ui.browsers.BrowserMenuCommand;
+import com.apkide.ui.util.Entry;
 
-public class FileEntry implements EntryListAdapter.Entry, Comparable<FileEntry> {
+public class FileEntry implements Entry, Comparable<FileEntry> {
     
     private static final long serialVersionUID = -4421092652929488640L;
     private static final String PRV = "...";
@@ -49,14 +48,14 @@ public class FileEntry implements EntryListAdapter.Entry, Comparable<FileEntry> 
         this.isHidden = false;
     }
     
-    public FileEntry(@NonNull String filePath, @NonNull String label, boolean isDirectory, boolean isProjectRoot) {
+    public FileEntry(@NonNull String filePath, @NonNull String label, boolean isDirectory) {
         this.filePath = filePath;
         this.label = label;
         this.isDirectory = isDirectory;
         this.isPrev = false;
         if (isDirectory) {
             this.isHidden = isHidden(filePath);
-            icon = isProjectRoot ? R.drawable.project_open : isHidden ? R.drawable.folder_hidden : R.drawable.folder;
+            icon = isHidden ? R.drawable.folder_hidden : R.drawable.folder;
         } else {
             this.isHidden = false;
             icon = FileIcons.getIcon(filePath);
@@ -112,8 +111,8 @@ public class FileEntry implements EntryListAdapter.Entry, Comparable<FileEntry> 
         return !isDirectory;
     }
     
-    public boolean isCommand(){
-        return myCommand!=null;
+    public boolean isCommand() {
+        return myCommand != null;
     }
     
     public BrowserMenuCommand getCommand() {
@@ -124,26 +123,19 @@ public class FileEntry implements EntryListAdapter.Entry, Comparable<FileEntry> 
     public int compareTo(FileEntry o) {
         if (isPrev() && !o.isPrev()) {
             return -1;
-        }
-        
-        if (!isPrev() && o.isPrev()) {
+        }else if (!isPrev() && o.isPrev()) {
             return 1;
         }
         
         if (isCommand() && !o.isCommand()) {
             return -1;
-        }
-    
-        if (!isCommand() && o.isCommand()) {
+        }else if (!isCommand() && o.isCommand()) {
             return 1;
         }
-    
-    
-        if (FileSystem.isDirectory(filePath) && !FileSystem.isDirectory(o.filePath)) {
-            return -1;
-        }
         
-        if (!FileSystem.isDirectory(filePath) && FileSystem.isDirectory(o.filePath)) {
+        if (isDirectory() && o.isFile()) {
+            return -1;
+        }else if (isFile() && o.isDirectory()) {
             return 1;
         }
         

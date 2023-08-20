@@ -42,7 +42,7 @@ import com.apkide.apktool.directory.ExtFile;
 import com.apkide.apktool.directory.FileDirectory;
 import com.apkide.apktool.ext.org.xmlpull.v1.XmlSerializer;
 import com.apkide.apktool.util.Duo;
-import com.apkide.common.Logger;
+import com.apkide.common.logger.Logger;
 
 import java.io.File;
 import java.io.IOException;

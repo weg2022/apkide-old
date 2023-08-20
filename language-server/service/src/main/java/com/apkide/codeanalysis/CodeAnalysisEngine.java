@@ -2,60 +2,94 @@ package com.apkide.codeanalysis;
 
 import androidx.annotation.NonNull;
 
-import com.apkide.common.AppLog;
-import com.apkide.common.FileNameMatcher;
-import com.apkide.common.FileSystem;
-import com.apkide.ls.api.Highlights;
 import com.apkide.ls.api.LanguageServer;
 import com.apkide.ls.api.Model;
+import com.apkide.ls.api.callback.CompleterCallback;
+import com.apkide.ls.api.callback.FindUsagesCallback;
 import com.apkide.ls.api.callback.HighlighterCallback;
+import com.apkide.ls.api.completion.Completion;
+import com.apkide.ls.api.highlighting.Highlights;
+import com.apkide.ls.api.util.Location;
+import com.apkide.ls.api.util.Position;
 
 public final class CodeAnalysisEngine {
-    protected static int modelCount = 0;
+
     private final Object myLock = new Object();
     private boolean myDestroyed;
     private boolean myShutdown;
-    private final Thread myThread;
     private final LanguageServer[] myLanguageServers;
     private final Model myModel;
     private String myVisibleFile;
-    private final HighlighterCallbackImpl myHighlighterCallback = new HighlighterCallbackImpl();
     private HighlightingListener myHighlightingListener;
     
     public CodeAnalysisEngine() {
-        myModel = new Model(null,null,null,myHighlighterCallback,null,null,null,null,null);
+        myModel = new Model(new HighlighterCallback() {
+            
+            @Override
+            public void highlightStarted(@NonNull String filePath) {
+    
+            }
+    
+            @Override
+            public void foundHighlighting(@NonNull String filePath, @NonNull Highlights highlights) {
+        
+            }
+    
+            @Override
+            public void foundSemantic(@NonNull String filePath, int style, int startLine, int startColumn, int endLine, int endColumn) {
+        
+            }
+    
+            @Override
+            public void highlightCompleted(@NonNull String filePath) {
+        
+            }
+        }, new CompleterCallback() {
+            @Override
+            public void completeStarted(@NonNull String filePath, @NonNull Position position) {
+    
+            }
+    
+            @Override
+            public void foundCompletion(@NonNull Completion completion) {
+        
+            }
+    
+            @Override
+            public void completeCompleted(@NonNull String filePath) {
+        
+            }
+        }, null, new FindUsagesCallback() {
+            @Override
+            public void findUsagesStarted(@NonNull String filePath, @NonNull Position position, boolean includeDeclaration) {
+        
+            }
+    
+            @Override
+            public void foundUsage(@NonNull Location location) {
+        
+            }
+    
+            @Override
+            public void findUsagesCompleted(@NonNull String filePath) {
+        
+            }
+        }, null);
         myLanguageServers = LanguageServerProvider.get().getLanguageServers();
         for (LanguageServer languageServer : myLanguageServers) {
-            if (languageServer!=null){
-                languageServer.configure(myModel);
+            if (languageServer != null) {
+                languageServer.initialize(myModel);
             }
         }
-        
-        myThread = new Thread(null, () -> {
+    
+        Thread thread = new Thread(null, () -> {
             try {
                 synchronized (myLock) {
                     while (!myDestroyed) {
-                        
+                    
                         if (!myShutdown) {
-                            
-                            if (myVisibleFile != null) {
-                                LanguageServer languageServer = null;
-                                for (LanguageServer server : myLanguageServers) {
-                                    if (server != null) {
-                                        for (String pattern : server.getDefaultFilePatterns()) {
-                                            if (FileNameMatcher.get().match(FileSystem.getName(myVisibleFile), pattern)) {
-                                                languageServer = server;
-                                            }
-                                        }
-                                    }
-                                }
-                                
-                                if (languageServer!=null){
-                                    languageServer.requestHighlighting(myVisibleFile);
-                                }
-                                
-                            }
-                            
+    
+    
                             myLock.wait();
                         }
                     }
@@ -64,38 +98,21 @@ public final class CodeAnalysisEngine {
                 e.printStackTrace();
             }
         }, "CodeAnalysisEngine", 2000000L);
-        myThread.setPriority(Thread.MIN_PRIORITY + 1);
-        myThread.start();
+        thread.setPriority(Thread.MIN_PRIORITY + 1);
+        thread.start();
     }
     
     
     public void openFile(@NonNull String filePath) {
-        synchronized (myLock) {
-            myVisibleFile = filePath;
-            myLock.notify();
-        }
+    
     }
     
     public void setHighlightingListener(HighlightingListener highlightingListener) {
-        AppLog.s(this,"setHighlightingListener");
-      //  synchronized (myLock) {
+        synchronized (myLock) {
             myHighlightingListener = highlightingListener;
-        //}
-    }
-    
-    public void begin() {
-        synchronized (myLock) {
-            modelCount++;
         }
     }
     
-    @Override
-    protected void finalize() {
-        synchronized (myLock) {
-            if (modelCount > 0)
-                modelCount--;
-        }
-    }
     
     public void restart() {
         synchronized (myLock) {
@@ -107,7 +124,6 @@ public final class CodeAnalysisEngine {
     public void shutdown() {
         synchronized (myLock) {
             myShutdown = true;
-            // myLock.notify();
         }
     }
     
@@ -125,47 +141,4 @@ public final class CodeAnalysisEngine {
     }
     
     
-    protected class HighlighterCallbackImpl implements HighlighterCallback {
-        
-        private final Highlights myHighlights = new Highlights();
-        
-        @Override
-        public void highlightStarted(@NonNull String filePath, long version) {
-            myHighlights.clear();
-        }
-        
-        @Override
-        public void fileHighlighting(@NonNull String filePath, long version, @NonNull Highlights highlights) {
-            //if (myHighlightingListener==null)return;
-            myHighlightingListener.fileHighlighting(
-                    filePath,
-                    version,
-                    highlights.styles,
-                    highlights.startLines,
-                    highlights.startColumns,
-                    highlights.endLines,
-                    highlights.endColumns, highlights.size);
-            myHighlights.clear();
-        }
-        
-        @Override
-        public void semanticHighlighting(@NonNull String filePath, long version, int style, int startLine, int startColumn, int endLine, int endColumn) {
-            myHighlights.highlight(style, startLine, startColumn, endLine, endColumn);
-        }
-        
-        @Override
-        public void highlightFinished(@NonNull String filePath, long version) {
-            //if (myHighlightingListener==null)return;
-            myHighlightingListener.semanticHighlighting(
-                    filePath,
-                    version,
-                    myHighlights.styles,
-                    myHighlights.startLines,
-                    myHighlights.startColumns,
-                    myHighlights.endLines,
-                    myHighlights.endColumns,
-                    myHighlights.size
-            );
-        }
-    }
 }

@@ -22,7 +22,7 @@ import android.graphics.BitmapFactory;
 import com.apkide.apktool.androlib.exceptions.AndrolibException;
 import com.apkide.apktool.androlib.exceptions.CantFind9PatchChunkException;
 import com.apkide.apktool.util.ExtDataInput;
-import com.apkide.common.IoUtils;
+import com.apkide.common.io.IoUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInput;
@@ -34,7 +34,7 @@ public class Res9patchStreamDecoder implements ResStreamDecoder {
     @Override
     public void decode(InputStream in, OutputStream out) throws AndrolibException {
         try {
-            byte[] data = IoUtils.readAllBytes(in);
+            byte[] data = IoUtils.readBytes(in);
 
             if (data.length == 0) {
                 return;

@@ -20,7 +20,7 @@ import com.apkide.apktool.common.BrutException;
 import com.apkide.apktool.common.InvalidUnknownFileException;
 import com.apkide.apktool.common.RootUnknownFileException;
 import com.apkide.apktool.common.TraversalUnknownFileException;
-import com.apkide.common.IoUtils;
+import com.apkide.common.io.IoUtils;
 
 import java.io.*;
 import java.util.zip.CRC32;
@@ -32,7 +32,7 @@ public class BrutIO {
     public static void copyAndClose(InputStream in, OutputStream out)
             throws IOException {
         try {
-            IoUtils.copyAllBytes(in, out);
+            IoUtils.copy(in, out);
         } finally {
             IoUtils.safeClose(in,out);
         }
@@ -107,7 +107,7 @@ public class BrutIO {
         try (
                 FileInputStream fis = new FileInputStream(inputFile)
         ) {
-            IoUtils.copyAllBytes(fis, outputFile);
+            IoUtils.copy(fis, outputFile);
         }
     }
 
@@ -115,7 +115,7 @@ public class BrutIO {
         try (
                 InputStream is = inputFile.getInputStream(entry)
         ) {
-            IoUtils.copyAllBytes(is, outputFile);
+            IoUtils.copy(is, outputFile);
         }
     }
 

@@ -35,7 +35,7 @@ android {
 }
 
 dependencies {
-    api fileTree(dir: 'libs', include: ['*.jar'])
+    //api fileTree(dir: 'libs', include: ['*.jar']) unused
     implementation libs.androidx.annotation
     implementation project(':common')
     implementation project(':language-server:api')

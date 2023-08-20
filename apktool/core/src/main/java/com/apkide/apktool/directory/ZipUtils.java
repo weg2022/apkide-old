@@ -18,8 +18,8 @@ package com.apkide.apktool.directory;
 
 import com.apkide.apktool.common.BrutException;
 import com.apkide.apktool.util.BrutIO;
-import com.apkide.common.FileUtils;
-import com.apkide.common.IoUtils;
+import com.apkide.common.io.FileUtils;
+import com.apkide.common.io.IoUtils;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -81,7 +81,7 @@ public class ZipUtils {
 
                 zipOutputStream.putNextEntry(zipEntry);
                 try (FileInputStream inputStream = new FileInputStream(file)) {
-                    IoUtils.copyAllBytes(inputStream, zipOutputStream);
+                    IoUtils.copy(inputStream, zipOutputStream);
                 }
                 zipOutputStream.closeEntry();
             } else if (file.isDirectory()) {

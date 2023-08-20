@@ -17,7 +17,7 @@
 package com.apkide.apktool.util;
 
 import com.apkide.apktool.common.BrutException;
-import com.apkide.common.IoUtils;
+import com.apkide.common.io.IoUtils;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -53,7 +53,7 @@ public abstract class Jar {
             fileOut.deleteOnExit();
 
             OutputStream out = Files.newOutputStream(fileOut.toPath());
-            IoUtils.copyAllBytes(in, out);
+            IoUtils.copy(in, out);
             in.close();
             out.close();
 

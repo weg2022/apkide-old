@@ -10,7 +10,7 @@
         android:id="@+id/fileEntryIcon"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="15dp"
         tools:srcCompat="@drawable/file_type_unknown"
         android:importantForAccessibility="no" />
 

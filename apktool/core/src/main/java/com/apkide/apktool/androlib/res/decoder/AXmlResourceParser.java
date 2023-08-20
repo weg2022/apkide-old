@@ -25,7 +25,8 @@ import com.apkide.apktool.ext.android.content.res.XmlResourceParser;
 import com.apkide.apktool.ext.android.util.TypedValue;
 import com.apkide.apktool.ext.org.xmlpull.v1.XmlPullParserException;
 import com.apkide.apktool.util.ExtDataInput;
-import com.apkide.common.Logger;
+import com.apkide.common.logger.Level;
+import com.apkide.common.logger.Logger;
 import com.google.common.io.LittleEndianDataInputStream;
 
 import java.io.DataInput;
@@ -420,7 +421,7 @@ public class AXmlResourceParser implements XmlResourceParser {
                 );
             } catch (AndrolibException ex) {
                 setFirstError(ex);
-                LOGGER.log(Logger.Level.Warning, String.format("Could not decode attr value, using undecoded value "
+                LOGGER.log(Level.Warning, String.format("Could not decode attr value, using undecoded value "
                                 + "instead: ns=%s, name=%s, value=0x%08x",
                         getAttributePrefix(index),
                         getAttributeName(index),

@@ -15,10 +15,10 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import com.apkide.common.Color;
+import com.apkide.common.color.Color;
 import com.apkide.common.SyncRunner;
-import com.apkide.common.TextModel;
-import com.apkide.common.TextStyle;
+import com.apkide.common.text.TextModel;
+import com.apkide.common.text.TextStyle;
 
 public class Console extends View implements TextModel.TextModelListener, Theme.ThemeListener {
     public Console(Context context) {

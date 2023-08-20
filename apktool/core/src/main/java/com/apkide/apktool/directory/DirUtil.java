@@ -22,7 +22,7 @@ import com.apkide.apktool.common.RootUnknownFileException;
 import com.apkide.apktool.common.TraversalUnknownFileException;
 import com.apkide.apktool.util.BrutIO;
 import com.apkide.apktool.util.OS;
-import com.apkide.common.Logger;
+import com.apkide.common.logger.Logger;
 
 import java.io.File;
 import java.io.IOException;

@@ -17,7 +17,7 @@
 package com.apkide.apktool.androlib.res.data;
 
 
-import com.apkide.common.Logger;
+import com.apkide.common.logger.Logger;
 
 public class ResConfigFlags {
     public final short mcc;

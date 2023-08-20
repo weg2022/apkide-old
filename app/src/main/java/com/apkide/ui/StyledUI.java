@@ -22,7 +22,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.apkide.common.AppLog;
-import com.apkide.common.MessageBox;
+import com.apkide.ui.util.MessageBox;
 
 
 public class StyledUI extends AppCompatActivity {

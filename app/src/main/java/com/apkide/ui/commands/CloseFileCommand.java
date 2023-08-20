@@ -20,12 +20,12 @@ public class CloseFileCommand implements MenuCommand {
 
 	@Override
 	public boolean isEnabled() {
-		return App.getOpenFileService().isOpen();
+		return App.getFileService().isOpenedFiles();
 	}
 
 	@Override
 	public boolean run() {
-		App.getOpenFileService().closeVisibleFile();
+		App.getFileService().closeVisibleFile();
 		return true;
 	}
 }

@@ -4,8 +4,8 @@ import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
 import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO;
 import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES;
 import static androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode;
-import static com.apkide.common.IoUtils.copyAllBytes;
-import static com.apkide.common.IoUtils.safeClose;
+import static com.apkide.common.io.IoUtils.copy;
+import static com.apkide.common.io.IoUtils.safeClose;
 import static java.io.File.separator;
 import static java.util.Objects.requireNonNull;
 
@@ -25,7 +25,7 @@ import com.apkide.codeanalysis.LanguageServerProvider;
 import com.apkide.common.AppLog;
 import com.apkide.common.Application;
 import com.apkide.common.FileSystem;
-import com.apkide.common.FileUtils;
+import com.apkide.common.io.FileUtils;
 import com.apkide.common.SafeRunner;
 import com.apkide.ls.api.LanguageServer;
 import com.apkide.ls.java.JavaLanguageServer;
@@ -122,7 +122,7 @@ public class IDEApplication extends MultiDexApplication {
                         InputStream inputStream = inputStreams[0];
                         FileOutputStream outputStream = new FileOutputStream(targetFile);
                         version[0] = inputStream.available();
-                        copyAllBytes(inputStream, outputStream);
+                        copy(inputStream, outputStream);
                         safeClose(inputStream, outputStream);
                     });
                 }
@@ -146,7 +146,7 @@ public class IDEApplication extends MultiDexApplication {
                     InputStream inputStream = getContext().getAssets().open(fileName);
                     FileOutputStream outputStream = new FileOutputStream(targetFile);
                     version[0] = inputStream.available();
-                    copyAllBytes(inputStream, outputStream);
+                    copy(inputStream, outputStream);
                     safeClose(inputStream, outputStream);
                 });
                 
@@ -174,7 +174,7 @@ public class IDEApplication extends MultiDexApplication {
             
             @NonNull
             @Override
-            public File getExternalStorageDir() {
+            public File getExternalDir() {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                     return Environment.getExternalStorageDirectory();
                 } else {

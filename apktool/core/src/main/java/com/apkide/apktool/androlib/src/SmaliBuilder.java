@@ -20,7 +20,7 @@ import com.apkide.apktool.androlib.exceptions.AndrolibException;
 import com.apkide.apktool.androlib.mod.SmaliMod;
 import com.apkide.apktool.directory.DirectoryException;
 import com.apkide.apktool.directory.ExtFile;
-import com.apkide.common.Logger;
+import com.apkide.common.logger.Logger;
 import com.apkide.smali.dexlib2.Opcodes;
 import com.apkide.smali.dexlib2.writer.builder.DexBuilder;
 import com.apkide.smali.dexlib2.writer.io.FileDataStore;

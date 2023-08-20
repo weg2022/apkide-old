@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class AppLog {
-	private static final String TAG = "Dev-A";
+	private static final String TAG = "APK-IDE";
 
 	public static void d(@NonNull String msg) {
 		Log.d(TAG, msg);

@@ -1,0 +1,458 @@
+// Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
+package com.apkide.java.decompiler.struct;
+
+import static com.apkide.java.decompiler.code.CodeConstants.GROUP_FIELDACCESS;
+import static com.apkide.java.decompiler.code.CodeConstants.GROUP_GENERAL;
+import static com.apkide.java.decompiler.code.CodeConstants.GROUP_INVOCATION;
+import static com.apkide.java.decompiler.code.CodeConstants.GROUP_JUMP;
+import static com.apkide.java.decompiler.code.CodeConstants.GROUP_RETURN;
+import static com.apkide.java.decompiler.code.CodeConstants.GROUP_SWITCH;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_aload;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_aload_3;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_anewarray;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_areturn;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_astore;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_astore_3;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_athrow;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_bipush;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_checkcast;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_dload;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_dreturn;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_dstore;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_fload;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_freturn;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_fstore;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_getfield;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_getstatic;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_goto;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_goto_w;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_iconst_5;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_iconst_m1;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_if_acmpeq;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_if_acmpne;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_if_icmpeq;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_if_icmpge;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_if_icmpgt;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_if_icmple;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_if_icmplt;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_if_icmpne;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_ifeq;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_ifge;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_ifgt;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_ifle;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_iflt;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_ifne;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_ifnonnull;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_ifnull;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_iinc;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_iload;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_iload_0;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_instanceof;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_invokedynamic;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_invokeinterface;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_invokespecial;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_invokestatic;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_invokevirtual;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_ireturn;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_istore;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_istore_0;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_jsr;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_jsr_w;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_ldc;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_ldc2_w;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_ldc_w;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_lload;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_lookupswitch;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_lreturn;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_lstore;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_multianewarray;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_new;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_newarray;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_putfield;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_putstatic;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_ret;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_return;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_sipush;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_tableswitch;
+import static com.apkide.java.decompiler.code.CodeConstants.opc_wide;
+
+import com.apkide.java.decompiler.struct.gen.MethodDescriptor;
+import com.apkide.java.decompiler.code.CodeConstants;
+import com.apkide.java.decompiler.code.ExceptionHandler;
+import com.apkide.java.decompiler.code.ExceptionTable;
+import com.apkide.java.decompiler.code.FullInstructionSequence;
+import com.apkide.java.decompiler.code.Instruction;
+import com.apkide.java.decompiler.code.InstructionSequence;
+import com.apkide.java.decompiler.struct.attr.StructCodeAttribute;
+import com.apkide.java.decompiler.struct.attr.StructGeneralAttribute;
+import com.apkide.java.decompiler.struct.attr.StructLocalVariableTableAttribute;
+import com.apkide.java.decompiler.struct.consts.ConstantPool;
+import com.apkide.java.decompiler.util.DataInputFullStream;
+import com.apkide.java.decompiler.util.VBStyleCollection;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+/*
+  method_info {
+    u2 access_flags;
+    u2 name_index;
+    u2 descriptor_index;
+    u2 attributes_count;
+    attribute_info attributes[attributes_count];
+  }
+*/
+public class StructMethod extends StructMember {
+  public static StructMethod create(DataInputFullStream in, ConstantPool pool, String clQualifiedName, int bytecodeVersion, boolean own) throws IOException {
+    int accessFlags = in.readUnsignedShort();
+    int nameIndex = in.readUnsignedShort();
+    int descriptorIndex = in.readUnsignedShort();
+
+    String[] values = pool.getClassElement(ConstantPool.METHOD, clQualifiedName, nameIndex, descriptorIndex);
+
+    Map<String, StructGeneralAttribute> attributes = readAttributes(in, pool);
+    StructCodeAttribute code = (StructCodeAttribute)attributes.remove(StructGeneralAttribute.ATTRIBUTE_CODE.name);
+    if (code != null) {
+      attributes.putAll(code.codeAttributes);
+    }
+
+    return new StructMethod(accessFlags, attributes, values[0], values[1], bytecodeVersion, own ? code : null);
+  }
+
+  private static final int[] opr_iconst = {-1, 0, 1, 2, 3, 4, 5};
+  private static final int[] opr_loadstore = {0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3};
+  private static final int[] opcs_load = {opc_iload, opc_lload, opc_fload, opc_dload, opc_aload};
+  private static final int[] opcs_store = {opc_istore, opc_lstore, opc_fstore, opc_dstore, opc_astore};
+
+  private final String name;
+  private final String descriptor;
+  private final int bytecodeVersion;
+  private final int localVariables;
+  private final int codeLength;
+  private final int codeFullLength;
+  private InstructionSequence seq = null;
+  private boolean expanded = false;
+
+  private StructMethod(int accessFlags,
+                       Map<String, StructGeneralAttribute> attributes,
+                       String name,
+                       String descriptor,
+                       int bytecodeVersion,
+                       StructCodeAttribute code) {
+    super(accessFlags, attributes);
+    this.name = name;
+    this.descriptor = descriptor;
+    this.bytecodeVersion = bytecodeVersion;
+    if (code != null) {
+      this.localVariables = code.localVariables;
+      this.codeLength = code.codeLength;
+      this.codeFullLength = code.codeFullLength;
+    }
+    else {
+      this.localVariables = this.codeLength = this.codeFullLength = -1;
+    }
+  }
+
+  public void expandData(StructClass classStruct) throws IOException {
+    if (codeLength >= 0 && !expanded) {
+      byte[] code = classStruct.getLoader().loadBytecode(classStruct, this, codeFullLength);
+      seq = parseBytecode(new DataInputFullStream(code), codeLength, classStruct.getPool());
+      expanded = true;
+    }
+  }
+
+  public void releaseResources() {
+    if (codeLength >= 0 && expanded) {
+      seq = null;
+      expanded = false;
+    }
+  }
+
+  @SuppressWarnings("AssignmentToForLoopParameter")
+  private InstructionSequence parseBytecode(DataInputFullStream in, int length, ConstantPool pool) throws IOException {
+    VBStyleCollection<Instruction, Integer> instructions = new VBStyleCollection<>();
+
+    for (int i = 0; i < length; ) {
+      int offset = i;
+
+      int opcode = in.readUnsignedByte();
+      int group = GROUP_GENERAL;
+
+      boolean wide = (opcode == opc_wide);
+
+      if (wide) {
+        i++;
+        opcode = in.readUnsignedByte();
+      }
+
+      List<Integer> operands = new ArrayList<>();
+
+      if (opcode >= opc_iconst_m1 && opcode <= opc_iconst_5) {
+        operands.add(opr_iconst[opcode - opc_iconst_m1]);
+        opcode = opc_bipush;
+      }
+      else if (opcode >= opc_iload_0 && opcode <= opc_aload_3) {
+        operands.add(opr_loadstore[opcode - opc_iload_0]);
+        opcode = opcs_load[(opcode - opc_iload_0) / 4];
+      }
+      else if (opcode >= opc_istore_0 && opcode <= opc_astore_3) {
+        operands.add(opr_loadstore[opcode - opc_istore_0]);
+        opcode = opcs_store[(opcode - opc_istore_0) / 4];
+      }
+      else {
+        switch (opcode) {
+          case opc_bipush:
+            operands.add((int)in.readByte());
+            i++;
+            break;
+          case opc_ldc:
+          case opc_newarray:
+            operands.add(in.readUnsignedByte());
+            i++;
+            break;
+          case opc_sipush:
+          case opc_ifeq:
+          case opc_ifne:
+          case opc_iflt:
+          case opc_ifge:
+          case opc_ifgt:
+          case opc_ifle:
+          case opc_if_icmpeq:
+          case opc_if_icmpne:
+          case opc_if_icmplt:
+          case opc_if_icmpge:
+          case opc_if_icmpgt:
+          case opc_if_icmple:
+          case opc_if_acmpeq:
+          case opc_if_acmpne:
+          case opc_goto:
+          case opc_jsr:
+          case opc_ifnull:
+          case opc_ifnonnull:
+            if (opcode != opc_sipush) {
+              group = GROUP_JUMP;
+            }
+            operands.add((int)in.readShort());
+            i += 2;
+            break;
+          case opc_ldc_w:
+          case opc_ldc2_w:
+          case opc_getstatic:
+          case opc_putstatic:
+          case opc_getfield:
+          case opc_putfield:
+          case opc_invokevirtual:
+          case opc_invokespecial:
+          case opc_invokestatic:
+          case opc_new:
+          case opc_anewarray:
+          case opc_checkcast:
+          case opc_instanceof:
+            operands.add(in.readUnsignedShort());
+            i += 2;
+            if (opcode >= opc_getstatic && opcode <= opc_putfield) {
+              group = GROUP_FIELDACCESS;
+            }
+            else if (opcode >= opc_invokevirtual && opcode <= opc_invokestatic) {
+              group = GROUP_INVOCATION;
+            }
+            break;
+          case opc_invokedynamic:
+            if (bytecodeVersion >= CodeConstants.BYTECODE_JAVA_7) { // instruction unused in Java 6 and before
+              operands.add(in.readUnsignedShort());
+              in.discard(2);
+              group = GROUP_INVOCATION;
+              i += 4;
+            }
+            break;
+          case opc_iload:
+          case opc_lload:
+          case opc_fload:
+          case opc_dload:
+          case opc_aload:
+          case opc_istore:
+          case opc_lstore:
+          case opc_fstore:
+          case opc_dstore:
+          case opc_astore:
+          case opc_ret:
+            if (wide) {
+              operands.add(in.readUnsignedShort());
+              i += 2;
+            }
+            else {
+              operands.add(in.readUnsignedByte());
+              i++;
+            }
+            if (opcode == opc_ret) {
+              group = GROUP_RETURN;
+            }
+            break;
+          case opc_iinc:
+            if (wide) {
+              operands.add(in.readUnsignedShort());
+              operands.add((int)in.readShort());
+              i += 4;
+            }
+            else {
+              operands.add(in.readUnsignedByte());
+              operands.add((int)in.readByte());
+              i += 2;
+            }
+            break;
+          case opc_goto_w:
+          case opc_jsr_w:
+            opcode = opcode == opc_jsr_w ? opc_jsr : opc_goto;
+            operands.add(in.readInt());
+            group = GROUP_JUMP;
+            i += 4;
+            break;
+          case opc_invokeinterface:
+            operands.add(in.readUnsignedShort());
+            operands.add(in.readUnsignedByte());
+            in.discard(1);
+            group = GROUP_INVOCATION;
+            i += 4;
+            break;
+          case opc_multianewarray:
+            operands.add(in.readUnsignedShort());
+            operands.add(in.readUnsignedByte());
+            i += 3;
+            break;
+          case opc_tableswitch:
+            in.discard((4 - (i + 1) % 4) % 4);
+            i += ((4 - (i + 1) % 4) % 4); // padding
+            operands.add(in.readInt());
+            i += 4;
+            int low = in.readInt();
+            operands.add(low);
+            i += 4;
+            int high = in.readInt();
+            operands.add(high);
+            i += 4;
+
+            for (int j = 0; j < high - low + 1; j++) {
+              operands.add(in.readInt());
+              i += 4;
+            }
+            group = GROUP_SWITCH;
+
+            break;
+          case opc_lookupswitch:
+            in.discard((4 - (i + 1) % 4) % 4);
+            i += ((4 - (i + 1) % 4) % 4); // padding
+            operands.add(in.readInt());
+            i += 4;
+            int npairs = in.readInt();
+            operands.add(npairs);
+            i += 4;
+
+            for (int j = 0; j < npairs; j++) {
+              operands.add(in.readInt());
+              i += 4;
+              operands.add(in.readInt());
+              i += 4;
+            }
+            group = GROUP_SWITCH;
+            break;
+          case opc_ireturn:
+          case opc_lreturn:
+          case opc_freturn:
+          case opc_dreturn:
+          case opc_areturn:
+          case opc_return:
+          case opc_athrow:
+            group = GROUP_RETURN;
+        }
+      }
+
+      int[] ops = null;
+      if (!operands.isEmpty()) {
+        ops = new int[operands.size()];
+        for (int j = 0; j < operands.size(); j++) {
+          ops[j] = operands.get(j);
+        }
+      }
+
+      Instruction instr = Instruction.create(opcode, wide, group, bytecodeVersion, ops);
+
+      instructions.addWithKey(instr, offset);
+
+      i++;
+    }
+
+    // initialize exception table
+    List<ExceptionHandler> lstHandlers = new ArrayList<>();
+
+    int exception_count = in.readUnsignedShort();
+    for (int i = 0; i < exception_count; i++) {
+      ExceptionHandler handler = new ExceptionHandler();
+      handler.from = in.readUnsignedShort();
+      handler.to = in.readUnsignedShort();
+      handler.handler = in.readUnsignedShort();
+
+      int excclass = in.readUnsignedShort();
+      if (excclass != 0) {
+        handler.exceptionClass = pool.getPrimitiveConstant(excclass).getString();
+      }
+
+      lstHandlers.add(handler);
+    }
+
+    InstructionSequence seq = new FullInstructionSequence(instructions, new ExceptionTable(lstHandlers));
+
+    // initialize instructions
+    int i = seq.length() - 1;
+    seq.setPointer(i);
+
+    while (i >= 0) {
+      Instruction instr = seq.getInstr(i--);
+      if (instr.group != GROUP_GENERAL) {
+        instr.initInstruction(seq);
+      }
+      seq.addToPointer(-1);
+    }
+
+    return seq;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public String getDescriptor() {
+    return descriptor;
+  }
+
+  public int getBytecodeVersion() {
+    return bytecodeVersion;
+  }
+
+  public boolean containsCode() {
+    return codeLength >= 0;
+  }
+
+  public int getLocalVariables() {
+    return localVariables;
+  }
+
+  public InstructionSequence getInstructionSequence() {
+    return seq;
+  }
+
+  public StructLocalVariableTableAttribute getLocalVariableAttr() {
+    return getAttribute(StructGeneralAttribute.ATTRIBUTE_LOCAL_VARIABLE_TABLE);
+  }
+
+  @Override
+  protected int getArrayDimensions() {
+    return MethodDescriptor.parseDescriptor(getDescriptor()).ret.getArrayDim();
+  }
+
+  @Override
+  public String toString() {
+    return name;
+  }
+}

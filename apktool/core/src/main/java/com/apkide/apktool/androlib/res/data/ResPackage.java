@@ -22,7 +22,7 @@ import com.apkide.apktool.androlib.res.data.value.ResFileValue;
 import com.apkide.apktool.androlib.res.data.value.ResValueFactory;
 import com.apkide.apktool.androlib.res.xml.ResValuesXmlSerializable;
 import com.apkide.apktool.util.Duo;
-import com.apkide.common.Logger;
+import com.apkide.common.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.Collection;

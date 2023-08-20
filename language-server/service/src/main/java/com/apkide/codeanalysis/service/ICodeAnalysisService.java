@@ -1,7 +1,5 @@
 package com.apkide.codeanalysis.service;
 
-import androidx.annotation.NonNull;
-
 import com.apkide.ls.api.util.Position;
 import com.apkide.ls.api.util.Range;
 
@@ -14,50 +12,52 @@ public interface ICodeAnalysisService {
     
     void shutdown();
     
-    void openFile(@NonNull String filePath);
+    void openFile(String filePath);
     
-    void renameFile(@NonNull String filePath,@NonNull String destFilePath);
+    void closeFile(String filePath);
     
-    void deleteFile(@NonNull String filePath);
+    void renameFile(String filePath, String destFilePath);
     
-    void safeDelete(@NonNull String filePath,@NonNull Position position);
+    void deleteFile(String filePath);
     
-    void prepareRename(@NonNull String filePath, @NonNull Position position, @NonNull String newName);
-   
-    void prepareInline(@NonNull String filePath,@NonNull Position position);
+    void safeDelete(String filePath, Position position);
     
-    void inline(@NonNull String filePath,@NonNull Position position);
+    void prepareRename(String filePath, Position position, String newName);
     
-    void rename(@NonNull String filePath, @NonNull Position position, @NonNull String newName);
-
-    void findUsages(@NonNull String filePath, @NonNull Position position, boolean includeDeclaration);
+    void prepareInline(String filePath, Position position);
     
-    void findAPI(@NonNull String filePath,@NonNull Position position);
+    void inline(String filePath, Position position);
     
-    void findSymbols(@NonNull String filePath);
+    void rename(String filePath, Position position, String newName);
     
-    void indent(@NonNull String filePath,int tabSize,int indentationSize);
-    void indent(@NonNull String filePath,int tabSize,int indentationSize,@NonNull Range range);
+    void findUsages(String filePath, Position position, boolean includeDeclaration);
     
-    void format(@NonNull String filePath,int tabSize,int indentationSize);
+    void findAPI(String filePath, Position position);
     
-    void format(@NonNull String filePath, int tabSize, int indentationSize, @NonNull Range range);
+    void indent(String filePath, int tabSize, int indentationSize);
     
-    void comment(@NonNull String filePath,@NonNull Range range);
-    void uncomment(@NonNull String filePath,@NonNull Range range);
+    void indent(String filePath, int tabSize, int indentationSize, Range range);
     
-    void surroundWith(@NonNull String filePath,@NonNull Position position);
+    void format(String filePath, int tabSize, int indentationSize);
     
-    void setDiagnosticListener(@NonNull IDiagnosticListener listener);
+    void format(String filePath, int tabSize, int indentationSize, Range range);
     
-    void setCodeCompletionListener(@NonNull ICodeCompletionListener listener);
+    void comment(String filePath, Range range);
     
-    void setHighlightingListener(@NonNull IHighlightingListener listener);
+    void uncomment(String filePath, Range range);
     
-    void setNavigationListener(@NonNull INavigationListener listener);
+    void surroundWith(String filePath, Position position);
     
-    void setGotoSymbolListener(@NonNull IGotoSymbolListener listener);
+    void setDiagnosticListener(IDiagnosticListener listener);
     
-    void setRefactoringListener(@NonNull IRefactoringListener listener);
+    void setCodeCompletionListener(ICodeCompletionListener listener);
+    
+    void setHighlightingListener(IHighlightingListener listener);
+    
+    void setFindAPIListener(IFindAPIListener listener);
+    
+    void setFindUsagesListener(IFindUsagesListener listener);
+    
+    void setRefactoringListener(IRefactoringListener listener);
     
 }

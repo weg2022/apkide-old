@@ -25,7 +25,7 @@ public abstract class Application {
 	public abstract File getTempDir();
     
     @NonNull
-    public abstract File getExternalStorageDir();
+    public abstract File getExternalDir();
     
     @NonNull
 	public abstract Context getContext();

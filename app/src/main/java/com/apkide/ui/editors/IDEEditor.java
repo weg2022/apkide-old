@@ -5,9 +5,7 @@ import android.util.AttributeSet;
 
 import androidx.annotation.NonNull;
 
-import com.apkide.ui.AppPreferences;
 import com.apkide.ui.views.CodeEditText;
-import com.apkide.ui.views.editor.Theme;
 
 public class IDEEditor extends CodeEditText {
     public IDEEditor(Context context) {
@@ -26,11 +24,7 @@ public class IDEEditor extends CodeEditText {
     }
     
     private void initView() {
-        configureTheme();
-    }
     
-    public void configureTheme(){
-        getEditorView().applyColorScheme(new Theme.DefaultColorScheme(AppPreferences.isNightTheme()));
     }
     
     public void setModel(@NonNull IDEEditorModel model) {

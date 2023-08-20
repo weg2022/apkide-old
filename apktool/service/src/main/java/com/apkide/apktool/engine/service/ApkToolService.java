@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import com.apkide.apktool.engine.ApkToolConfig;
 import com.apkide.apktool.engine.ApkToolEngine;
 import com.apkide.apktool.engine.ProcessingCallback;
-import com.apkide.common.Logger;
+import com.apkide.common.logger.Level;
 
 import cn.thens.okbinder2.OkBinder;
 
@@ -33,7 +33,7 @@ public class ApkToolService extends Service {
                 }
     
                 @Override
-                public void processing(@NonNull Logger.Level level, @NonNull String msg) {
+                public void processing(@NonNull Level level, @NonNull String msg) {
                     callback.processing(level, msg);
                 }
     
@@ -58,7 +58,7 @@ public class ApkToolService extends Service {
                 }
     
                 @Override
-                public void processing(@NonNull Logger.Level level, @NonNull String msg) {
+                public void processing(@NonNull Level level, @NonNull String msg) {
                     callback.processing(level, msg);
                 }
     

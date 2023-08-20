@@ -8,7 +8,7 @@ import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 
-import com.apkide.common.MessageBox;
+import com.apkide.ui.util.MessageBox;
 
 public class ProgressDialog extends MessageBox {
     

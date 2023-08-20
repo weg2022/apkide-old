@@ -17,7 +17,7 @@
 package com.apkide.apktool.androlib.res.decoder;
 
 import com.apkide.apktool.androlib.exceptions.AndrolibException;
-import com.apkide.common.IoUtils;
+import com.apkide.common.io.IoUtils;
 
 
 import java.io.IOException;
@@ -29,7 +29,7 @@ public class ResRawStreamDecoder implements ResStreamDecoder {
     public void decode(InputStream in, OutputStream out)
             throws AndrolibException {
         try {
-            IoUtils.copyAllBytes(in, out);
+            IoUtils.copy(in, out);
         } catch (IOException ex) {
             throw new AndrolibException("Could not decode raw stream", ex);
         }

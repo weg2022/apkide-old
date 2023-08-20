@@ -2,18 +2,18 @@ package com.apkide.ui.editors;
 
 import androidx.annotation.NonNull;
 
+import com.apkide.codeanalysis.FileHighlights;
 import com.apkide.common.FileSystem;
-import com.apkide.common.IoUtils;
-import com.apkide.common.LineIterator;
-import com.apkide.common.TextModel;
-import com.apkide.codeanalysis.FileHighlighting;
-import com.apkide.ui.services.openfile.OpenFileModel;
+import com.apkide.common.io.IoUtils;
+import com.apkide.common.io.iterator.LineIterator;
+import com.apkide.common.text.TextModel;
+import com.apkide.ui.services.file.FileModel;
 import com.apkide.ui.views.CodeEditTextModel;
 import com.apkide.ui.views.editor.StyleSpan;
 
 import java.io.IOException;
 
-public class IDEEditorModel extends CodeEditTextModel implements OpenFileModel {
+public class IDEEditorModel extends CodeEditTextModel implements FileModel {
     private final String myFilePath;
     private final Object myHighlightLock = new Object();
     private StyleSpan myHighlight = new StyleSpan();
@@ -73,7 +73,7 @@ public class IDEEditorModel extends CodeEditTextModel implements OpenFileModel {
     
     @Override
     public void sync() throws IOException {
-        setText(IoUtils.readAllCharsAndClose(FileSystem.readFile(myFilePath)));
+        setText(IoUtils.readStringAndClose(FileSystem.readFile(myFilePath)));
     }
     
     @Override
@@ -82,7 +82,7 @@ public class IDEEditorModel extends CodeEditTextModel implements OpenFileModel {
     }
     
     @Override
-    public void highlighting(@NonNull FileHighlighting highlighting) {
+    public void highlighting(@NonNull FileHighlights highlighting) {
         myHighlight.set(highlighting.styles,
                 highlighting.startLines,
                 highlighting.startColumns,
@@ -97,7 +97,7 @@ public class IDEEditorModel extends CodeEditTextModel implements OpenFileModel {
     }
     
     @Override
-    public void semanticHighlighting(@NonNull FileHighlighting highlighting) {
+    public void semanticHighlighting(@NonNull FileHighlights highlighting) {
         mySyntaxHighlight.set(highlighting.styles,
                 highlighting.startLines,
                 highlighting.startColumns,

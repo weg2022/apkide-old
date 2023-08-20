@@ -16,7 +16,7 @@
  */
 package com.apkide.apktool.androlib.res.decoder;
 
-import static com.apkide.common.Logger.*;
+import static com.apkide.common.logger.Logger.*;
 
 import com.apkide.apktool.androlib.exceptions.AndrolibException;
 import com.apkide.apktool.androlib.exceptions.CantFind9PatchChunkException;
@@ -27,7 +27,8 @@ import com.apkide.apktool.androlib.res.data.value.ResFileValue;
 import com.apkide.apktool.directory.DirUtil;
 import com.apkide.apktool.directory.Directory;
 import com.apkide.apktool.directory.DirectoryException;
-import com.apkide.common.Logger;
+import com.apkide.common.logger.Level;
+import com.apkide.common.logger.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;

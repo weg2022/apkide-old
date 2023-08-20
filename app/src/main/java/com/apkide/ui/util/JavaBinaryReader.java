@@ -1,18 +1,18 @@
 package com.apkide.ui.util;
 
 import static com.apkide.common.FileSystem.getName;
-import static com.apkide.common.FileUtils.readBytes;
+import static com.apkide.common.io.FileUtils.readBytes;
 
 import androidx.annotation.NonNull;
 
 import com.apkide.common.Application;
 import com.apkide.common.FileSystem;
-import com.apkide.common.IoUtils;
-import com.apkide.common.Logger;
+import com.apkide.common.io.IoUtils;
+import com.apkide.common.logger.Logger;
 import com.apkide.ui.AppPreferences;
 
-import org.jetbrains.java.decompiler.main.Fernflower;
-import org.jetbrains.java.decompiler.main.extern.IFernflowerLogger;
+import com.apkide.java.decompiler.main.Fernflower;
+import com.apkide.java.decompiler.main.extern.IFernflowerLogger;
 
 import java.io.ByteArrayInputStream;
 import java.io.Closeable;
@@ -130,7 +130,7 @@ public class JavaBinaryReader implements Closeable {
                     String.valueOf((getName(archivePath) + File.separator + getName(entryName)).hashCode()));
             
             if (!temDir.exists())
-                FileSystem.mkdir(temDir.getAbsolutePath());
+                FileSystem.createDir(temDir.getAbsolutePath());
             
             List<ZipEntry> entities = new ArrayList<>();
             String className = FileSystem.getName(entryName.substring(0, entryName.indexOf(".")));
@@ -162,7 +162,7 @@ public class JavaBinaryReader implements Closeable {
                 InputStream in = archiveFile.getInputStream(entry);
                 FileOutputStream out = new FileOutputStream(tempFile);
                 try {
-                    IoUtils.copyAllBytes(in, out);
+                    IoUtils.copy(in, out);
                 } finally {
                     IoUtils.safeClose(in, out);
                 }

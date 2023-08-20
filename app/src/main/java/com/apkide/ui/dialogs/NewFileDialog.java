@@ -10,7 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.apkide.common.FileSystem;
-import com.apkide.common.MessageBox;
+import com.apkide.ui.util.MessageBox;
 import com.apkide.ui.App;
 
 import java.io.File;
@@ -41,7 +41,7 @@ public class NewFileDialog extends MessageBox {
 				String newFilePath = filePath + File.separator + editText.getText().toString();
 				try {
 					if (isDirectory) {
-						FileSystem.mkdir(newFilePath);
+						FileSystem.createDir(newFilePath);
 					} else {
 						FileSystem.createFile(newFilePath);
 					}

@@ -2,7 +2,7 @@ package com.apkide.ui;
 
 import androidx.annotation.NonNull;
 
-import com.apkide.common.Command;
+import com.apkide.common.command.Command;
 import com.apkide.ui.commands.CloseFileCommand;
 import com.apkide.ui.commands.ExitCommand;
 import com.apkide.ui.commands.GotoSettingsCommand;

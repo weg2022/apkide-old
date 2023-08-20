@@ -17,8 +17,8 @@
 package com.apkide.apktool.util;
 
 import com.apkide.apktool.common.BrutException;
-import com.apkide.common.IoUtils;
-import com.apkide.common.Logger;
+import com.apkide.common.io.IoUtils;
+import com.apkide.common.logger.Logger;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -84,7 +84,7 @@ public class OS {
             try {
                 try (InputStream in = Files.newInputStream(file.toPath())) {
                     try (OutputStream out = Files.newOutputStream(destFile.toPath())) {
-                        IoUtils.copyAllBytes(in, out);
+                        IoUtils.copy(in, out);
                     }
                 }
             } catch (IOException ex) {

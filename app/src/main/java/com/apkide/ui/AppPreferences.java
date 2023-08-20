@@ -7,7 +7,7 @@ import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 
-import org.jetbrains.java.decompiler.main.extern.IFernflowerPreferences;
+import com.apkide.java.decompiler.main.extern.IFernflowerPreferences;
 
 import java.util.Map;
 

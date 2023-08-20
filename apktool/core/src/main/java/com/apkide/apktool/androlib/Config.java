@@ -16,9 +16,11 @@
  */
 package com.apkide.apktool.androlib;
 
+import static java.util.Objects.requireNonNull;
+
 import com.apkide.apktool.androlib.exceptions.AndrolibException;
 import com.apkide.common.Application;
-import com.apkide.common.Logger;
+import com.apkide.common.logger.Logger;
 
 public class Config {
     private final static Logger LOGGER = Logger.getLogger(Config.class.getName());
@@ -75,7 +77,9 @@ public class Config {
     }
 
     private void setDefaultFrameworkDirectory() {
-        frameworkDirectory = Application.get().foundFile("android.jar").getParentFile().getAbsolutePath();
+        frameworkDirectory = requireNonNull(
+                Application.get().foundFile("android-framework.jar")
+                        .getParentFile()).getAbsolutePath();
     }
 
     public void setDecodeSources(short mode) throws AndrolibException {

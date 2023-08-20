@@ -6,8 +6,8 @@ import android.util.SparseArray;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.apkide.common.Color;
-import com.apkide.common.TextStyle;
+import com.apkide.common.color.Color;
+import com.apkide.common.text.TextStyle;
 
 import java.util.HashMap;
 import java.util.List;

@@ -29,7 +29,7 @@ import com.apkide.apktool.androlib.res.xml.ResXmlPatcher;
 import com.apkide.apktool.directory.Directory;
 import com.apkide.apktool.directory.DirectoryException;
 import com.apkide.apktool.directory.ExtFile;
-import com.apkide.common.Logger;
+import com.apkide.common.logger.Logger;
 import com.google.common.base.Strings;
 
 import java.io.BufferedInputStream;

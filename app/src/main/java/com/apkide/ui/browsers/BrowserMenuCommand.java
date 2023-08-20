@@ -3,7 +3,7 @@ package com.apkide.ui.browsers;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
 
-import com.apkide.common.Command;
+import com.apkide.common.command.Command;
 
 
 public interface BrowserMenuCommand extends Command {

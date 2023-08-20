@@ -8,7 +8,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.apkide.common.FileSystem;
-import com.apkide.common.MessageBox;
+import com.apkide.ui.util.MessageBox;
 import com.apkide.ui.App;
 
 import java.io.File;
@@ -28,7 +28,7 @@ public class DeleteFileDialog extends MessageBox {
 		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 		boolean isDir = FileSystem.isNormalDirectory(filePath);
 		String name = FileSystem.getName(filePath);
-		String parent = FileSystem.getParentDirPath(filePath);
+		String parent = FileSystem.getParentPath(filePath);
 		name = parent == null ? name : FileSystem.getName(parent) + File.separator + name;
 		builder.setTitle("Delete " + (isDir ? "Directory" : "File"));
 		builder.setMessage(String.format("Are you sure you want to delete\n \"...%s\" %s?", name, isDir ? "Directory" : "File"));

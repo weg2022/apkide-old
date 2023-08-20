@@ -2,10 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/fileBrowserCommandDecompile"
-        android:title="Decompile"/>
-
-    <item
         android:id="@+id/fileBrowserCommandSyncWithDisk"
         android:title="Sync With Disk" />
 
@@ -16,8 +12,6 @@
     <item
         android:id="@+id/fileBrowserCommandCopyName"
         android:title="Copy File Name"/>
-
-
 
     <item
         android:id="@+id/fileBrowserCommandRename"

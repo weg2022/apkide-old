@@ -3,43 +3,33 @@ package com.apkide.ls.smali;
 import static com.apkide.smali.smali.SmaliParser.*;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
-import com.apkide.common.FileSystem;
-import com.apkide.ls.api.Highlights;
+import com.apkide.ls.api.CodeCompiler;
+import com.apkide.ls.api.CodeCompleter;
+import com.apkide.ls.api.CodeFormatter;
+import com.apkide.ls.api.CodeHighlighter;
+import com.apkide.ls.api.CodeNavigation;
+import com.apkide.ls.api.CodeRefactor;
 import com.apkide.ls.api.LanguageServer;
 import com.apkide.ls.api.Model;
 import com.apkide.ls.api.lexer.Lexer;
-import com.apkide.ls.api.util.Position;
-import com.apkide.ls.api.util.Range;
-import com.apkide.smali.smali.SmaliFlexLexer;
-import com.apkide.smali.smali.SmaliParser;
-
-import org.antlr.runtime.CommonTokenStream;
-import org.antlr.runtime.Token;
-import org.antlr.runtime.TokenSource;
-import org.antlr.runtime.tree.CommonTree;
-import org.antlr.runtime.tree.TreeVisitor;
-import org.antlr.runtime.tree.TreeVisitorAction;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
 
 public class SmaliLanguageServer implements LanguageServer {
     private Model myModel;
     
     @Override
-    public void configure(@NonNull Model model) {
+    public void initialize(@NonNull Model model) {
         myModel = model;
     }
     
     @Override
-    public void initialize(@NonNull String rootPath, @NonNull Map<String, Object> options, @NonNull Map<String, String> workspacePaths) {
+    public void shutdown() {
     
     }
     
     @Override
-    public void shutdown() {
+    public void configureRootPah(@NonNull String rootPath) {
     
     }
     
@@ -55,9 +45,42 @@ public class SmaliLanguageServer implements LanguageServer {
         return new String[]{"*.smali"};
     }
     
-    private final SmaliFlexLexer myLexer = new SmaliFlexLexer(null, 40);
-    private final Highlights myHighlights = new Highlights();
+    @Nullable
+    @Override
+    public CodeCompleter getCompleter() {
+        return null;
+    }
     
+    @Nullable
+    @Override
+    public CodeFormatter getFormatter() {
+        return null;
+    }
+    
+    @Nullable
+    @Override
+    public CodeHighlighter getHighlighter() {
+        return null;
+    }
+    
+    @Nullable
+    @Override
+    public CodeNavigation getNavigation() {
+        return null;
+    }
+    
+    @Nullable
+    @Override
+    public CodeRefactor getRefactor() {
+        return null;
+    }
+    
+    @Nullable
+    @Override
+    public CodeCompiler getCompiler() {
+        return null;
+    }
+
     private int getStyle(int type) {
         switch (type) {
             case CLASS_DIRECTIVE:
@@ -187,156 +210,4 @@ public class SmaliLanguageServer implements LanguageServer {
         }
     }
     
-    @Override
-    public void requestHighlighting(@NonNull String filePath) {
-        myModel.getHighlighterCallback().highlightStarted(filePath, 0);
-        try {
-            myHighlights.clear();
-            myLexer.yyreset(FileSystem.readFile(filePath));
-            myLexer.setSuppressErrors(false);
-            myLexer.yybegin(myLexer.yystate());
-            
-            Token token = myLexer.nextToken();
-            int style = getStyle(token.getType());
-            int startColumn = myLexer.getLine() - 1;
-            int startLine = myLexer.getColumn();
-            
-            
-            while (true) {
-                token = myLexer.nextToken();
-                if (token == null) break;
-                
-                int nextStyle = getStyle(token.getType());
-                int line = myLexer.getLine() - 1;
-                int column = myLexer.getColumn();
-                if (nextStyle == Lexer.StringStyle) {
-                    column = Math.min(column, column - token.getText().length());
-                }
-                
-                myHighlights.highlight(style, startLine, startColumn, line, column);
-                
-                style = nextStyle;
-                startColumn = column;
-                startLine = line;
-                
-                if (token.getType() == -1) break;
-            }
-            myModel.getHighlighterCallback().fileHighlighting(filePath, 0, myHighlights);
-        } catch (IOException ignored) {
-        
-        }
-        try {
-            myLexer.yyreset(FileSystem.readFile(filePath));
-            myLexer.yybegin(myLexer.yystate());
-            myLexer.setSourceFile(new File(filePath));
-    
-            CommonTokenStream tokens = new CommonTokenStream((TokenSource) myLexer);
-            SmaliParser parser = new SmaliParser(tokens);
-            parser.setVerboseErrors(false);
-            parser.setAllowOdex(true);
-            parser.setApiLevel(40);
-    
-            SmaliParser.smali_file_return result = parser.smali_file();
-            CommonTree t = result.getTree();
-            TreeVisitor visitor=new TreeVisitor();
-            visitor.visit(t, new TreeVisitorAction() {
-                @Override
-                public Object pre(Object t) {
-                    return t;
-                }
-    
-                @Override
-                public Object post(Object t) {
-                    CommonTree tree= (CommonTree) t;
-                    //TODO: Semantic highlighting
-                    return t;
-                }
-            });
-            
-        }catch (Exception e){
-        
-        }
-    
-        myModel.getHighlighterCallback().highlightFinished(filePath, 0);
-    }
-    
-    @Override
-    public void requestCompletion(@NonNull String filePath, @NonNull Position position) {
-    
-    }
-    
-    @Override
-    public void findSymbols(@NonNull String filePath) {
-    
-    }
-    
-    @Override
-    public void findAPI(@NonNull String filePath, @NonNull Position position) {
-    
-    }
-    
-    @Override
-    public void findUsages(@NonNull String filePath, @NonNull Position position, boolean includeDeclaration) {
-    
-    }
-    
-    @Override
-    public void prepareRename(@NonNull String filePath, @NonNull Position position, @NonNull String newName) {
-    
-    }
-    
-    @Override
-    public void rename(@NonNull String filePath, @NonNull Position position, @NonNull String newName) {
-    
-    }
-    
-    @Override
-    public void prepareInline(@NonNull String filePath, @NonNull Position position) {
-    
-    }
-    
-    @Override
-    public void inline(@NonNull String filePath, @NonNull Position position) {
-    
-    }
-    
-    @Override
-    public void safeDelete(@NonNull String filePath, @NonNull Position position) {
-    
-    }
-    
-    @Override
-    public void surroundWith(@NonNull String filePath, @NonNull Position position) {
-    
-    }
-    
-    @Override
-    public void indent(@NonNull String filePath, int tabSize, int indentationSize) {
-    
-    }
-    
-    @Override
-    public void indent(@NonNull String filePath, int tabSize, int indentationSize, @NonNull Range range) {
-    
-    }
-    
-    @Override
-    public void format(@NonNull String filePath, int tabSize, int indentationSize) {
-    
-    }
-    
-    @Override
-    public void format(@NonNull String filePath, int tabSize, int indentationSize, @NonNull Range range) {
-    
-    }
-    
-    @Override
-    public void comment(@NonNull String filePath, @NonNull Range range) {
-    
-    }
-    
-    @Override
-    public void uncomment(@NonNull String filePath, @NonNull Range range) {
-    
-    }
 }

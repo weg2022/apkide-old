@@ -2,6 +2,9 @@ package com.apkide.common;
 
 import static org.junit.Assert.assertEquals;
 
+import com.apkide.common.text.TextModel;
+import com.apkide.common.text.TextModelImpl;
+
 import org.junit.Test;
 
 /**

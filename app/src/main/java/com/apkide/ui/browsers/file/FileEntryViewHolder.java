@@ -5,11 +5,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.apkide.ui.R;
+import com.apkide.ui.util.ListAdapter;
 
-public class FileEntryViewHolder extends RecyclerView.ViewHolder {
+public class FileEntryViewHolder extends ListAdapter.EntryViewHolder {
 	public ImageView entryIcon;
 	public TextView entryLabel;
 

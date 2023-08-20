@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 
 import com.apkide.common.AppLog;
 import com.apkide.ui.App;
-import com.apkide.ui.services.IService;
+import com.apkide.ui.services.AppService;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
-public class ProjectService implements IService {
+public class ProjectService implements AppService {
 	private final HashMap<String, ProjectManager> myProjectManagerMap = new HashMap<>();
 	private ProjectManager myProjectManager;
 	private SharedPreferences myPreferences;

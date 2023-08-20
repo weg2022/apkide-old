@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.LinearLayoutCompat;
 
-import com.apkide.common.MessageBox;
+import com.apkide.ui.util.MessageBox;
 import com.apkide.ui.views.ColorPickerView;
 
 

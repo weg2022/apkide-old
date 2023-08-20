@@ -10,7 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.apkide.common.FileSystem;
-import com.apkide.common.MessageBox;
+import com.apkide.ui.util.MessageBox;
 import com.apkide.ui.App;
 
 import java.io.File;
@@ -36,7 +36,7 @@ public class RenameFileDialog extends MessageBox {
             dialog.dismiss();
             if (editText.getText().length() != 0) {
                try {
-                    String parent = FileSystem.getParentDirPath(filePath);
+                    String parent = FileSystem.getParentPath(filePath);
                     if (parent != null) {
                         String destPath = parent + File.separator + editText.getText().toString();
                         FileSystem.rename(filePath, destPath);

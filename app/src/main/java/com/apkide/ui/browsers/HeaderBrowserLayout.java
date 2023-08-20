@@ -1,7 +1,10 @@
 package com.apkide.ui.browsers;
 
+import static android.view.ViewGroup.LayoutParams.*;
+
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +18,9 @@ public abstract class HeaderBrowserLayout extends BrowserLayout {
 
 	public HeaderBrowserLayout(@NonNull Context context) {
 		super(context);
+		setLayoutParams(new ViewGroup.LayoutParams(
+				MATCH_PARENT,
+				MATCH_PARENT));
 		removeAllViews();
 		setOrientation(VERTICAL);
 		myBinding = BrowserHeaderBinding.inflate(LayoutInflater.from(getContext()), this, false);

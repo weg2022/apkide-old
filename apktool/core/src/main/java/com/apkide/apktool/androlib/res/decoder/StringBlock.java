@@ -27,7 +27,7 @@ import java.nio.charset.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import com.apkide.common.Logger;
+import com.apkide.common.logger.Logger;
 
 public class StringBlock {
     public static StringBlock readWithChunk(ExtDataInput reader) throws IOException {

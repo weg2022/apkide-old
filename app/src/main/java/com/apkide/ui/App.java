@@ -1,12 +1,8 @@
 package com.apkide.ui;
 
-import static java.util.Objects.requireNonNull;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Handler;
-import android.os.Looper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,9 +10,10 @@ import androidx.annotation.StringRes;
 
 import com.apkide.common.Application;
 import com.apkide.ui.browsers.file.FileBrowserService;
-import com.apkide.ui.services.CodeEngineService;
-import com.apkide.ui.services.apktool.ApkEngineService;
-import com.apkide.ui.services.openfile.OpenFileService;
+import com.apkide.ui.browsers.project.ProjectBrowserService;
+import com.apkide.ui.services.analysis.CodeAnalysisEngineService;
+import com.apkide.ui.services.apktool.ApkToolEngineService;
+import com.apkide.ui.services.file.FileService;
 import com.apkide.ui.services.project.ProjectService;
 
 import java.util.ArrayList;
@@ -26,33 +23,36 @@ public final class App {
     
     private static final List<StyledUI> sActivities = new ArrayList<>();
     private static App sApp;
-    private static Handler sHandler;
     private static MainUI sMainUI;
     
     private final FileBrowserService myFileBrowserService = new FileBrowserService();
-    private final OpenFileService myOpenFileService = new OpenFileService();
+    private final ProjectBrowserService myProjectBrowserService=new ProjectBrowserService();
+    private final FileService myFileService = new FileService();
     private final ProjectService myProjectService = new ProjectService();
-    private final CodeEngineService myCodeEngineService = new CodeEngineService();
-    
-    private final ApkEngineService myApkEngineService = new ApkEngineService();
+    private final CodeAnalysisEngineService myCodeAnalysisEngineService = new CodeAnalysisEngineService();
+    private final ApkToolEngineService myApkToolEngineService = new ApkToolEngineService();
     
     private App() {
     }
     
-    public static ApkEngineService getApkEngineService() {
-        return sApp.myApkEngineService;
+    public static ApkToolEngineService getApkEngineService() {
+        return sApp.myApkToolEngineService;
     }
     
-    public static CodeEngineService getCodeEngineService() {
-        return sApp.myCodeEngineService;
+    public static CodeAnalysisEngineService getCodeEngineService() {
+        return sApp.myCodeAnalysisEngineService;
     }
     
     public static FileBrowserService getFileBrowserService() {
         return sApp.myFileBrowserService;
     }
     
-    public static OpenFileService getOpenFileService() {
-        return sApp.myOpenFileService;
+    public static ProjectBrowserService getProjectBrowserService(){
+        return sApp.myProjectBrowserService;
+    }
+    
+    public static FileService getFileService() {
+        return sApp.myFileService;
     }
     
     public static ProjectService getProjectService() {
@@ -61,27 +61,27 @@ public final class App {
     
     public static void init(@NonNull MainUI mainUI) {
         sApp = new App();
-        sHandler = new Handler(requireNonNull(Looper.myLooper()));
         sMainUI = mainUI;
-        sApp.myApkEngineService.initialize();
-        sApp.myCodeEngineService.initialize();
-        sApp.myFileBrowserService.initialize();
+        sApp.myApkToolEngineService.initialize();
+        sApp.myCodeAnalysisEngineService.initialize();
+        sApp.myFileService.initialize();
         sApp.myProjectService.initialize();
-        sApp.myOpenFileService.initialize();
+        sApp.myFileBrowserService.initialize();
+        sApp.myProjectBrowserService.initialize();;
     }
     
     
     public static void shutdown() {
         if (sApp != null) {
             
-            sApp.myOpenFileService.shutdown();
+            sApp.myProjectBrowserService.shutdown();
             sApp.myFileBrowserService.shutdown();
             sApp.myProjectService.shutdown();
-            sApp.myCodeEngineService.shutdown();
-            sApp.myApkEngineService.shutdown();
+            sApp.myFileService.shutdown();
+            sApp.myApkToolEngineService.shutdown();
+            sApp.myCodeAnalysisEngineService.shutdown();
             sActivities.clear();
             sMainUI = null;
-            sHandler = null;
             sApp = null;
         }
     }

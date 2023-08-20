@@ -23,8 +23,8 @@ import com.apkide.apktool.androlib.res.data.arsc.ARSCData;
 import com.apkide.apktool.androlib.res.data.arsc.FlagsOffset;
 import com.apkide.apktool.androlib.res.decoder.ARSCDecoder;
 import com.apkide.common.Application;
-import com.apkide.common.IoUtils;
-import com.apkide.common.Logger;
+import com.apkide.common.io.IoUtils;
+import com.apkide.common.logger.Logger;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -68,7 +68,7 @@ public class Framework {
             }
 
             in = zip.getInputStream(entry);
-            byte[] data = IoUtils.readAllBytes(in);
+            byte[] data = IoUtils.readBytes(in);
 
             ARSCData arsc = ARSCDecoder.decode(new ByteArrayInputStream(data), true, true);
             publicizeResources(data, arsc.getFlagsOffsets());
@@ -94,7 +94,7 @@ public class Framework {
             entry = zip.getEntry("AndroidManifest.xml");
             if (entry != null) {
                 in = zip.getInputStream(entry);
-                byte[] manifest = IoUtils.readAllBytes(in);
+                byte[] manifest = IoUtils.readBytes(in);
                 CRC32 manifestCrc = new CRC32();
                 manifestCrc.update(manifest);
                 entry.setSize(manifest.length);
@@ -224,7 +224,7 @@ public class Framework {
         if (id == 1) {
             try (InputStream in = getAndroidFrameworkResourcesAsStream();
                  OutputStream out = Files.newOutputStream(apk.toPath())) {
-                IoUtils.copyAllBytes(in, out);
+                IoUtils.copy(in, out);
                 return apk;
             } catch (IOException ex) {
                 throw new AndrolibException(ex);
@@ -263,7 +263,7 @@ public class Framework {
 
     private InputStream getAndroidFrameworkResourcesAsStream() {
         try {
-           return new FileInputStream(Application.get().foundFile("android.jar"));
+           return new FileInputStream(Application.get().foundFile("android-framework.jar"));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }

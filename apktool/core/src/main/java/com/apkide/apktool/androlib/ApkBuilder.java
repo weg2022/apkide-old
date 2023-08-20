@@ -34,8 +34,8 @@ import com.apkide.apktool.directory.ZipUtils;
 import com.apkide.apktool.util.BrutIO;
 import com.apkide.apktool.util.OS;
 import com.apkide.common.FileSystem;
-import com.apkide.common.IoUtils;
-import com.apkide.common.Logger;
+import com.apkide.common.io.IoUtils;
+import com.apkide.common.logger.Logger;
 
 import org.xml.sax.SAXException;
 

@@ -40,7 +40,7 @@ import com.apkide.apktool.androlib.res.data.value.ResValueFactory;
 import com.apkide.apktool.ext.android.util.TypedValue;
 import com.apkide.apktool.util.Duo;
 import com.apkide.apktool.util.ExtDataInput;
-import com.apkide.common.Logger;
+import com.apkide.common.logger.Logger;
 import com.google.common.io.CountingInputStream;
 import com.google.common.io.LittleEndianDataInputStream;
 

@@ -22,7 +22,7 @@ import com.apkide.apktool.androlib.res.data.ResResource;
 import com.apkide.apktool.androlib.res.xml.ResValuesXmlSerializable;
 import com.apkide.apktool.ext.org.xmlpull.v1.XmlSerializer;
 import com.apkide.apktool.util.Duo;
-import com.apkide.common.Logger;
+import com.apkide.common.logger.Logger;
 
 import java.io.IOException;
 

@@ -14,7 +14,7 @@ import android.widget.ScrollView;
 
 import androidx.annotation.NonNull;
 
-import com.apkide.common.Color;
+import com.apkide.common.color.Color;
 import com.apkide.ui.R;
 import com.apkide.ui.views.editor.EditorView;
 import com.apkide.ui.views.editor.SelectionListener;
