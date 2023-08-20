@@ -6,4 +6,5 @@ public class BuildOutputModel extends CodeEditTextModel {
     public BuildOutputModel() {
         super();
     }
+    
 }

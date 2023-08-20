@@ -37,7 +37,7 @@ public final class ApkToolEngine {
     public ApkToolEngine() {
         LoggerListener loggerListener = (name, level, msg) -> {
             if (myMode != Mode.None && myCallback != null) {
-                myCallback.processing(level, msg);
+                myCallback.processing(level.prefix + ":" + msg);
             }
         };
         Logger.getLogger(ApkBuilder.class.getName()).addListener(loggerListener);

@@ -99,6 +99,7 @@ dependencies {
     implementation libs.okbinder2
     annotationProcessor libs.okbinder2.compiler
 
+    implementation project(':analytics')
     implementation project(':common')
 
     runtimeOnly project(':apktool:core')

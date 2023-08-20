@@ -5,6 +5,7 @@ import static com.apkide.ui.views.SplitLayout.OnSplitChangeListener;
 import static java.lang.System.currentTimeMillis;
 
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +19,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.apkide.common.command.Command;
 import com.apkide.ui.browsers.BrowserPager;
-import com.apkide.ui.databinding.MainBinding;
+import com.apkide.ui.databinding.UiMainBinding;
 import com.apkide.ui.editors.EditorPager;
 import com.apkide.ui.util.MenuCommand;
 import com.apkide.ui.views.SplitLayout;
@@ -32,7 +33,7 @@ public class MainUI extends StyledUI implements
 		OnSharedPreferenceChangeListener,
 		OnSplitChangeListener{
 	private SharedPreferences myPreferences;
-	private MainBinding myUiBinding;
+	private UiMainBinding myUiBinding;
 	private MainUIViewModel myUIViewModel;
 	private long myLastBackPressedTimestamps;
 
@@ -42,7 +43,7 @@ public class MainUI extends StyledUI implements
 		super.onCreate(savedInstanceState);
 		AppPreferences.registerListener(this);
 		myUIViewModel = new ViewModelProvider(this, new ViewModelProvider.AndroidViewModelFactory(getApplication())).get(MainUIViewModel.class);
-		myUiBinding = MainBinding.inflate(getLayoutInflater());
+		myUiBinding = UiMainBinding.inflate(getLayoutInflater());
 		setContentView(myUiBinding.getRoot());
 		setSupportActionBar(myUiBinding.mainToolbar);
 
@@ -125,7 +126,12 @@ public class MainUI extends StyledUI implements
 		App.shutdown();
 		AppPreferences.unregisterListener(this);
 	}
-
+	
+	@Override
+	public void onConfigurationChanged(@NonNull Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+	}
+	
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @Nullable String key) {
 		if (key == null) return;
@@ -139,7 +145,7 @@ public class MainUI extends StyledUI implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main_options, menu);
+		getMenuInflater().inflate(R.menu.ui_main_options, menu);
 		return true;
 	}
 

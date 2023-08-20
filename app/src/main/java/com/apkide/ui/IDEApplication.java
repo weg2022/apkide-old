@@ -21,12 +21,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.multidex.MultiDexApplication;
 
+import com.apkide.analytics.Analytics;
 import com.apkide.codeanalysis.LanguageServerProvider;
 import com.apkide.common.AppLog;
 import com.apkide.common.Application;
 import com.apkide.common.FileSystem;
-import com.apkide.common.io.FileUtils;
 import com.apkide.common.SafeRunner;
+import com.apkide.common.io.FileUtils;
 import com.apkide.ls.api.LanguageServer;
 import com.apkide.ls.java.JavaLanguageServer;
 import com.apkide.ls.smali.SmaliLanguageServer;
@@ -210,6 +211,10 @@ public class IDEApplication extends MultiDexApplication {
         });
         
         AppPreferences.initialize(getApplicationContext());
+    
+        Analytics.initialize(getApplicationContext(), BuildConfig.DEBUG,
+                AppPreferences::isAnalyticsEnabled);
+        
         if (AppPreferences.isFollowSystemTheme()) {
             if (AppCompatDelegate.getDefaultNightMode() != MODE_NIGHT_FOLLOW_SYSTEM)
                 AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM);

@@ -17,23 +17,20 @@ import com.apkide.ui.commands.actionbar.RedoCommand;
 import com.apkide.ui.commands.actionbar.RunCommand;
 import com.apkide.ui.commands.actionbar.SelectAllCommand;
 import com.apkide.ui.commands.actionbar.UndoCommand;
-import com.apkide.ui.commands.code.GenerateCommand;
 import com.apkide.ui.commands.code.IndentLinesCommand;
 import com.apkide.ui.commands.code.OptimizeImportsCommand;
-import com.apkide.ui.commands.code.OutBlockCommentCommand;
-import com.apkide.ui.commands.code.OutLineCommentCommand;
+import com.apkide.ui.commands.code.OutCommentCommand;
 import com.apkide.ui.commands.code.ReformatCodeCommand;
 import com.apkide.ui.commands.code.SurroundWithCommand;
-import com.apkide.ui.commands.code.UnOutComment;
+import com.apkide.ui.commands.code.UnOutCommentCommand;
 import com.apkide.ui.commands.edit.FindCommand;
 import com.apkide.ui.commands.edit.FindInFileCommand;
 import com.apkide.ui.commands.edit.FindReplaceCommand;
 import com.apkide.ui.commands.edit.FindReplaceInFileCommand;
-import com.apkide.ui.commands.edit.FindUsagesCommand;
+import com.apkide.ui.commands.navigate.FindUsagesCommand;
 import com.apkide.ui.commands.navigate.BackwardCommand;
 import com.apkide.ui.commands.navigate.ForwardCommand;
 import com.apkide.ui.commands.navigate.GotoCommand;
-import com.apkide.ui.commands.navigate.GotoDefinitionCommand;
 import com.apkide.ui.commands.project.CleanProjectCommand;
 import com.apkide.ui.commands.project.CloseProjectCommand;
 import com.apkide.ui.commands.project.MakeProjectCommand;
@@ -72,7 +69,6 @@ public final class AppCommands {
 				new FindInFileCommand(),
 				new FindReplaceCommand(),
 				new FindReplaceInFileCommand(),
-				new FindUsagesCommand()
 		});
 
 		addAll(new Command[]{
@@ -86,18 +82,16 @@ public final class AppCommands {
 				new BackwardCommand(),
 				new ForwardCommand(),
 				new GotoCommand(),
-				new GotoDefinitionCommand()
+				new FindUsagesCommand()
 		});
 
 		addAll(new Command[]{
 				new OptimizeImportsCommand(),
 				new ReformatCodeCommand(),
 				new IndentLinesCommand(),
-				new GenerateCommand(),
 				new SurroundWithCommand(),
-				new OutLineCommentCommand(),
-				new OutBlockCommentCommand(),
-				new UnOutComment(),
+				new OutCommentCommand(),
+				new UnOutCommentCommand(),
 		});
 
 		addAll(new Command[]{

@@ -32,8 +32,15 @@ public class BuildOutputView extends CodeEditText {
     }
     
     @NonNull
-    @Override
-    public BuildOutputModel getCodeEditTextModel() {
+    public BuildOutputModel getBuildOutputModel() {
         return (BuildOutputModel) super.getCodeEditTextModel();
+    }
+    
+    public void append(@NonNull String msg){
+        getBuildOutputModel().insert(getCaretLine(),getCaretColumn(),msg);
+    }
+    
+    public void appendLineBreak(){
+        getBuildOutputModel().insertLineBreak(getCaretLine(),getCaretColumn());
     }
 }

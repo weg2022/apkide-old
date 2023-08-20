@@ -30,15 +30,12 @@
     <string name="action_backward">后退</string>
     <string name="action_forward">前进</string>
     <string name="action_goto">转到</string>
-    <string name="action_goto_definition">转到定义</string>
     <string name="action_group_code">代码</string>
     <string name="action_optimize_imports">优化导入</string>
     <string name="action_reformat_code">格式化代码</string>
     <string name="action_auto_indent_lines">缩进行</string>
-    <string name="action_generate">代码生成</string>
     <string name="action_surround_with">环绕包围</string>
-    <string name="action_comment_with_line_comment">行注释</string>
-    <string name="action_comment_with_block_comment">块注释</string>
+    <string name="action_outcomment">块注释</string>
     <string name="action_uncomment">取消注释</string>
     <string name="action_group_refactor">重构</string>
     <string name="action_rename">重命名</string>

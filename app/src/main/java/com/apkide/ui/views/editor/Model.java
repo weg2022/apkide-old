@@ -33,4 +33,29 @@ public class Model extends TextModelImpl {
     public Diagnostic getDiagnostic(int line,int column){
         return null;
     }
+    
+    public boolean isLogging(){
+        return false;
+    }
+    
+    public boolean isLogErrorLine(int line){
+        return false;
+    }
+    
+    public boolean isLogWarningLine(int line){
+        return false;
+    }
+    
+    public boolean isLogInfo(int line){
+        return false;
+    }
+    
+    public boolean isLogDebugLine(int line){
+        return false;
+    }
+    
+    public boolean isLogVerboseLine(int line){
+        return false;
+    }
+    
 }

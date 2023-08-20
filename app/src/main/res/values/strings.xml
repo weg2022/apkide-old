@@ -30,15 +30,12 @@
     <string name="action_backward">Backward</string>
     <string name="action_forward">Forward</string>
     <string name="action_goto">Goto</string>
-    <string name="action_goto_definition">Goto Definition</string>
     <string name="action_group_code">Code</string>
     <string name="action_optimize_imports">Optimize Imports</string>
     <string name="action_reformat_code">Reformat Code</string>
     <string name="action_auto_indent_lines">Auto-Indent Lines…</string>
-    <string name="action_generate">Generate…</string>
     <string name="action_surround_with">Surround With…</string>
-    <string name="action_comment_with_line_comment">Comment With Line Comment</string>
-    <string name="action_comment_with_block_comment">Comment With Block Comment</string>
+    <string name="action_outcomment">Out Comment</string>
     <string name="action_uncomment">Un-Out Comment</string>
     <string name="action_group_refactor">Refactor</string>
     <string name="action_rename">Rename</string>

@@ -18,8 +18,8 @@ import java.util.List;
 public class FileBrowserService implements AppService {
     
     public interface FileBrowserServiceListener {
-    
-        void  filesUpdate(@NonNull String visiblePath,@NonNull List<FileEntry> entries);
+        
+        void filesUpdate(@NonNull String visiblePath, @NonNull List<FileEntry> entries);
     }
     
     private SharedPreferences myPreferences;
@@ -30,6 +30,7 @@ public class FileBrowserService implements AppService {
     private final Object myLock = new Object();
     private boolean myShutdown;
     private String myVisiblePath;
+    private boolean myHiddenVisible;
     private boolean myRunning;
     
     @Override
@@ -54,17 +55,22 @@ public class FileBrowserService implements AppService {
                             for (String path : childList) {
                                 String name = FileSystem.getName(path);
                                 boolean isDir = FileSystem.isDirectory(path);
-                                myFileEntries.add(new FileEntry(path, name, isDir));
+                                FileEntry fileEntry = new FileEntry(path, name, isDir);
+                                if (!myHiddenVisible && fileEntry.isHidden()) {
+                                    //...
+                                } else {
+                                    myFileEntries.add(new FileEntry(path, name, isDir));
+                                }
                             }
                             
                             Collections.sort(myFileEntries);
                             
-                            if (myListener!=null) {
-                                App.postRun(() -> myListener.filesUpdate(myVisiblePath,new ArrayList<>(myFileEntries)));
+                            if (myListener != null) {
+                                App.postRun(() -> myListener.filesUpdate(myVisiblePath, new ArrayList<>(myFileEntries)));
                             }
                             
-                            myRunning = false;
                             
+                            myRunning = false;
                         }
                         myLock.wait();
                     }
@@ -72,9 +78,10 @@ public class FileBrowserService implements AppService {
             } catch (InterruptedException e) {
                 AppLog.e(e);
             }
-        },"FileBrowserService");
+        }, "FileBrowserService");
         thread.start();
         
+        myHiddenVisible = getPreferences().getBoolean("hidden.visible", false);
         myVisiblePath = getLastRootPath();
     }
     
@@ -107,12 +114,28 @@ public class FileBrowserService implements AppService {
         if (!file.exists() || !file.isDirectory()) {
             return;
         }
-        getPreferences().getString("open.rootPath", path);
+        getPreferences().edit().putString("open.rootPath", path).apply();
         synchronized (myLock) {
             myVisiblePath = path;
             myRunning = true;
             myLock.notify();
         }
+    }
+    
+    public void setHiddenVisible(boolean visible) {
+        if (myHiddenVisible == visible) {
+            return;
+        }
+        getPreferences().edit().putBoolean("hidden.visible", visible).apply();
+        synchronized (myLock) {
+            myRunning = true;
+            myHiddenVisible = visible;
+            myLock.notify();
+        }
+    }
+    
+    public boolean isHiddenVisible() {
+        return myHiddenVisible;
     }
     
     public void sync() {

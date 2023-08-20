@@ -48,9 +48,7 @@
             <item
                 android:id="@+id/commandFindReplaceInFile"
                 android:title="@string/action_find_replace_in_file" />
-            <item
-                android:id="@+id/commandFindUsages"
-                android:title="@string/action_find_usages" />
+
         </menu>
     </item>
 
@@ -88,8 +86,8 @@
                 android:id="@+id/commandGoto"
                 android:title="@string/action_goto" />
             <item
-                android:id="@+id/commandGotoDefinition"
-                android:title="@string/action_goto_definition" />
+                android:id="@+id/commandFindUsages"
+                android:title="@string/action_find_usages" />
         </menu>
     </item>
 
@@ -106,18 +104,14 @@
             <item
                 android:id="@+id/commandAutoIndentLines"
                 android:title="@string/action_auto_indent_lines" />
-            <item
-                android:id="@+id/commandGenerate"
-                android:title="@string/action_generate" />
+
             <item
                 android:id="@+id/commandSurroundWith"
                 android:title="@string/action_surround_with" />
+
             <item
-                android:id="@+id/commandOutLineComment"
-                android:title="@string/action_comment_with_line_comment" />
-            <item
-                android:id="@+id/commandOutBlockComment"
-                android:title="@string/action_comment_with_block_comment" />
+                android:id="@+id/commandOutComment"
+                android:title="@string/action_outcomment" />
             <item
                 android:id="@+id/commandUnOutComment"
                 android:title="@string/action_uncomment"/>

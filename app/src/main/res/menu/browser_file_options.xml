@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/commandSyncWithDisk"
+        android:title="Sync With Disk" />
+
+    <item
+        android:id="@+id/commandHiddenFileVisible"
+        android:title="Hidden Files Visible" />
+
+    <item
+        android:id="@+id/commandHiddenFileInVisible"
+        android:title="Hidden Files Not Visible" />
+
+    <item
+        android:title="New..."
+        android:id="@+id/commandNew">
+        <menu>
+            <item android:id="@+id/commandNewFile"
+                android:title="New File"/>
+
+            <item android:id="@+id/commandNewDir"
+                android:title="New Directory"/>
+        </menu>
+    </item>
+</menu>

@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.preference.PreferenceManager;
 
 import com.apkide.common.Application;
 import com.apkide.ui.browsers.file.FileBrowserService;
@@ -159,4 +160,8 @@ public final class App {
         return getContext().getSharedPreferences(name, Context.MODE_PRIVATE);
     }
     
+    @NonNull
+    public static SharedPreferences getPreferences() {
+        return PreferenceManager.getDefaultSharedPreferences(getContext());
+    }
 }

@@ -135,7 +135,7 @@ public class EditorPager extends ViewPager implements FileModelFactory, FileServ
             }
             post(() -> {
                 MessageBox.hide();
-                View view = LayoutInflater.from(getContext()).inflate(R.layout.editor, null);
+                View view = LayoutInflater.from(getContext()).inflate(R.layout.component_editor, null);
                 IDEEditor editor = view.findViewById(R.id.editor);
                 editor.setModel((IDEEditorModel) fileModel);
                 myViews.add(view);

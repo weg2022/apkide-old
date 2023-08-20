@@ -144,7 +144,7 @@ public class CodeEditTextScrollView extends ScrollView {
     }
     
     public void showDragHandle() {
-        if (getEditorView().getSelectionVisibility()) {
+        if (getEditorView().isSelectionVisibility()) {
             makeVisible(true);
         } else {
             makeVisible(false);

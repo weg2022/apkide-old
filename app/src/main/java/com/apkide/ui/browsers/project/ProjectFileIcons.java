@@ -13,7 +13,7 @@ import java.io.IOException;
 public class ProjectFileIcons {
     public static Drawable getIconDrawable(@NonNull String filePath) {
         try {
-            String ext = FileSystem.getExtension(filePath).toLowerCase();
+            String ext = FileSystem.getExtensionName(filePath).toLowerCase();
             switch (ext) {
                 case ".jpg":
                 case ".png":
@@ -32,7 +32,7 @@ public class ProjectFileIcons {
     }
     
     public static int getIcon(@NonNull String filePath) {
-        String ext = FileSystem.getExtension(filePath).toLowerCase();
+        String ext = FileSystem.getExtensionName(filePath).toLowerCase();
         switch (ext) {
             case ".class":
             case ".java":

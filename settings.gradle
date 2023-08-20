@@ -1,6 +1,8 @@
 rootProject.name = "apkide"
 include ':app'
+include ':analytics'
 include ':common'
+include ':editor'
 include ':apktool:core'
 include ':apktool:service'
 include ':language-server:service'

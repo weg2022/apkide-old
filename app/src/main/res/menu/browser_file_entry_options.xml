@@ -2,22 +2,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/fileBrowserCommandSyncWithDisk"
+        android:id="@+id/commandSyncWithDisk"
         android:title="Sync With Disk" />
 
     <item
-        android:id="@+id/fileBrowserCommandCopyPath"
+        android:id="@+id/commandCopyFilePath"
         android:title="Copy File Path"/>
 
     <item
-        android:id="@+id/fileBrowserCommandCopyName"
+        android:id="@+id/commandCopyFileName"
         android:title="Copy File Name"/>
 
     <item
-        android:id="@+id/fileBrowserCommandRename"
+        android:id="@+id/commandRenameFile"
         android:title="Rename"/>
 
     <item
-        android:id="@+id/fileBrowserCommandDelete"
+        android:id="@+id/commandDeleteFile"
         android:title="Delete"/>
 </menu>

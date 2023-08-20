@@ -35,6 +35,6 @@ dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     api libs.google.guava
     api libs.commons.text
-    implementation libs.material
+    implementation libs.androidx.annotation
     testImplementation libs.junit
 }

@@ -20,7 +20,7 @@ import com.apkide.common.SyncRunner;
 import com.apkide.common.text.TextModel;
 import com.apkide.common.text.TextStyle;
 
-public class Console extends View implements TextModel.TextModelListener, Theme.ThemeListener {
+public class Console extends View implements TextModel.TextChangeListener, Theme.ThemeListener {
     public Console(Context context) {
         super(context);
         initView();
@@ -276,7 +276,7 @@ public class Console extends View implements TextModel.TextModelListener, Theme.
         }
     }
     
-    public boolean getCaretVisibility() {
+    public boolean isCaretVisibility() {
         return myCaretVisibility;
     }
     
@@ -337,7 +337,7 @@ public class Console extends View implements TextModel.TextModelListener, Theme.
     
     }
     
-    public boolean getSelectionVisibility() {
+    public boolean isSelectionVisibility() {
         return mySelectionVisibility;
     }
     
@@ -757,7 +757,7 @@ public class Console extends View implements TextModel.TextModelListener, Theme.
         Color color = myTheme.getColor(Theme.Colors.CaretLineColor);
         if (color != null && color.value != 0 && !mySelectionVisibility && myCaretLine == line) {
             myPaint.setColor(color.value);
-            canvas.drawRect(x, y - myFontTop, myRect.right, y + myFontBottom, myPaint);
+            canvas.drawRect(x, y - myFontTop, canvas.getClipBounds().right, y + myFontBottom, myPaint);
         }
     }
     

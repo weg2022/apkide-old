@@ -1,15 +1,12 @@
-package com.apkide.ui.commands.navigate;
-
-import androidx.annotation.IdRes;
+package com.apkide.ui.commands.code;
 
 import com.apkide.ui.R;
 import com.apkide.ui.util.MenuCommand;
 
-public class GotoDefinitionCommand implements MenuCommand {
-	@IdRes
+public class UnOutCommentCommand implements MenuCommand {
 	@Override
 	public int getId() {
-		return R.id.commandGotoDefinition;
+		return R.id.commandUnOutComment;
 	}
 
 	@Override

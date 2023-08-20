@@ -7,6 +7,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.apkide.common.FileSystem;
 import com.apkide.ui.App;
 import com.apkide.ui.R;
 import com.apkide.ui.browsers.HeaderBrowserLayout;
@@ -38,12 +39,14 @@ public class ProjectBrowser extends HeaderBrowserLayout implements
         
         });
         
+        myAdapter.setClickListener(this);
+        myAdapter.setLongPressListener(this);
         myBinding.projectFileListView.setAdapter(myAdapter);
         myBinding.projectFileListView.setLayoutManager(new LinearLayoutManager(context));
         App.getProjectBrowserService().setListener(this);
-        App.getProjectService().reloadProject();
         App.getProjectService().addListener(this);
-        
+        App.getProjectBrowserService().sync();
+        getHeaderLabel().setText(FileSystem.getName(App.getProjectService().getProjectRootPath()));
     }
     
     @NonNull
@@ -54,12 +57,13 @@ public class ProjectBrowser extends HeaderBrowserLayout implements
     
     @Override
     public void projectOpened(@NonNull String rootPath) {
-        getHeaderLabel().setText(rootPath);
-        App.getProjectBrowserService().open(rootPath);
+        getHeaderLabel().setText(FileSystem.getName(rootPath));
+        App.getProjectBrowserService().openProject(rootPath);
     }
     
     @Override
     public void projectClosed(@NonNull String rootPath) {
+        App.getProjectBrowserService().closeProject();
         getHeaderLabel().setText(R.string.browser_label_project);
         myAdapter.clear();
         myAdapter.sync();
@@ -77,12 +81,12 @@ public class ProjectBrowser extends HeaderBrowserLayout implements
         if (entry instanceof ProjectEntry) {
             ProjectEntry projectEntry = (ProjectEntry) entry;
             if (projectEntry.isPrev()) {
-                App.getProjectBrowserService().open(projectEntry.getFilePath());
+                App.getProjectBrowserService().openProject(projectEntry.getFilePath());
                 return;
             }
             
             if (projectEntry.isDirectory()) {
-                App.getProjectBrowserService().open(projectEntry.getFilePath());
+                App.getProjectBrowserService().openProject(projectEntry.getFilePath());
                 return;
             }
             

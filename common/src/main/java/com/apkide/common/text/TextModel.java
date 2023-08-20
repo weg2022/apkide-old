@@ -11,7 +11,7 @@ import java.io.Reader;
 
 public interface TextModel extends Cloneable {
     
-    interface TextModelListener {
+    interface TextChangeListener {
         void prepareInsert(@NonNull TextModel model, int line, int column, @NonNull String newText);
         
         void insertUpdate(@NonNull TextModel model, int startLine, int startColumn, int endLine, int endColumn);
@@ -21,9 +21,9 @@ public interface TextModel extends Cloneable {
         void removeUpdate(@NonNull TextModel model, int startLine, int startColumn, int endLine, int endColumn);
     }
     
-    void addTextModelListener(@NonNull TextModelListener listener);
+    void addTextModelListener(@NonNull TextChangeListener listener);
     
-    void removeTextModelListener(@NonNull TextModelListener listener);
+    void removeTextModelListener(@NonNull TextChangeListener listener);
     
     void setText(@NonNull String text);
     

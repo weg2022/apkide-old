@@ -53,7 +53,7 @@ public class Editor extends Console {
     }
     
     public boolean isEditable() {
-        return myEditable;
+        return myEditable && !getModel().isReadOnly();
     }
     
     public void setInternalState(@NonNull State internalState) {
@@ -85,7 +85,7 @@ public class Editor extends Console {
     }
     
     public void runOnUnSelect(Runnable runnable) {
-        if (getSelectionVisibility() && !myInSelecting)
+        if (isSelectionVisibility() && !myInSelecting)
             setSelectionVisibility(false);
         runnable.run();
     }
@@ -260,7 +260,7 @@ public class Editor extends Console {
     public void insertLineBreak() {
         if (isEditable()) {
             setInternalState(State.INSERTING);
-            if (getSelectionVisibility()) {
+            if (isSelectionVisibility()) {
                 removeSelectionText();
                 moveCaret(getFirstSelectedLine(), getLastSelectedColumn());
                 setSelectionVisibility(false);
@@ -346,7 +346,7 @@ public class Editor extends Console {
         if (isEditable()) {
             int firstSelectedLine = getFirstSelectedLine();
             int lastSelectedLine = getLastSelectedLine();
-            if (!getSelectionVisibility()) {
+            if (!isSelectionVisibility()) {
                 firstSelectedLine = getCaretLine();
                 lastSelectedLine = firstSelectedLine;
             } else if (getLastSelectedColumn() == -1) {
@@ -389,20 +389,21 @@ public class Editor extends Console {
     
     public void insertChar(char c) {
         if (isEditable()) {
-            if (getSelectionVisibility()) {
+            if (isSelectionVisibility()) {
                 moveCaret(getFirstSelectedLine(), getFirstSelectedColumn());
                 removeSelectionText();
-                setSelectionVisibility(false);
             }
+            int caretLine = getCaretLine();
+            int caretColumn = getCaretColumn();
+            
             if (isOverwriteMode()) {
                 setInternalState(State.OVERWRITING);
-                int caretLine = getCaretLine();
-                int caretColumn = getCaretColumn();
                 getEditorModel().insert(caretLine, caretColumn, c);
-                moveCaret(caretLine, caretColumn + 1);
+                moveCaret(caretLine, caretColumn);
             } else {
                 setInternalState(State.INSERTING);
-                getEditorModel().insert(getCaretLine(), getCaretColumn(), c);
+                getEditorModel().insert(caretLine, caretColumn, c);
+                moveCaret(caretLine, caretColumn+1);
             }
         }
     }
@@ -414,7 +415,7 @@ public class Editor extends Console {
         selection(0, 0, lineCount, length);
     }
     
-    private void removeSelectionText() {
+    public void removeSelectionText() {
         setInternalState(State.NONE);
         if (isEditable()) {
             moveCaret(getFirstSelectedLine(), getFirstSelectedColumn());
@@ -435,7 +436,7 @@ public class Editor extends Console {
     }
     
     public void copySelection() {
-        if (getSelectionVisibility()) {
+        if (isSelectionVisibility()) {
             String text = getEditorModel().getText(getFirstSelectedLine(),
                     getFirstSelectedColumn(), getLastSelectedLine(), getLastSelectedColumn());
             ClipboardManager clipboardManager =
@@ -447,7 +448,7 @@ public class Editor extends Console {
     public void pasteSelection() {
         setInternalState(State.NONE);
         if (isEditable()) {
-            if (getSelectionVisibility()) {
+            if (isSelectionVisibility()) {
                 removeSelectionText();
                 setSelectionVisibility(false);
             }
@@ -464,7 +465,7 @@ public class Editor extends Console {
     public void autoIndent() {
         setInternalState(State.NONE);
         if (isEditable()) {
-            if (getSelectionVisibility()) {
+            if (isSelectionVisibility()) {
                 int firstSelectedLine = getFirstSelectedLine();
                 int lastSelectedLine = getLastSelectedLine();
                 if (getLastSelectedColumn() == -1) {
@@ -522,7 +523,7 @@ public class Editor extends Console {
         if (isEditable()) {
             int firstSelectedLine = getFirstSelectedLine();
             int lastSelectedLine = getLastSelectedLine();
-            if (!getSelectionVisibility()) {
+            if (!isSelectionVisibility()) {
                 firstSelectedLine = getCaretLine();
                 lastSelectedLine = firstSelectedLine;
             } else if (getLastSelectedColumn() == -1) {
@@ -540,9 +541,9 @@ public class Editor extends Console {
         setOverwriteMode(!isOverwriteMode());
     }
     
-    public void removePreChar(){
+    public void removePreChar() {
         if (isEditable()) {
-            if (getSelectionVisibility()) {
+            if (isSelectionVisibility()) {
                 setInternalState(State.NONE);
                 moveCaret(getFirstSelectedLine(), getFirstSelectedColumn());
                 removeSelectionText();
@@ -552,7 +553,7 @@ public class Editor extends Console {
             int caretLine = getCaretLine();
             int caretColumn = getCaretColumn();
             if (caretColumn != 0) {
-                getEditorModel().remove(caretLine, caretColumn - 1,caretLine,caretColumn);
+                getEditorModel().remove(caretLine, caretColumn - 1, caretLine, caretColumn);
             } else if (caretLine != 0) {
                 getEditorModel().removeLineBreak(caretLine - 1);
             }
@@ -561,7 +562,7 @@ public class Editor extends Console {
     
     public void removeChar() {
         if (isEditable()) {
-            if (getSelectionVisibility()) {
+            if (isSelectionVisibility()) {
                 setInternalState(State.NONE);
                 moveCaret(getFirstSelectedLine(), getFirstSelectedColumn());
                 removeSelectionText();

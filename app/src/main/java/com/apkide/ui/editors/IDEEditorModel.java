@@ -26,7 +26,7 @@ public class IDEEditorModel extends CodeEditTextModel implements FileModel {
         super();
         myFilePath = filePath;
         setReadOnly(!FileSystem.isNormalFile(myFilePath));
-        addTextModelListener(new TextModelListener() {
+        addTextModelListener(new TextChangeListener() {
             @Override
             public void prepareInsert(@NonNull TextModel model, int line, int column, @NonNull String newText) {
             

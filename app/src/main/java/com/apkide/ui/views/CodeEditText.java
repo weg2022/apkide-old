@@ -45,33 +45,42 @@ public class CodeEditText extends ViewGroup {
         getScrollView().showDragHandle();
     }
     
+    
+    public int getCaretLine(){
+        return getEditorView().getCaretLine();
+    }
+    
+    public int getCaretColumn(){
+        return getEditorView().getCaretColumn();
+    }
+    
     public void select(int startLine, int startColumn, int endLine, int endColumn) {
         getScrollView().selection(startLine, startColumn, endLine, endColumn);
     }
     
     public int getSelectionStartLine() {
-        if (getEditorView().getSelectionVisibility()) {
+        if (getEditorView().isSelectionVisibility()) {
             return getEditorView().getFirstSelectedLine();
         }
         return getEditorView().getCaretLine();
     }
     
     public int getSelectionStartColumn() {
-        if (getEditorView().getSelectionVisibility()) {
+        if (getEditorView().isSelectionVisibility()) {
             return getEditorView().getFirstSelectedColumn();
         }
         return getEditorView().getCaretColumn();
     }
     
     public int getSelectionEndLine() {
-        if (getEditorView().getSelectionVisibility()) {
+        if (getEditorView().isSelectionVisibility()) {
             return getEditorView().getLastSelectedLine();
         }
         return getEditorView().getCaretLine();
     }
     
     public int getSelectionEndColumn() {
-        if (getEditorView().getSelectionVisibility()) {
+        if (getEditorView().isSelectionVisibility()) {
             return getEditorView().getLastSelectedColumn();
         }
         return getEditorView().getCaretColumn();

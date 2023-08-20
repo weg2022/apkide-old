@@ -42,7 +42,7 @@ public class ProjectBrowserService implements AppService {
                                 String parent = FileSystem.getParentPath(myVisiblePath);
                                 
                                 if (parent != null && new File(parent).exists()) {
-                                    if (!parent.equals(App.getProjectService().getProjectRootPath()))
+                                    if (!myVisiblePath.equals(App.getProjectService().getProjectRootPath()))
                                         myProjectEntries.add(new ProjectEntry(parent));
                                 }
                                 
@@ -61,7 +61,7 @@ public class ProjectBrowserService implements AppService {
                             }
                             
                             myRunning = false;
-                           
+                            
                         }
                         myLock.wait();
                     }
@@ -72,6 +72,7 @@ public class ProjectBrowserService implements AppService {
         }, "ProjectBrowserService");
         thread.start();
         
+        myVisiblePath = getPreferences().getString("visible.path", null);
     }
     
     public void setListener(ProjectBrowserServiceListener listener) {
@@ -79,8 +80,9 @@ public class ProjectBrowserService implements AppService {
     }
     
     
-    public void open(@NonNull String filePath) {
+    public void openProject(@NonNull String filePath) {
         
+        getPreferences().edit().putString("visible.path", filePath).apply();
         synchronized (myLock) {
             myVisiblePath = filePath;
             myRunning = true;
@@ -89,6 +91,13 @@ public class ProjectBrowserService implements AppService {
     }
     
     public void sync() {
+        if (myVisiblePath == null) {
+            if (App.getProjectService().isProjectOpened()) {
+                myVisiblePath = App.getProjectService().getProjectRootPath();
+                getPreferences().edit().putString("visible.path", myVisiblePath).apply();
+            }
+        }
+        
         synchronized (myLock) {
             myRunning = true;
             myLock.notify();
@@ -99,7 +108,11 @@ public class ProjectBrowserService implements AppService {
         return myVisiblePath;
     }
     
-
+    
+    public void closeProject() {
+        getPreferences().edit().putString("visible.path", null).apply();
+    }
+    
     private SharedPreferences getPreferences() {
         if (myPreferences == null)
             myPreferences = App.getPreferences("ProjectBrowserService");

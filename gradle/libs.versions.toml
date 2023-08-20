@@ -14,6 +14,7 @@ annotation = "1.2.0"
 #noinspection GradleDependency
 okbinder2-compiler = "2.0"
 okbinder2 = "2.0"
+#noinspection GradleDependency
 preference = "1.1.0"
 #noinspection GradleDependency
 material = "1.5.0"

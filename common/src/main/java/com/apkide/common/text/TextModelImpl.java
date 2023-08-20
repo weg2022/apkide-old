@@ -18,7 +18,7 @@ import java.util.Vector;
 
 public class TextModelImpl implements TextModel {
     
-    private final List<TextModelListener> myListeners;
+    private final List<TextChangeListener> myListeners;
     private boolean myReadOnly;
     private final String myLineBreak;
     private final List<TextSource> myLines;
@@ -36,13 +36,13 @@ public class TextModelImpl implements TextModel {
     }
     
     @Override
-    public void addTextModelListener(@NonNull TextModelListener listener) {
+    public void addTextModelListener(@NonNull TextChangeListener listener) {
         if (!myListeners.contains(listener))
             myListeners.remove(listener);
     }
     
     @Override
-    public void removeTextModelListener(@NonNull TextModelListener listener) {
+    public void removeTextModelListener(@NonNull TextChangeListener listener) {
         myListeners.remove(listener);
     }
     
@@ -55,7 +55,7 @@ public class TextModelImpl implements TextModel {
     @Override
     public void insertLineBreak(int line, int column) {
         
-        for (TextModelListener listener : myListeners) {
+        for (TextChangeListener listener : myListeners) {
             listener.prepareInsert(this, line, column, getLineBreak());
         }
         
@@ -70,7 +70,7 @@ public class TextModelImpl implements TextModel {
         
         updateEditTimestamps();
         
-        for (TextModelListener listener : myListeners) {
+        for (TextChangeListener listener : myListeners) {
             listener.insertUpdate(this, line, column, line + 1, -1);
         }
     }
@@ -82,7 +82,7 @@ public class TextModelImpl implements TextModel {
             return;
         }
         
-        for (TextModelListener listener : myListeners) {
+        for (TextChangeListener listener : myListeners) {
             listener.prepareInsert(this, line, column, String.valueOf(c));
         }
         
@@ -94,14 +94,14 @@ public class TextModelImpl implements TextModel {
             updateEditTimestamps();
         }
         
-        for (TextModelListener listener : myListeners) {
+        for (TextChangeListener listener : myListeners) {
             listener.insertUpdate(this, line, column, line, column);
         }
     }
     
     @Override
     public void insert(int line, int column, @NonNull String newText) {
-        for (TextModelListener listener : myListeners) {
+        for (TextChangeListener listener : myListeners) {
             listener.prepareInsert(this, line, column, newText);
         }
         int endLine = line;
@@ -134,7 +134,7 @@ public class TextModelImpl implements TextModel {
             updateEditTimestamps();
         }
         
-        for (TextModelListener listener : myListeners) {
+        for (TextChangeListener listener : myListeners) {
             listener.insertUpdate(this, line, column, endLine, endColumn);
         }
         
@@ -145,7 +145,7 @@ public class TextModelImpl implements TextModel {
         switchEditLine(line);
         int column = myBuffer.length();
         
-        for (TextModelListener listener : myListeners) {
+        for (TextChangeListener listener : myListeners) {
             listener.prepareRemove(this, line, column, line + 1, -1);
         }
         
@@ -157,7 +157,7 @@ public class TextModelImpl implements TextModel {
             updateEditTimestamps();
         }
         
-        for (TextModelListener listener : myListeners) {
+        for (TextChangeListener listener : myListeners) {
             listener.removeUpdate(this, line, column, line + 1, -1);
         }
     }
@@ -171,7 +171,7 @@ public class TextModelImpl implements TextModel {
         if (endColumn > getLineLength(endLine))
             endColumn = getLineLength(endLine);
         
-        for (TextModelListener listener : myListeners) {
+        for (TextChangeListener listener : myListeners) {
             listener.prepareRemove(this, startLine, startColumn, endLine, endColumn);
         }
         
@@ -196,7 +196,7 @@ public class TextModelImpl implements TextModel {
             updateEditTimestamps();
         }
         
-        for (TextModelListener listener : myListeners) {
+        for (TextChangeListener listener : myListeners) {
             listener.removeUpdate(this, startLine, startColumn, endLine, endColumn);
         }
     }

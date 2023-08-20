@@ -7,6 +7,8 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
 
 import androidx.annotation.NonNull;
 
@@ -33,6 +35,7 @@ public class EditorView extends Editor {
     private final List<CaretListener> myCaretListeners = new ArrayList<>(1);
     private final List<SelectionListener> mySelectionListeners = new ArrayList<>(1);
     private WindowManager windowManager;
+    private EditorInputConnection myInputConnection;
     
     private void initView() {
         windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
@@ -41,6 +44,7 @@ public class EditorView extends Editor {
         setFocusableInTouchMode(true);
         setCaretVisibility(true);
     }
+    
     
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -109,23 +113,23 @@ public class EditorView extends Editor {
     
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        switch (keyCode){
+        switch (keyCode) {
             case KeyEvent.KEYCODE_DPAD_UP:
                 moveCaretUp();
                 break;
             case KeyEvent.KEYCODE_DPAD_DOWN:
                 moveCaretDown();
                 break;
-             case KeyEvent.KEYCODE_DPAD_LEFT:
-                 moveCaretLeft();
-                 break;
-             case KeyEvent.KEYCODE_DPAD_RIGHT:
-                 moveCaretRight();
-                 break;
-             case  KeyEvent.KEYCODE_ENTER:
-                 insertLineBreak();
-                 break;
-            case  KeyEvent.KEYCODE_TAB:
+            case KeyEvent.KEYCODE_DPAD_LEFT:
+                moveCaretLeft();
+                break;
+            case KeyEvent.KEYCODE_DPAD_RIGHT:
+                moveCaretRight();
+                break;
+            case KeyEvent.KEYCODE_ENTER:
+                insertLineBreak();
+                break;
+            case KeyEvent.KEYCODE_TAB:
                 insertTab();
                 break;
             case KeyEvent.KEYCODE_SPACE:
@@ -135,5 +139,31 @@ public class EditorView extends Editor {
                 super.onKeyDown(keyCode, event);
         }
         return true;
+    }
+    
+    @Override
+    public boolean onCheckIsTextEditor() {
+        return true;
+    }
+    
+    @Override
+    public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
+        if (!isEditable()) {
+            return super.onCreateInputConnection(outAttrs);
+        }
+        
+        if (myInputConnection == null)
+            myInputConnection = new EditorInputConnection(this);
+        
+        outAttrs.inputType = EditorInfo.TYPE_CLASS_TEXT |
+                        EditorInfo.TYPE_TEXT_VARIATION_NORMAL |
+                        EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS |
+                        EditorInfo.TYPE_TEXT_FLAG_MULTI_LINE |
+                        EditorInfo.TYPE_TEXT_FLAG_IME_MULTI_LINE;
+        
+        outAttrs.imeOptions = EditorInfo.IME_FLAG_NO_EXTRACT_UI |
+                EditorInfo.IME_FLAG_NO_ENTER_ACTION;
+        
+        return myInputConnection;
     }
 }

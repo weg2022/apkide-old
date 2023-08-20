@@ -24,7 +24,6 @@
                 android:id="@+id/editor"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-
                 <requestFocus />
             </com.apkide.ui.editors.IDEEditor>
         </com.apkide.ui.views.CodeEditTextHorizontalScrollView>
