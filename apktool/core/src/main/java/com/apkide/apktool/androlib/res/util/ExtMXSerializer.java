@@ -16,7 +16,7 @@
  */
 package com.apkide.apktool.androlib.res.util;
 
-import com.apkide.apktool.ext.org.xmlpull.renamed.MXSerializer;
+import org.xmlpull.renamed.MXSerializer;
 
 import java.io.IOException;
 import java.io.OutputStream;

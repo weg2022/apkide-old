@@ -23,11 +23,12 @@ import com.apkide.apktool.androlib.res.data.axml.NamespaceStack;
 import com.apkide.apktool.androlib.res.xml.ResXmlEncoders;
 import com.apkide.apktool.ext.android.content.res.XmlResourceParser;
 import com.apkide.apktool.ext.android.util.TypedValue;
-import com.apkide.apktool.ext.org.xmlpull.v1.XmlPullParserException;
 import com.apkide.apktool.util.ExtDataInput;
 import com.apkide.common.logger.Level;
 import com.apkide.common.logger.Logger;
 import com.google.common.io.LittleEndianDataInputStream;
+
+import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.DataInput;
 import java.io.IOException;

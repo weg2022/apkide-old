@@ -40,9 +40,10 @@ import com.apkide.apktool.directory.Directory;
 import com.apkide.apktool.directory.DirectoryException;
 import com.apkide.apktool.directory.ExtFile;
 import com.apkide.apktool.directory.FileDirectory;
-import com.apkide.apktool.ext.org.xmlpull.v1.XmlSerializer;
 import com.apkide.apktool.util.Duo;
 import com.apkide.common.logger.Logger;
+
+import org.xmlpull.v1.XmlSerializer;
 
 import java.io.File;
 import java.io.IOException;

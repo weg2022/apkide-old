@@ -16,7 +16,7 @@
  */
 package com.apkide.apktool.androlib.res.util;
 
-import com.apkide.apktool.ext.org.xmlpull.v1.XmlSerializer;
+import org.xmlpull.v1.XmlSerializer;
 
 import java.io.IOException;
 

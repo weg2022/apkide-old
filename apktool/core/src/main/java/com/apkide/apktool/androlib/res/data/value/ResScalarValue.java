@@ -21,7 +21,8 @@ import com.apkide.apktool.androlib.res.data.ResResource;
 import com.apkide.apktool.androlib.res.xml.ResValuesXmlSerializable;
 import com.apkide.apktool.androlib.res.xml.ResXmlEncodable;
 import com.apkide.apktool.androlib.res.xml.ResXmlEncoders;
-import com.apkide.apktool.ext.org.xmlpull.v1.XmlSerializer;
+
+import org.xmlpull.v1.XmlSerializer;
 
 import java.io.IOException;
 

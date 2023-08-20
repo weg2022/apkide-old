@@ -21,12 +21,13 @@ import com.apkide.apktool.androlib.exceptions.AndrolibException;
 import com.apkide.apktool.androlib.exceptions.RawXmlEncounteredException;
 import com.apkide.apktool.androlib.res.data.ResTable;
 import com.apkide.apktool.androlib.res.util.ExtXmlSerializer;
-import com.apkide.apktool.ext.org.xmlpull.v1.XmlPullParser;
-import com.apkide.apktool.ext.org.xmlpull.v1.XmlPullParserException;
-import com.apkide.apktool.ext.org.xmlpull.v1.wrapper.XmlPullParserWrapper;
-import com.apkide.apktool.ext.org.xmlpull.v1.wrapper.XmlPullWrapperFactory;
-import com.apkide.apktool.ext.org.xmlpull.v1.wrapper.XmlSerializerWrapper;
-import com.apkide.apktool.ext.org.xmlpull.v1.wrapper.classic.StaticXmlSerializerWrapper;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.wrapper.XmlPullParserWrapper;
+import org.xmlpull.v1.wrapper.XmlPullWrapperFactory;
+import org.xmlpull.v1.wrapper.XmlSerializerWrapper;
+import org.xmlpull.v1.wrapper.classic.StaticXmlSerializerWrapper;
 
 import java.io.IOException;
 import java.io.InputStream;

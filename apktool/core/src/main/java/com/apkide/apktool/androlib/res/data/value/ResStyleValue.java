@@ -20,9 +20,10 @@ import com.apkide.apktool.androlib.exceptions.AndrolibException;
 import com.apkide.apktool.androlib.res.data.ResResSpec;
 import com.apkide.apktool.androlib.res.data.ResResource;
 import com.apkide.apktool.androlib.res.xml.ResValuesXmlSerializable;
-import com.apkide.apktool.ext.org.xmlpull.v1.XmlSerializer;
 import com.apkide.apktool.util.Duo;
 import com.apkide.common.logger.Logger;
+
+import org.xmlpull.v1.XmlSerializer;
 
 import java.io.IOException;
 

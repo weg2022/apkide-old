@@ -16,7 +16,8 @@
 package com.apkide.apktool.ext.android.content.res;
 
 import com.apkide.apktool.ext.android.util.AttributeSet;
-import com.apkide.apktool.ext.org.xmlpull.v1.XmlPullParser;
+
+import org.xmlpull.v1.XmlPullParser;
 
 /**
  * The XML parsing interface returned for an XML resource. This is a standard
