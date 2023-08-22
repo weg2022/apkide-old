@@ -13,7 +13,7 @@ import com.apkide.common.Application;
 import com.apkide.ui.browsers.file.FileBrowserService;
 import com.apkide.ui.browsers.project.ProjectBrowserService;
 import com.apkide.ui.services.ApkService;
-import com.apkide.ui.services.IDECodeService;
+import com.apkide.ui.services.CodeService;
 import com.apkide.ui.services.build.BuildService;
 import com.apkide.ui.services.decode.DecodeService;
 import com.apkide.ui.services.error.ErrorService;
@@ -29,7 +29,7 @@ public final class App {
     private static App sApp;
     private static MainUI sMainUI;
     
-    private final IDECodeService myIDECodeService = new IDECodeService();
+    private final CodeService myCodeService = new CodeService();
     private final ApkService myApkService=new ApkService();
     private final FileBrowserService myFileBrowserService = new FileBrowserService();
     private final ProjectBrowserService myProjectBrowserService=new ProjectBrowserService();
@@ -43,8 +43,8 @@ public final class App {
     }
     
     
-    public static IDECodeService getCodeService() {
-        return sApp.myIDECodeService;
+    public static CodeService getCodeService() {
+        return sApp.myCodeService;
     }
     
     public static ApkService getAPkService(){
@@ -82,7 +82,7 @@ public final class App {
     public static void init(@NonNull MainUI mainUI) {
         sApp = new App();
         sMainUI = mainUI;
-        sApp.myIDECodeService.initialize();
+        sApp.myCodeService.initialize();
         sApp.myApkService.initialize();
         sApp.myFileService.initialize();
         sApp.myProjectService.initialize();
@@ -105,7 +105,7 @@ public final class App {
             sApp.myErrorService.shutdown();
             sApp.myFileService.shutdown();
             sApp.myApkService.shutdown();
-            sApp.myIDECodeService.shutdown();
+            sApp.myCodeService.shutdown();
             sActivities.clear();
             sMainUI = null;
             sApp = null;

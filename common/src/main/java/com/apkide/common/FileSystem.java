@@ -98,15 +98,13 @@ public class FileSystem {
             for (FileArchiveReader archiveReader : getArchiveReaders()) {
                 for (String filePattern : archiveReader.getSupportArchiveFilePatterns()) {
                     if (FilePatternMatcher.get().match(getName(parent), filePattern)) {
-                        Reader reader = archiveReader.getArchiveEntryReader(parent, getName(filePath), encoding);
-                        return NormalizedReadWriter.get().createReader(reader);
+                        return archiveReader.getArchiveEntryReader(parent, getName(filePath), encoding);
                     }
                 }
             }
-            Reader reader = encoding == null ?
+            return encoding == null ?
                     new FileReader(filePath) :
                     new InputStreamReader(new FileInputStream(filePath), encoding);
-            return NormalizedReadWriter.get().createReader(reader);
         } else if (isArchiveFileEntry(filePath))
             return readArchiveFileEntry(filePath, encoding);
         throw new IOException();
@@ -193,8 +191,7 @@ public class FileSystem {
         for (FileArchiveReader archiveReader : getArchiveReaders()) {
             for (String filePattern : archiveReader.getSupportArchiveFilePatterns()) {
                 if (FilePatternMatcher.get().match(getName(archivePath), filePattern)) {
-                    Reader reader = archiveReader.getArchiveEntryReader(archivePath, entryPath, encoding);
-                    return NormalizedReadWriter.get().createReader(reader);
+                    return archiveReader.getArchiveEntryReader(archivePath, entryPath, encoding);
                 }
             }
         }

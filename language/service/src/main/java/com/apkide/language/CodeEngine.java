@@ -108,9 +108,17 @@ public final class CodeEngine {
                                                         .highlighting(myFilePath, myCallback);
                                                 
                                             }
+                                            
                                             if (myHighlightingListener != null) {
-                                                myCallback.myHighlights.highlighting(myFilePath,
-                                                        myHighlightingListener);
+                                                myHighlightingListener.highlighting(
+                                                        myFilePath,
+                                                        myCallback.myHighlights.styles,
+                                                        myCallback.myHighlights.startLines,
+                                                        myCallback.myHighlights.startColumns,
+                                                        myCallback.myHighlights.endLines,
+                                                        myCallback.myHighlights.endColumns,
+                                                        myCallback.myHighlights.length
+                                                );
                                             }
                                             
                                             myCallback.myHighlights.clear();
@@ -121,8 +129,15 @@ public final class CodeEngine {
                                             }
                                             
                                             if (myHighlightingListener != null) {
-                                                myCallback.myHighlights.highlighting2(myFilePath,
-                                                        myHighlightingListener);
+                                                myHighlightingListener.semanticHighlighting(
+                                                        myFilePath,
+                                                        myCallback.myHighlights.styles,
+                                                        myCallback.myHighlights.startLines,
+                                                        myCallback.myHighlights.startColumns,
+                                                        myCallback.myHighlights.endLines,
+                                                        myCallback.myHighlights.endColumns,
+                                                        myCallback.myHighlights.length
+                                                );
                                             }
                                         case Analyze:
                                             myCallback.myProblemList.clear();

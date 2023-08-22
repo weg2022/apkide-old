@@ -3,14 +3,13 @@ package com.apkide.ui.services.file;
 import static java.util.Objects.requireNonNull;
 
 import android.content.SharedPreferences;
-import android.os.RemoteException;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.apkide.language.CodeEngine;
 import com.apkide.language.FileHighlighting;
-import com.apkide.language.service.ICodeHighlightingListener;
 import com.apkide.ui.App;
 import com.apkide.ui.services.AppService;
 
@@ -28,7 +27,7 @@ public class FileService implements AppService {
     private final HashMap<String, FileModelFactory> myFactors = new HashMap<>();
     private final List<FileServiceListener> myListeners = new Vector<>();
     
-    private ICodeHighlightingListener myHighlightingListener;
+    private CodeEngine.HighlightingListener myHighlightingListener;
     private String myVisibleFilePath;
     
     private SharedPreferences getPreferences() {
@@ -49,21 +48,36 @@ public class FileService implements AppService {
     
     private void registerListener(){
         if (myHighlightingListener==null){
-            myHighlightingListener=new ICodeHighlightingListener.Stub() {
+            myHighlightingListener=new CodeEngine.HighlightingListener() {
+                private final FileHighlighting myHighlighting=new FileHighlighting();
                 @Override
-                public void highlightingFinished(FileHighlighting highlight) throws RemoteException {
+                public void highlighting(String filePath, int[] styles, int[] startLines, int[] startColumns, int[] endLines, int[] endColumns, int length) {
+                    myHighlighting.filePath=filePath;
+                    myHighlighting.styles=styles;
+                    myHighlighting.startLines=startLines;
+                    myHighlighting.startColumns=startColumns;
+                    myHighlighting.endLines=endLines;
+                    myHighlighting.endColumns=endColumns;
+                    myHighlighting.length=length;
                     for (FileModel value : myOpenFileModels.values()) {
-                        if (value.getFilePath().endsWith(highlight.filePath)){
-                            value.highlighting(highlight);
+                        if (value.getFilePath().endsWith(myHighlighting.filePath)){
+                            value.highlighting(myHighlighting);
                         }
                     }
                 }
     
                 @Override
-                public void semanticHighlightingFinished(FileHighlighting highlight) throws RemoteException {
+                public void semanticHighlighting(String filePath, int[] styles, int[] startLines, int[] startColumns, int[] endLines, int[] endColumns, int length) {
+                    myHighlighting.filePath=filePath;
+                    myHighlighting.styles=styles;
+                    myHighlighting.startLines=startLines;
+                    myHighlighting.startColumns=startColumns;
+                    myHighlighting.endLines=endLines;
+                    myHighlighting.endColumns=endColumns;
+                    myHighlighting.length=length;
                     for (FileModel value : myOpenFileModels.values()) {
-                        if (value.getFilePath().endsWith(highlight.filePath)){
-                            value.semanticHighlighting(highlight);
+                        if (value.getFilePath().endsWith(myHighlighting.filePath)){
+                            value.semanticHighlighting(myHighlighting);
                         }
                     }
                 }

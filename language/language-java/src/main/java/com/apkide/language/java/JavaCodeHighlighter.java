@@ -1,5 +1,7 @@
 package com.apkide.language.java;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.apkide.language.api.CodeHighlighter;
@@ -18,6 +20,7 @@ public class JavaCodeHighlighter implements CodeHighlighter {
     
     @Override
     public void highlighting(@NonNull String filePath, @NonNull CodeHighlighterCallback callback) {
+        long startTime=System.currentTimeMillis();
         try {
             Reader reader = callback.getFileReader(filePath);
             myLexer.yyreset(reader);
@@ -40,6 +43,8 @@ public class JavaCodeHighlighter implements CodeHighlighter {
         } catch (IOException ignored) {
         
         }
+        long endTime=System.currentTimeMillis();
+        Log.d("JavaCodeHighlighter", "highlighting: done in "+(endTime-startTime));
     }
     
     @Override
