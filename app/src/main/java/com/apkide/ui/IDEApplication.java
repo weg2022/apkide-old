@@ -22,23 +22,28 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.multidex.MultiDexApplication;
 
 import com.apkide.analytics.Analytics;
-import com.apkide.codeanalysis.LanguageServerProvider;
 import com.apkide.common.AppLog;
 import com.apkide.common.Application;
+import com.apkide.common.FilePatternMatcher;
 import com.apkide.common.FileSystem;
 import com.apkide.common.SafeRunner;
 import com.apkide.common.io.FileUtils;
-import com.apkide.ls.api.LanguageServer;
-import com.apkide.ls.java.JavaLanguageServer;
-import com.apkide.ls.smali.SmaliLanguageServer;
-import com.apkide.ls.xml.XmlLanguageServer;
+import com.apkide.language.FileStore;
+import com.apkide.language.LanguageProvider;
+import com.apkide.language.api.Language;
+import com.apkide.language.java.JavaLanguage;
+import com.apkide.language.smali.SmaliLanguage;
+import com.apkide.language.xml.XmlLanguage;
+import com.apkide.language.yaml.YamlLanguage;
 import com.apkide.ui.util.JarFileArchiveReader;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -211,7 +216,7 @@ public class IDEApplication extends MultiDexApplication {
         });
         
         AppPreferences.initialize(getApplicationContext());
-    
+        
         Analytics.initialize(getApplicationContext(), BuildConfig.DEBUG,
                 AppPreferences::isAnalyticsEnabled);
         
@@ -228,14 +233,95 @@ public class IDEApplication extends MultiDexApplication {
                 //TODO: zip & apk support
         });
         
-        LanguageServerProvider.set(new LanguageServerProvider() {
+        FileStore.set(new FileStore() {
+            @Override
+            public boolean matchFilePatterns(@NonNull String filePath, @NonNull String filePattern) {
+                return FilePatternMatcher.get().match(filePath, filePattern);
+            }
+            
             @NonNull
             @Override
-            public LanguageServer[] getLanguageServers() {
-                return new LanguageServer[]{
-                        new SmaliLanguageServer(),
-                        new JavaLanguageServer(),
-                        new XmlLanguageServer(),
+            public String getFileExtension(@NonNull String filePath) {
+                return FileSystem.getExtensionName(filePath);
+            }
+            
+            @NonNull
+            @Override
+            public String getFileName(@NonNull String filePath) {
+                return FileSystem.getName(filePath);
+            }
+            
+            @Nullable
+            @Override
+            public String getParentFilePath(@NonNull String filePath) {
+                return FileSystem.getParentPath(filePath);
+            }
+            
+            @NonNull
+            @Override
+            public Reader getFileReader(@NonNull String filePath) throws IOException {
+                return FileSystem.readFile(filePath);
+            }
+            
+            @Override
+            public long getFileSize(@NonNull String filePath) {
+                return FileSystem.getLength(filePath);
+            }
+            
+            @Override
+            public long getFileVersion(@NonNull String filePath) {
+                return FileSystem.getLastModified(filePath);
+            }
+            
+            @NonNull
+            @Override
+            public List<String> getFileChildren(@NonNull String filePath) {
+                return FileSystem.getChildEntries(filePath);
+            }
+            
+            @Override
+            public boolean isFileExists(@NonNull String filePath) {
+                return FileSystem.exists(filePath);
+            }
+            
+            @Override
+            public boolean isDirectory(@NonNull String filePath) {
+                return FileSystem.isDirectory(filePath);
+            }
+            
+            @Override
+            public boolean isFile(@NonNull String filePath) {
+                return FileSystem.isFile(filePath);
+            }
+            
+            @Override
+            public boolean isArchiveFile(@NonNull String filePath) {
+                return FileSystem.isArchiveFile(filePath);
+            }
+            
+            @Override
+            public boolean isArchiveEntry(@NonNull String filePath) {
+                return FileSystem.isArchiveEntry(filePath);
+            }
+            
+            @Override
+            public boolean isReadOnly(@NonNull String filePath) {
+                File file = new File(filePath);
+                if (!file.exists()||file.isDirectory()) {
+                    return true;
+                }
+                return !new File(filePath).canWrite();
+            }
+        });
+        
+        LanguageProvider.set(new LanguageProvider() {
+            @Override
+            public Language[] createLanguages() {
+                return new Language[]{
+                        new JavaLanguage(),
+                        new SmaliLanguage(),
+                        new XmlLanguage(),
+                        new YamlLanguage()
                 };
             }
         });

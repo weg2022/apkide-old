@@ -105,11 +105,12 @@ dependencies {
     runtimeOnly project(':apktool:core')
     implementation project(':apktool:service')
 
-    implementation project(':language-server:service')
-    implementation project(':language-server:api')
-    implementation project(':language-server:impl-java')
-    implementation project(':language-server:impl-smali')
-    implementation project(':language-server:impl-xml')
+    implementation project(':language:service')
+    implementation project(':language:api')
+    implementation project(':language:language-java')
+    implementation project(':language:language-smali')
+    implementation project(':language:language-xml')
+    implementation project(':language:language-yaml')
 
     implementation project(':smali')
     implementation project(':java-decompiler')

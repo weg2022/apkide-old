@@ -12,7 +12,7 @@ import androidx.preference.PreferenceManager;
 import com.apkide.common.Application;
 import com.apkide.ui.browsers.file.FileBrowserService;
 import com.apkide.ui.browsers.project.ProjectBrowserService;
-import com.apkide.ui.services.analysis.CodeAnalysisEngineService;
+import com.apkide.ui.services.IDECodeService;
 import com.apkide.ui.services.apktool.ApkToolEngineService;
 import com.apkide.ui.services.file.FileService;
 import com.apkide.ui.services.project.ProjectService;
@@ -30,7 +30,7 @@ public final class App {
     private final ProjectBrowserService myProjectBrowserService=new ProjectBrowserService();
     private final FileService myFileService = new FileService();
     private final ProjectService myProjectService = new ProjectService();
-    private final CodeAnalysisEngineService myCodeAnalysisEngineService = new CodeAnalysisEngineService();
+    private final IDECodeService myIDECodeService = new IDECodeService();
     private final ApkToolEngineService myApkToolEngineService = new ApkToolEngineService();
     
     private App() {
@@ -40,8 +40,8 @@ public final class App {
         return sApp.myApkToolEngineService;
     }
     
-    public static CodeAnalysisEngineService getCodeEngineService() {
-        return sApp.myCodeAnalysisEngineService;
+    public static IDECodeService getCodeService() {
+        return sApp.myIDECodeService;
     }
     
     public static FileBrowserService getFileBrowserService() {
@@ -64,7 +64,7 @@ public final class App {
         sApp = new App();
         sMainUI = mainUI;
         sApp.myApkToolEngineService.initialize();
-        sApp.myCodeAnalysisEngineService.initialize();
+        sApp.myIDECodeService.initialize();
         sApp.myFileService.initialize();
         sApp.myProjectService.initialize();
         sApp.myFileBrowserService.initialize();
@@ -80,7 +80,7 @@ public final class App {
             sApp.myProjectService.shutdown();
             sApp.myFileService.shutdown();
             sApp.myApkToolEngineService.shutdown();
-            sApp.myCodeAnalysisEngineService.shutdown();
+            sApp.myIDECodeService.shutdown();
             sActivities.clear();
             sMainUI = null;
             sApp = null;

@@ -1,0 +1,79 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    signingConfigs {
+        testKey {
+            storeFile file('testkey.jks')
+            storePassword 'testkey'
+            keyAlias 'testkey'
+            keyPassword 'testkey'
+        }
+    }
+
+    namespace 'weg.test.ui'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "weg.test.ui"
+        minSdk 26
+        targetSdk 34
+        versionCode 20230808
+        versionName '0.1beta1'
+        multiDexEnabled true
+        signingConfig signingConfigs.testKey
+    }
+
+    buildTypes {
+        debug {
+            pseudoLocalesEnabled true
+            ext.enableCrashlytics = false
+            ext.alwaysUpdateBuildId = false
+            shrinkResources false
+            minifyEnabled false
+            proguardFiles 'proguard-rules.pro'
+            signingConfig signingConfigs.testKey
+        }
+
+        release {
+            pseudoLocalesEnabled true
+            ext.enableCrashlytics = false
+            ext.alwaysUpdateBuildId = false
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles 'proguard-rules.pro'
+            signingConfig signingConfigs.testKey
+        }
+    }
+
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/java']
+            resources.srcDirs = ['src/main/java', 'src/main/resources']
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    buildFeatures {
+        viewBinding true
+        buildConfig true
+    }
+
+    packagingOptions {
+        exclude 'androidsupportmultidexversion.txt'
+        exclude 'META-INF/**.version'
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation libs.androidx.multidex
+    implementation libs.material
+    implementation project(':language:service')
+    implementation project(':language:api')
+}

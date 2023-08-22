@@ -66,7 +66,6 @@ public class FileService implements AppService {
             for (FileServiceListener listener : myListeners) {
                 listener.fileOpened(filePath, requireNonNull(getOpenFileModel(filePath)));
             }
-            App.getCodeEngineService().openFile(filePath);
             return;
         }
         for (FileModelFactory factory : myFactors.values()) {
@@ -78,7 +77,6 @@ public class FileService implements AppService {
                     for (FileServiceListener listener : myListeners) {
                         listener.fileOpened(filePath, fileModel);
                     }
-                    App.getCodeEngineService().openFile(filePath);
                 } catch (IOException e) {
                     e.printStackTrace();
                     Toast.makeText(App.getUI(), e.getMessage(), Toast.LENGTH_SHORT).show();
