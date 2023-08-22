@@ -1,13 +1,12 @@
 package com.apkide.ui.views.editor;
 
 import static java.lang.Math.log10;
-import static java.lang.Math.max;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.text.TextPaint;
 import android.util.AttributeSet;
@@ -15,8 +14,8 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import com.apkide.common.color.Color;
 import com.apkide.common.SyncRunner;
+import com.apkide.common.color.Color;
 import com.apkide.common.text.TextModel;
 import com.apkide.common.text.TextStyle;
 
@@ -36,7 +35,7 @@ public class Console extends View implements TextModel.TextChangeListener, Theme
         initView();
     }
     
-    private final Rect myRect = new Rect(0, 0, 0, 0);
+    
     private Typeface myTypeface = Typeface.MONOSPACE;
     private int myFontSize = 16;
     private final TextPaint myPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
@@ -104,20 +103,25 @@ public class Console extends View implements TextModel.TextChangeListener, Theme
     }
     
     public void setModel(@NonNull Model model) {
-        if (myModel != null) {
+        if (myModel != null)
             myModel.removeTextModelListener(this);
-        }
+        
         myModel = model;
         myModel.addTextModelListener(this);
         configurePaint();
         computeMaxColumn();
         computeSidebar();
         redraw();
+        myComputeMaxColumnRunner.run();
         myLayoutUpdateRunner.run();
     }
     
     public Model getModel() {
         return myModel;
+    }
+    
+    public int getLineCount() {
+        return myModel.getLineCount();
     }
     
     private void computeSidebar() {
@@ -478,16 +482,8 @@ public class Console extends View implements TextModel.TextChangeListener, Theme
     public void insertUpdate(@NonNull TextModel model, int startLine, int startColumn, int endLine, int endColumn) {
         computeSidebar();
         invalidate();
-        if (startLine < myCaretLine && startLine != endLine) {
-            moveCaret((myCaretLine + endLine) - startLine, myCaretColumn, true);
-        } else if (startLine == myCaretLine && startColumn <= myCaretColumn) {
-            if (startLine == endLine) {
-                moveCaret(myCaretLine, ((myCaretColumn + endColumn) - startColumn) + 1, true);
-            } else {
-                moveCaret((myCaretLine + endLine) - startLine,
-                        ((myCaretColumn + endColumn) - startColumn) + 1, true);
-            }
-        }
+      
+        moveCaret(endLine,endColumn==-1?0:endColumn);
         
         setSelectionVisibility(false);
         
@@ -530,20 +526,8 @@ public class Console extends View implements TextModel.TextChangeListener, Theme
         computeSidebar();
         
         invalidate();
-        if (startLine == endLine) {
-            if (endLine == myCaretLine && startColumn < myCaretColumn) {
-                moveCaret(myCaretLine, max(startColumn,
-                        myCaretColumn - ((endColumn - startColumn) + 1)), true);
-            }
-        } else if ((myCaretLine == startLine && startColumn < myCaretColumn) ||
-                (myCaretLine > startLine && myCaretLine < endLine) ||
-                (myCaretLine == endLine && myCaretColumn < endColumn)) {
-            moveCaret(startLine, startColumn, true);
-        } else if (myCaretLine == endLine) {
-            moveCaret(startLine, ((myCaretColumn + startColumn) - endColumn) - 1, true);
-        } else if (myCaretLine > endLine) {
-            moveCaret(myCaretLine - (endLine - startLine), myCaretColumn, true);
-        }
+        moveCaret(startLine,startColumn==-1?0:startColumn);
+        
         setSelectionVisibility(false);
         
         if (startLine == endLine) {
@@ -565,10 +549,28 @@ public class Console extends View implements TextModel.TextChangeListener, Theme
     
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        setMeasuredDimension(
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        /*setMeasuredDimension(
                 (int) (((myMaxColumn + 1) * mySpaceCharWidth) + mySidebarX),
                 myModel == null ? 0 :
-                        (int) ((myModel.getLineCount() + 1) * myFontHeight));
+                        (int) ((myModel.getLineCount() + 1) * myFontHeight));*/
+    }
+    
+    
+    public int getComponentWidth() {
+        return getWidth() - getPaddingLeft() - getPaddingRight();
+    }
+    
+    public int getComponentHeight() {
+        return getHeight() - getPaddingTop() - getPaddingBottom();
+    }
+    
+    public int getMaxWidth() {
+        return (int) (((myMaxColumn + 1) * mySpaceCharWidth) + mySidebarX);
+    }
+    
+    public int getMaxHeight() {
+        return myModel == null ? 0 : (int) ((myModel.getLineCount() + 1) * myFontHeight);
     }
     
     
@@ -631,7 +633,7 @@ public class Console extends View implements TextModel.TextChangeListener, Theme
     }
     
     public float computeLocationX(int line, int column) {
-        if (getModel()==null){
+        if (getModel() == null) {
             return 0;
         }
         if (line < 0) line = 0;
@@ -698,20 +700,18 @@ public class Console extends View implements TextModel.TextChangeListener, Theme
     }
     
     public void redraw() {
-        getLocalVisibleRect(myRect);
         invalidate();
     }
-    
+    @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
         Color color = myTheme.getColor(Theme.Colors.BackgroundColor);
         if (color != null && color.value != 0)
             canvas.drawColor(color.value);
         
-        if (myRect.isEmpty()) return;
         
-        int firstLine = computeLine(myRect.top);
-        int lastLine = computeLine(myRect.bottom + 1);
+        int firstLine = computeLine(getScrollY());
+         int lastLine = computeLine(canvas.getClipBounds().bottom + 1);
         if (firstLine >= getModel().getLineCount()) firstLine = getModel().getLineCount() - 1;
         
         if (lastLine >= getModel().getLineCount()) lastLine = getModel().getLineCount() - 1;

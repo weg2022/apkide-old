@@ -268,7 +268,7 @@ public class Editor extends Console {
             int caretLine = getCaretLine();
             int caretColumn = getCaretColumn();
             getEditorModel().insertLineBreak(caretLine, caretColumn);
-            
+            moveCaret(caretLine+1,0);
         }
     }
     
@@ -278,6 +278,7 @@ public class Editor extends Console {
             int caretLine = getCaretLine();
             int caretColumn = getCaretColumn();
             getEditorModel().insert(caretLine, caretColumn, '\t');
+            moveCaret(caretLine, caretColumn + 1);
         }
     }
     
@@ -403,7 +404,7 @@ public class Editor extends Console {
             } else {
                 setInternalState(State.INSERTING);
                 getEditorModel().insert(caretLine, caretColumn, c);
-                moveCaret(caretLine, caretColumn+1);
+                moveCaret(caretLine, caretColumn + 1);
             }
         }
     }
@@ -554,8 +555,10 @@ public class Editor extends Console {
             int caretColumn = getCaretColumn();
             if (caretColumn != 0) {
                 getEditorModel().remove(caretLine, caretColumn - 1, caretLine, caretColumn);
+                moveCaret(caretLine,caretColumn-1);
             } else if (caretLine != 0) {
                 getEditorModel().removeLineBreak(caretLine - 1);
+                moveCaret(caretLine-1,getEditorModel().getLineLength(caretLine-1));
             }
         }
     }
@@ -574,9 +577,11 @@ public class Editor extends Console {
             int caretColumn = getCaretColumn();
             if (caretColumn > 0) {
                 getEditorModel().remove(caretLine, caretColumn, caretLine, caretColumn + 1);
+                moveCaret(caretLine,caretColumn);
             } else if (caretColumn == 0) {
                 if (caretLine == 0) return;
                 getEditorModel().removeLineBreak(caretLine);
+                moveCaret(caretLine-1,getEditorModel().getLineLength(caretLine-1));
             }
         }
     }

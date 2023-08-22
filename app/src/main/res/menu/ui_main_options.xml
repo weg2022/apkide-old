@@ -157,7 +157,7 @@
         android:title="@string/action_close_file" />
 
     <item
-        android:id="@+id/commandSaveAll"
+        android:id="@+id/commandSave"
         android:title="@string/action_save_all" />
 
     <item

@@ -5,7 +5,9 @@ import android.util.AttributeSet;
 
 import androidx.annotation.NonNull;
 
+import com.apkide.ui.AppPreferences;
 import com.apkide.ui.views.CodeEditText;
+import com.apkide.ui.views.editor.Theme;
 
 public class BuildOutputView extends CodeEditText {
     public BuildOutputView(Context context) {
@@ -24,6 +26,8 @@ public class BuildOutputView extends CodeEditText {
     }
     
     private void initView() {
+        getEditorView().applyColorScheme(new Theme.DefaultColorScheme(AppPreferences.isNightTheme()));
+        getEditorView().setCaretVisibility(true);
         setModel(new BuildOutputModel());
     }
     
@@ -37,10 +41,10 @@ public class BuildOutputView extends CodeEditText {
     }
     
     public void append(@NonNull String msg){
-        getBuildOutputModel().insert(getCaretLine(),getCaretColumn(),msg);
+        getBuildOutputModel().insert(getBuildOutputModel().getLineCount()-1,getBuildOutputModel().getLineLength(getLineCount()-1),msg);
+        getBuildOutputModel().insertLineBreak(getBuildOutputModel().getLineCount()-1,getBuildOutputModel().getLineLength(getLineCount()-1));
+        
     }
     
-    public void appendLineBreak(){
-        getBuildOutputModel().insertLineBreak(getCaretLine(),getCaretColumn());
-    }
+    
 }

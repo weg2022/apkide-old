@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,24 +37,32 @@ public abstract class ConfigureFile implements Serializable {
 		return null;
 	}
 
-	public void sync() throws ConfigureFileException {
+	public void sync() throws IOException {
 		File file = new File(getFilePath());
 		if (!file.exists())
-			throw new ConfigureFileException(getFilePath() + " file not exists.");
+			throw new IOException(getFilePath() + " file not exists.");
 		if (file.isDirectory())
-			throw new ConfigureFileException(getFilePath() + " file is directory.");
+			throw new IOException(getFilePath() + " file is directory.");
 
 		if (sCacheMap.containsKey(getFilePath())) {
 			CacheEntry entry = sCacheMap.get(getFilePath());
 			if (entry != null && entry.isInvalid()) {
 				if (file.lastModified() != entry.lastModified) {
-					entry.file.onSync();
+					try {
+						entry.file.onSync();
+					} catch (IOException e) {
+						throw new RuntimeException(e);
+					}
 					entry.lastModified = file.lastModified();
 				}
 				return;
 			}
 		}
-		onSync();
+		try {
+			onSync();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 		sCacheMap.put(getFilePath(),
 				new CacheEntry(this, new File(getFilePath()).lastModified()));
 	}
@@ -73,7 +82,7 @@ public abstract class ConfigureFile implements Serializable {
 		sCacheMap.remove(getFilePath());
 	}
 
-	protected abstract void onSync() throws ConfigureFileException;
+	protected abstract void onSync() throws IOException;
 
 	protected abstract void onDestroy();
 

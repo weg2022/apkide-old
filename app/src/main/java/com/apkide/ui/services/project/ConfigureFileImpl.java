@@ -2,6 +2,8 @@ package com.apkide.ui.services.project;
 
 import androidx.annotation.NonNull;
 
+import java.io.IOException;
+
 public class ConfigureFileImpl extends ConfigureFile {
     
     public static final String APKTOOL_YML = "apktool.yml";
@@ -12,9 +14,9 @@ public class ConfigureFileImpl extends ConfigureFile {
     
     
     @Override
-    protected void onSync() throws ConfigureFileException {
+    protected void onSync() throws IOException {
         if (!getFilePath().equals(APKTOOL_YML))
-            throw new ConfigureFileException(getFilePath()+" file not supported.");
+            throw new IOException(getFilePath()+" file not supported.");
         
         
     }

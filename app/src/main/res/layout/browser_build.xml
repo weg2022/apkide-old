@@ -8,26 +8,13 @@
         android:id="@+id/buildProgressBar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="2dp"
         android:indeterminate="true" />
 
-    <com.apkide.ui.views.CodeEditTextScrollView
-        android:id="@+id/buildScrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-
-        <com.apkide.ui.views.CodeEditTextHorizontalScrollView
-            android:id="@+id/buildHorizontalScrollView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-           >
             <com.apkide.ui.browsers.build.BuildOutputView
                 android:id="@+id/buildOutputView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <requestFocus/>
             </com.apkide.ui.browsers.build.BuildOutputView>
-        </com.apkide.ui.views.CodeEditTextHorizontalScrollView>
-    </com.apkide.ui.views.CodeEditTextScrollView>
 </androidx.appcompat.widget.LinearLayoutCompat>

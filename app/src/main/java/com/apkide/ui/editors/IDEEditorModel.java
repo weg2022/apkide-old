@@ -2,11 +2,12 @@ package com.apkide.ui.editors;
 
 import androidx.annotation.NonNull;
 
-import com.apkide.codeanalysis.FileHighlights;
+
 import com.apkide.common.FileSystem;
 import com.apkide.common.io.IoUtils;
 import com.apkide.common.io.iterator.LineIterator;
 import com.apkide.common.text.TextModel;
+import com.apkide.language.FileHighlighting;
 import com.apkide.ui.services.file.FileModel;
 import com.apkide.ui.views.CodeEditTextModel;
 import com.apkide.ui.views.editor.StyleSpan;
@@ -73,7 +74,8 @@ public class IDEEditorModel extends CodeEditTextModel implements FileModel {
     
     @Override
     public void sync() throws IOException {
-        setText(IoUtils.readStringAndClose(FileSystem.readFile(myFilePath)));
+        String text=IoUtils.readStringAndClose(FileSystem.readFile(myFilePath));
+        setText(text);
     }
     
     @Override
@@ -82,13 +84,13 @@ public class IDEEditorModel extends CodeEditTextModel implements FileModel {
     }
     
     @Override
-    public void highlighting(@NonNull FileHighlights highlighting) {
+    public void highlighting(@NonNull FileHighlighting highlighting) {
         myHighlight.set(highlighting.styles,
                 highlighting.startLines,
                 highlighting.startColumns,
                 highlighting.endLines,
                 highlighting.endColumns,
-                highlighting.size);
+                highlighting.length);
         synchronized (myHighlightLock) {
             StyleSpan span = myHighlightGUI;
             myHighlightGUI = myHighlight;
@@ -97,13 +99,13 @@ public class IDEEditorModel extends CodeEditTextModel implements FileModel {
     }
     
     @Override
-    public void semanticHighlighting(@NonNull FileHighlights highlighting) {
+    public void semanticHighlighting(@NonNull FileHighlighting highlighting) {
         mySyntaxHighlight.set(highlighting.styles,
                 highlighting.startLines,
                 highlighting.startColumns,
                 highlighting.endLines,
                 highlighting.endColumns,
-                highlighting.size);
+                highlighting.length);
         synchronized (myHighlightLock) {
             StyleSpan span = mySyntaxHighlightGUI;
             mySyntaxHighlightGUI = mySyntaxHighlight;

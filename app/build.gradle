@@ -61,6 +61,7 @@ android {
         exclude 'smali.properties'
         exclude 'baksmali.properties'
         exclude 'resources/**.ser'
+        exclude '**/*.aidl'
         jniLibs {
             useLegacyPackaging true
         }
@@ -102,7 +103,7 @@ dependencies {
     implementation project(':analytics')
     implementation project(':common')
 
-    runtimeOnly project(':apktool:core')
+    implementation project(':apktool:core')
     implementation project(':apktool:service')
 
     implementation project(':language:service')

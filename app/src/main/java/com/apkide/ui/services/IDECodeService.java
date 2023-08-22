@@ -29,14 +29,7 @@ public class IDECodeService implements AppService {
         
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            if (myService != null) {
-                try {
-                    myService.shutdown();
-                } catch (RemoteException e) {
-                    throw new RuntimeException(e);
-                }
-                myService = null;
-            }
+            myService = null;
         }
     };
     
@@ -122,6 +115,7 @@ public class IDECodeService implements AppService {
     
     public void setCodeHighlightingListener(ICodeHighlightingListener listener) {
         if (!isConnected()) return;
+       
         try {
             myService.setCodeHighlightingListener(listener);
         } catch (RemoteException e) {
@@ -284,6 +278,13 @@ public class IDECodeService implements AppService {
     
     @Override
     public void shutdown() {
+        if (isConnected()) {
+            try {
+                myService.shutdown();
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        }
         unbindService();
     }
     

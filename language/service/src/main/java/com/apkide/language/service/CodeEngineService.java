@@ -94,7 +94,7 @@ public class CodeEngineService extends Service {
                     try {
                         listener.highlightingFinished(myFileHighlighting);
                     } catch (RemoteException e) {
-                        throw new RuntimeException(e);
+                        e.printStackTrace();
                     }
                 }
                 
@@ -110,7 +110,7 @@ public class CodeEngineService extends Service {
                     try {
                         listener.semanticHighlightingFinished(myFileHighlighting);
                     } catch (RemoteException e) {
-                        throw new RuntimeException(e);
+                       e.printStackTrace();
                     }
                 }
             });

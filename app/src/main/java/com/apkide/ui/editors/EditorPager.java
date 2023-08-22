@@ -18,13 +18,12 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.apkide.common.AppLog;
 import com.apkide.common.FileSystem;
-import com.apkide.ui.util.MessageBox;
 import com.apkide.ui.App;
 import com.apkide.ui.R;
-import com.apkide.ui.dialogs.ProgressDialog;
 import com.apkide.ui.services.file.FileModel;
 import com.apkide.ui.services.file.FileModelFactory;
 import com.apkide.ui.services.file.FileServiceListener;
+import com.apkide.ui.util.MessageBox;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -86,6 +85,7 @@ public class EditorPager extends ViewPager implements FileModelFactory, FileServ
                 super.setPrimaryItem(container, position, object);
                 if (this.index != position) {
                     this.index = position;
+                    getEditor(index).redraw();
                 }
             }
             
@@ -110,6 +110,13 @@ public class EditorPager extends ViewPager implements FileModelFactory, FileServ
     public void fileOpened(@NonNull String filePath, @NonNull FileModel fileModel) {
         AppLog.s(this, "fileOpened: " + filePath);
         
+        if (App.getMainUI().getEditorTabLayout().getVisibility() != VISIBLE)
+            App.getMainUI().getEditorTabLayout().setVisibility(VISIBLE);
+        
+        if (App.getMainUI().getEmptyFrame().getVisibility() == VISIBLE) {
+            App.getMainUI().getEmptyFrame().setVisibility(GONE);
+        }
+        
         for (IDEEditor editor : getEditors()) {
             if (editor.getIDEEditorModel().getFilePath().equals(filePath)) {
                 int index = foundEditor(filePath);
@@ -121,20 +128,17 @@ public class EditorPager extends ViewPager implements FileModelFactory, FileServ
             }
         }
         
-        MessageBox.show(App.getMainUI(), new ProgressDialog("Open File", "File Opening..."));
         App.runOnBackground(() -> {
             try {
                 fileModel.sync();
             } catch (IOException e) {
                 AppLog.e(e);
-                post(() -> {
-                    MessageBox.hide();
+                App.postRun(() -> {
                     MessageBox.showError(App.getMainUI(), "Open Failed", e.getMessage());
                 });
                 return;
             }
-            post(() -> {
-                MessageBox.hide();
+            App.postRun(() -> {
                 View view = LayoutInflater.from(getContext()).inflate(R.layout.component_editor, null);
                 IDEEditor editor = view.findViewById(R.id.editor);
                 editor.setModel((IDEEditorModel) fileModel);
@@ -143,8 +147,7 @@ public class EditorPager extends ViewPager implements FileModelFactory, FileServ
                 openEditor(filePath);
                 requestLayout();
                 postDelayed(() -> {
-                    requestLayout();
-                    editor.getScrollView().scrollToCaretVisible();
+                    editor.focus();
                     editor.redraw();
                 }, 100L);
             });
@@ -155,6 +158,8 @@ public class EditorPager extends ViewPager implements FileModelFactory, FileServ
     @Override
     public void fileClosed(@NonNull String filePath, @NonNull FileModel fileModel) {
         AppLog.s(this, "fileClosed: " + filePath);
+        
+        
         for (int i = 0; i < getEditorCount(); i++) {
             if (getEditor(i).getIDEEditorModel().getFilePath().equals(filePath)) {
                 myViews.remove(i);
@@ -164,9 +169,17 @@ public class EditorPager extends ViewPager implements FileModelFactory, FileServ
                     App.getFileService().setVisibleFilePath(filePath);
                     setCurrentItem(getEditorCount() - 1);
                 }
-                return;
+                break;
             }
         }
+        
+        if (getEditorCount() == 0) {
+            App.getMainUI().getEditorTabLayout().setVisibility(GONE);
+            if (App.getMainUI().getEmptyFrame().getVisibility() == GONE) {
+                App.getMainUI().getEmptyFrame().setVisibility(VISIBLE);
+            }
+        }
+        
     }
     
     @NonNull
@@ -238,10 +251,6 @@ public class EditorPager extends ViewPager implements FileModelFactory, FileServ
     
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (ev.getAction() == 0 && getCurrentEditor() != null &&
-                getCurrentEditor().isTouchEventInsideHandle(ev)) {
-            return false;
-        }
         return super.onInterceptTouchEvent(ev);
     }
 }

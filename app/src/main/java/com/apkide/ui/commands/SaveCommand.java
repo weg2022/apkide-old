@@ -5,11 +5,11 @@ import androidx.annotation.IdRes;
 import com.apkide.ui.R;
 import com.apkide.ui.util.MenuCommand;
 
-public class SaveAllCommand implements MenuCommand {
+public class SaveCommand implements MenuCommand {
 	@IdRes
 	@Override
 	public int getId() {
-		return R.id.commandSaveAll;
+		return R.id.commandSave;
 	}
 
 	@Override

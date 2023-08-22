@@ -130,9 +130,18 @@ public class FileBrowser extends HeaderBrowserLayout implements
             
             PopupMenu menu = new PopupMenu(getContext(), view);
             menu.inflate(R.menu.browser_file_entry_options);
+            menu.getMenu().findItem(R.id.commandDecodeApk).setVisible(false);
+            if (fileEntry.isFile() && fileEntry.getFilePath().endsWith(".apk")){
+                menu.getMenu().findItem(R.id.commandDecodeApk).setVisible(true);
+            }
             
             menu.setOnMenuItemClickListener(item -> {
-                if (item.getItemId() == R.id.commandSyncWithDisk) {
+                if (item.getItemId()==R.id.commandDecodeApk){
+                    App.getDecodeService().decode(fileEntry.getFilePath(),
+                            fileEntry.getFilePath().substring(0,fileEntry.getFilePath().length()-4));
+                    
+                    return true;
+                }else if (item.getItemId() == R.id.commandSyncWithDisk) {
                     App.getProjectBrowserService().sync();
                     
                     return true;
@@ -141,6 +150,7 @@ public class FileBrowser extends HeaderBrowserLayout implements
                             getSystemService(Context.CLIPBOARD_SERVICE);
                     clipboardManager.setPrimaryClip(
                             ClipData.newPlainText(null, fileEntry.getFilePath()));
+                    
                     return true;
                 } else if (item.getItemId() == R.id.commandCopyFileName) {
                     String name = FileSystem.getName(fileEntry.getFilePath());
@@ -152,13 +162,13 @@ public class FileBrowser extends HeaderBrowserLayout implements
                     return true;
                 } else if (item.getItemId() == R.id.commandRenameFile) {
                     MessageBox.show(App.getMainUI(), new RenameFileDialog(
-                            App.getFileBrowserService().getVisiblePath()));
+                            fileEntry.getFilePath()));
                     
                     return true;
                 } else if (item.getItemId() == R.id.commandDeleteFile) {
     
                     MessageBox.show(App.getMainUI(), new DeleteFileDialog(
-                            App.getFileBrowserService().getVisiblePath()));
+                            fileEntry.getFilePath()));
                     return true;
                 }
                 

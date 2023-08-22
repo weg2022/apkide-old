@@ -36,28 +36,13 @@
 
         <activity
             android:name=".MainUI"
+            android:theme="@style/Theme.UI"
             android:configChanges="screenSize|uiMode|screenLayout|orientation|keyboardHidden|keyboard"
             android:exported="true"
             android:launchMode="singleTask">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="file" />
-                <data android:mimeType="*/*" />
-                <data android:pathPattern=".*\\.apk" />
-                <data android:pathPattern=".*\\.apktool.yml" />
-                <data android:host="*" />
-            </intent-filter>
-            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
 

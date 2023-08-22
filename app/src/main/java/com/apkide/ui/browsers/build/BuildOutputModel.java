@@ -7,4 +7,18 @@ public class BuildOutputModel extends CodeEditTextModel {
         super();
     }
     
+    @Override
+    public boolean isReadOnly() {
+        return false;
+    }
+    
+    @Override
+    public boolean isLogging() {
+        return true;
+    }
+    
+    @Override
+    public boolean isLogErrorLine(int line) {
+        return super.isLogErrorLine(line);
+    }
 }

@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="Application">
+    <PreferenceCategory android:title="应用">
         <Preference
             android:fragment="com.apkide.ui.preferences.AppearancePreferencesFragment"
-            android:title="Appearance" />
+            android:title="外观" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Editor">
+    <PreferenceCategory android:title="编辑器">
         <Preference
             android:fragment="com.apkide.ui.preferences.EditorPreferencesFragment"
-            android:summary="Configure the editor settings."
-            android:title="Editor" />
+            android:summary="编辑器选项"
+            android:title="编辑器" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Editor">
+    <PreferenceCategory android:title="构建与反编译">
         <Preference
             android:fragment="com.apkide.ui.preferences.CompilerPreferencesFragment"
-            android:summary="Configure Build and Decode settings."
-            android:title="Build &amp; Decode" />
+            android:summary="配置构建选项"
+            android:title="构建" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="About">
+    <PreferenceCategory android:title="关于">
         <Preference
-            android:summary="Show legal information about the application"
-            android:title="About">
+            android:summary="显示有关应用程序的法律信息"
+            android:title="关于">
             <intent
                 android:targetClass="com.apkide.ui.about.AboutUI"
                 android:targetPackage="com.apkide.ui" />

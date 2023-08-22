@@ -61,7 +61,6 @@ public class ProjectBrowserService implements AppService {
                             }
                             
                             myRunning = false;
-                            
                         }
                         myLock.wait();
                     }

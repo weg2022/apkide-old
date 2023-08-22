@@ -85,7 +85,7 @@ public class ProjectManagerImpl implements ProjectManager {
     public void sync() {
         try {
             myConfigureFile.sync();
-        } catch (ConfigureFileException e) {
+        } catch (IOException e) {
             Toast.makeText(App.getUI(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }

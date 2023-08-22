@@ -3,11 +3,14 @@ package com.apkide.ui.services.file;
 import static java.util.Objects.requireNonNull;
 
 import android.content.SharedPreferences;
+import android.os.RemoteException;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.apkide.language.FileHighlighting;
+import com.apkide.language.service.ICodeHighlightingListener;
 import com.apkide.ui.App;
 import com.apkide.ui.services.AppService;
 
@@ -25,6 +28,7 @@ public class FileService implements AppService {
     private final HashMap<String, FileModelFactory> myFactors = new HashMap<>();
     private final List<FileServiceListener> myListeners = new Vector<>();
     
+    private ICodeHighlightingListener myHighlightingListener;
     private String myVisibleFilePath;
     
     private SharedPreferences getPreferences() {
@@ -41,6 +45,31 @@ public class FileService implements AppService {
     @Override
     public void shutdown() {
     
+    }
+    
+    private void registerListener(){
+        if (myHighlightingListener==null){
+            myHighlightingListener=new ICodeHighlightingListener.Stub() {
+                @Override
+                public void highlightingFinished(FileHighlighting highlight) throws RemoteException {
+                    for (FileModel value : myOpenFileModels.values()) {
+                        if (value.getFilePath().endsWith(highlight.filePath)){
+                            value.highlighting(highlight);
+                        }
+                    }
+                }
+    
+                @Override
+                public void semanticHighlightingFinished(FileHighlighting highlight) throws RemoteException {
+                    for (FileModel value : myOpenFileModels.values()) {
+                        if (value.getFilePath().endsWith(highlight.filePath)){
+                            value.semanticHighlighting(highlight);
+                        }
+                    }
+                }
+            };
+            App.getCodeService().setCodeHighlightingListener(myHighlightingListener);
+        }
     }
     
     public void addListener(@NonNull FileServiceListener listener) {
@@ -61,6 +90,7 @@ public class FileService implements AppService {
     }
     
     public void openFile(@NonNull String filePath) {
+        registerListener();
         if (isOpenFile(filePath)) {
             setVisibleFilePath(filePath);
             for (FileServiceListener listener : myListeners) {
@@ -88,6 +118,7 @@ public class FileService implements AppService {
     
     public void setVisibleFilePath(String visibleFilePath) {
         myVisibleFilePath = visibleFilePath;
+        App.getCodeService().highlight(myVisibleFilePath);
     }
     
     public void closeVisibleFile() {

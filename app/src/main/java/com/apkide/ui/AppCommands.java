@@ -6,7 +6,7 @@ import com.apkide.common.command.Command;
 import com.apkide.ui.commands.CloseFileCommand;
 import com.apkide.ui.commands.ExitCommand;
 import com.apkide.ui.commands.GotoSettingsCommand;
-import com.apkide.ui.commands.SaveAllCommand;
+import com.apkide.ui.commands.SaveCommand;
 import com.apkide.ui.commands.actionbar.CopyCommand;
 import com.apkide.ui.commands.actionbar.CutCommand;
 import com.apkide.ui.commands.actionbar.EditModeCommand;
@@ -41,6 +41,7 @@ import com.apkide.ui.commands.refactor.SafeDeleteCommand;
 import com.apkide.ui.commands.view.ViewBuildCommand;
 import com.apkide.ui.commands.view.ViewErrorCommand;
 import com.apkide.ui.commands.view.ViewFileCommand;
+import com.apkide.ui.commands.view.ViewProjectCommand;
 import com.apkide.ui.commands.view.ViewSearchCommand;
 
 import java.util.ArrayList;
@@ -73,6 +74,7 @@ public final class AppCommands {
 
 		addAll(new Command[]{
 				new ViewFileCommand(),
+				new ViewProjectCommand(),
 				new ViewErrorCommand(),
 				new ViewSearchCommand(),
 				new ViewBuildCommand()
@@ -109,7 +111,7 @@ public final class AppCommands {
 
 		addAll(new Command[]{
 				new CloseFileCommand(),
-				new SaveAllCommand(),
+				new SaveCommand(),
 				new GotoSettingsCommand(),
 				new ExitCommand()
 		});

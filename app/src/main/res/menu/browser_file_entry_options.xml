@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
+    <item
+        android:id="@+id/commandDecodeApk"
+        android:title="反编译" />
     <item
         android:id="@+id/commandSyncWithDisk"
-        android:title="Sync With Disk" />
+        android:title="同步" />
 
     <item
         android:id="@+id/commandCopyFilePath"
-        android:title="Copy File Path"/>
+        android:title="复制路径"/>
 
     <item
         android:id="@+id/commandCopyFileName"
-        android:title="Copy File Name"/>
+        android:title="复制文件名"/>
 
     <item
         android:id="@+id/commandRenameFile"
-        android:title="Rename"/>
+        android:title="重命名"/>
 
     <item
         android:id="@+id/commandDeleteFile"
-        android:title="Delete"/>
+        android:title="删除"/>
 </menu>

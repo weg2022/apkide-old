@@ -2,8 +2,8 @@ package com.apkide.ui.services.file;
 
 import androidx.annotation.NonNull;
 
-import com.apkide.codeanalysis.FileHighlights;
 import com.apkide.common.io.iterator.LineIterator;
+import com.apkide.language.FileHighlighting;
 
 import java.io.IOException;
 
@@ -18,9 +18,9 @@ public interface FileModel {
 
 	void save() throws IOException;
 
-	void highlighting(@NonNull FileHighlights highlighting);
+	void highlighting(@NonNull FileHighlighting highlighting);
 
-	void semanticHighlighting(@NonNull FileHighlights highlighting);
+	void semanticHighlighting(@NonNull FileHighlighting highlighting);
 
 	boolean isReadOnly();
 	

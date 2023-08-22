@@ -12,8 +12,11 @@ import androidx.preference.PreferenceManager;
 import com.apkide.common.Application;
 import com.apkide.ui.browsers.file.FileBrowserService;
 import com.apkide.ui.browsers.project.ProjectBrowserService;
+import com.apkide.ui.services.ApkService;
 import com.apkide.ui.services.IDECodeService;
-import com.apkide.ui.services.apktool.ApkToolEngineService;
+import com.apkide.ui.services.build.BuildService;
+import com.apkide.ui.services.decode.DecodeService;
+import com.apkide.ui.services.error.ErrorService;
 import com.apkide.ui.services.file.FileService;
 import com.apkide.ui.services.project.ProjectService;
 
@@ -26,22 +29,26 @@ public final class App {
     private static App sApp;
     private static MainUI sMainUI;
     
+    private final IDECodeService myIDECodeService = new IDECodeService();
+    private final ApkService myApkService=new ApkService();
     private final FileBrowserService myFileBrowserService = new FileBrowserService();
     private final ProjectBrowserService myProjectBrowserService=new ProjectBrowserService();
     private final FileService myFileService = new FileService();
+    private final ErrorService myErrorService =new ErrorService();
     private final ProjectService myProjectService = new ProjectService();
-    private final IDECodeService myIDECodeService = new IDECodeService();
-    private final ApkToolEngineService myApkToolEngineService = new ApkToolEngineService();
+    private final BuildService myBuildService=new BuildService();
+    private final DecodeService myDecodeService=new DecodeService();
     
     private App() {
     }
     
-    public static ApkToolEngineService getApkEngineService() {
-        return sApp.myApkToolEngineService;
-    }
     
     public static IDECodeService getCodeService() {
         return sApp.myIDECodeService;
+    }
+    
+    public static ApkService getAPkService(){
+        return sApp.myApkService;
     }
     
     public static FileBrowserService getFileBrowserService() {
@@ -56,30 +63,48 @@ public final class App {
         return sApp.myFileService;
     }
     
+    public static ErrorService getErrorService(){
+        return sApp.myErrorService;
+    }
+    
     public static ProjectService getProjectService() {
         return sApp.myProjectService;
+    }
+    
+    public static BuildService getBuildService(){
+        return sApp.myBuildService;
+    }
+    
+    public static DecodeService getDecodeService(){
+        return sApp.myDecodeService;
     }
     
     public static void init(@NonNull MainUI mainUI) {
         sApp = new App();
         sMainUI = mainUI;
-        sApp.myApkToolEngineService.initialize();
         sApp.myIDECodeService.initialize();
+        sApp.myApkService.initialize();
         sApp.myFileService.initialize();
         sApp.myProjectService.initialize();
         sApp.myFileBrowserService.initialize();
+        sApp.myErrorService.initialize();
         sApp.myProjectBrowserService.initialize();;
+        sApp.myBuildService.initialize();
+        sApp.myDecodeService.initialize();
     }
     
     
     public static void shutdown() {
         if (sApp != null) {
             
+            sApp.myDecodeService.shutdown();
+            sApp.myBuildService.shutdown();
             sApp.myProjectBrowserService.shutdown();
             sApp.myFileBrowserService.shutdown();
             sApp.myProjectService.shutdown();
+            sApp.myErrorService.shutdown();
             sApp.myFileService.shutdown();
-            sApp.myApkToolEngineService.shutdown();
+            sApp.myApkService.shutdown();
             sApp.myIDECodeService.shutdown();
             sActivities.clear();
             sMainUI = null;

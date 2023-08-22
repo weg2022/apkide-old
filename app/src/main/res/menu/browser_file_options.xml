@@ -3,25 +3,25 @@
 
     <item
         android:id="@+id/commandSyncWithDisk"
-        android:title="Sync With Disk" />
+        android:title="同步" />
 
     <item
         android:id="@+id/commandHiddenFileVisible"
-        android:title="Hidden Files Visible" />
+        android:title="显示隐藏文件" />
 
     <item
         android:id="@+id/commandHiddenFileInVisible"
-        android:title="Hidden Files Not Visible" />
+        android:title="关闭隐藏文件" />
 
     <item
-        android:title="New..."
+        android:title="新建"
         android:id="@+id/commandNew">
         <menu>
             <item android:id="@+id/commandNewFile"
-                android:title="New File"/>
+                android:title="新建文件"/>
 
             <item android:id="@+id/commandNewDir"
-                android:title="New Directory"/>
+                android:title="新建文件夹"/>
         </menu>
     </item>
 </menu>

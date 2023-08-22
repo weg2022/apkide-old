@@ -2,7 +2,6 @@ package com.apkide.ui.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -31,18 +30,10 @@ public class CodeEditText extends ViewGroup {
         addView(new EditorView(getContext()));
     }
     
-    public void insertChar(char c) {
-        getEditorView().insertChar(c);
-    }
-    
     public void focus() {
         if (getEditorView().hasFocus()) return;
         
         getEditorView().requestFocus();
-    }
-    
-    public void showDragHandle(){
-        getScrollView().showDragHandle();
     }
     
     
@@ -53,38 +44,7 @@ public class CodeEditText extends ViewGroup {
     public int getCaretColumn(){
         return getEditorView().getCaretColumn();
     }
-    
-    public void select(int startLine, int startColumn, int endLine, int endColumn) {
-        getScrollView().selection(startLine, startColumn, endLine, endColumn);
-    }
-    
-    public int getSelectionStartLine() {
-        if (getEditorView().isSelectionVisibility()) {
-            return getEditorView().getFirstSelectedLine();
-        }
-        return getEditorView().getCaretLine();
-    }
-    
-    public int getSelectionStartColumn() {
-        if (getEditorView().isSelectionVisibility()) {
-            return getEditorView().getFirstSelectedColumn();
-        }
-        return getEditorView().getCaretColumn();
-    }
-    
-    public int getSelectionEndLine() {
-        if (getEditorView().isSelectionVisibility()) {
-            return getEditorView().getLastSelectedLine();
-        }
-        return getEditorView().getCaretLine();
-    }
-    
-    public int getSelectionEndColumn() {
-        if (getEditorView().isSelectionVisibility()) {
-            return getEditorView().getLastSelectedColumn();
-        }
-        return getEditorView().getCaretColumn();
-    }
+
     
     public int getLineCount() {
         return getEditorView().getEditorModel().getLineCount();
@@ -94,13 +54,6 @@ public class CodeEditText extends ViewGroup {
         return getEditorView().getTabSize();
     }
     
-    public CodeEditTextScrollView getScrollView() {
-        return (CodeEditTextScrollView) getParent().getParent();
-    }
-    
-    public boolean isTouchEventInsideHandle(MotionEvent event) {
-        return getScrollView().isTouchEventInsideHandle(event);
-    }
     
     public void setModel(@NonNull CodeEditTextModel model) {
         getEditorView().setModel(model);

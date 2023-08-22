@@ -1,6 +1,10 @@
 package com.apkide.ui;
 
 import static android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO;
+import static androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES;
+import static androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode;
 import static com.apkide.ui.views.SplitLayout.OnSplitChangeListener;
 import static java.lang.System.currentTimeMillis;
 
@@ -10,11 +14,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.apkide.common.command.Command;
@@ -99,6 +105,10 @@ public class MainUI extends StyledUI implements
 	}
 	
 	
+	public FrameLayout getEmptyFrame(){
+		return myUiBinding.mainEmptyFrame;
+	}
+	
 	public EditorPager getEditorPager(){
 		return myUiBinding.mainEditorPager;
 	}
@@ -135,6 +145,24 @@ public class MainUI extends StyledUI implements
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @Nullable String key) {
 		if (key == null) return;
+		boolean recreated=false;
+		
+		if (key.startsWith("app.theme")){
+			if (AppPreferences.isFollowSystemTheme()) {
+				if (AppCompatDelegate.getDefaultNightMode() != MODE_NIGHT_FOLLOW_SYSTEM) {
+					AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM);
+				}else {
+					setDefaultNightMode(AppPreferences.isNightTheme() ? MODE_NIGHT_YES : MODE_NIGHT_NO);
+				}
+			} else {
+				setDefaultNightMode(AppPreferences.isNightTheme() ? MODE_NIGHT_YES : MODE_NIGHT_NO);
+			}
+			recreated=true;
+		}
+		
+		if (recreated){
+			recreate();
+		}
 	}
 
 	@Override

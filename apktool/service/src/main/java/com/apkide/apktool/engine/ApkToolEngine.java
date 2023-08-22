@@ -2,13 +2,19 @@ package com.apkide.apktool.engine;
 
 import androidx.annotation.NonNull;
 
+import com.apkide.apktool.androlib.AaptInvoker;
 import com.apkide.apktool.androlib.ApkBuilder;
 import com.apkide.apktool.androlib.ApkDecoder;
 import com.apkide.apktool.androlib.Config;
 import com.apkide.apktool.androlib.exceptions.AndrolibException;
+import com.apkide.apktool.androlib.res.Framework;
+import com.apkide.apktool.androlib.res.ResourcesDecoder;
+import com.apkide.apktool.androlib.res.decoder.ARSCDecoder;
 import com.apkide.apktool.common.BrutException;
+import com.apkide.apktool.directory.DirUtil;
 import com.apkide.apktool.directory.DirectoryException;
 import com.apkide.apktool.directory.ExtFile;
+import com.apkide.apktool.util.OS;
 import com.apkide.common.AppLog;
 import com.apkide.common.logger.Logger;
 import com.apkide.common.logger.LoggerListener;
@@ -52,8 +58,15 @@ public final class ApkToolEngine {
                 myCallback.processing(level.prefix + ":" + msg);
             }
         };
+        Logger.getLogger(AaptInvoker.class.getName()).addListener(loggerListener);
         Logger.getLogger(ApkBuilder.class.getName()).addListener(loggerListener);
         Logger.getLogger(ApkDecoder.class.getName()).addListener(loggerListener);
+        Logger.getLogger(Framework.class.getName()).addListener(loggerListener);
+        Logger.getLogger(Config.class.getName()).addListener(loggerListener);
+        Logger.getLogger(ResourcesDecoder.class.getName()).addListener(loggerListener);
+        Logger.getLogger(ARSCDecoder.class.getName()).addListener(loggerListener);
+        Logger.getLogger(DirUtil.class.getName()).addListener(loggerListener);
+        Logger.getLogger(OS.class.getName()).addListener(loggerListener);
         
         Thread thread = new Thread(null, () -> {
             try {
@@ -122,8 +135,8 @@ public final class ApkToolEngine {
                             }
                             
                             myMode = Mode.None;
-                            myLock.wait();
                         }
+                        myLock.wait();
                     }
                 }
             } catch (InterruptedException ignored) {
@@ -167,7 +180,7 @@ public final class ApkToolEngine {
     /**
      * 构建
      *
-     * @param rootPath  项目根路径
+     * @param rootPath   项目根路径
      * @param outputPath 输出文件路径
      * @param callback   处理回调
      */
